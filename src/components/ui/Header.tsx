@@ -63,29 +63,20 @@ const Header = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className="transition-transform duration-300 group-hover:scale-110"
               >
-                <rect
-                  width="40"
-                  height="40"
-                  rx="8"
-                  fill="var(--color-primary)"
-                  className="transition-colors duration-300"
-                />
-                <path
-                  d="M12 28V12H16.5C18.5 12 20 13.5 20 15.5C20 16.8 19.3 17.9 18.2 18.5C19.5 19 20.5 20.2 20.5 21.8C20.5 24.1 18.8 26 16.3 26H12V28ZM15 17H16.5C17.3 17 18 16.3 18 15.5C18 14.7 17.3 14 16.5 14H15V17ZM15 24H16.3C17.2 24 18 23.2 18 22.3C18 21.4 17.2 20.5 16.3 20.5H15V24Z"
-                  fill="var(--color-accent)"
-                  className="transition-colors duration-300"
-                />
-                <circle
-                  cx="28"
-                  cy="20"
-                  r="6"
-                  fill="var(--color-accent)"
-                  className="transition-all duration-300 group-hover:r-7"
-                />
+                <g>
+                  <ellipse cx="20" cy="20" rx="16" ry="16" fill="var(--color-primary)" />
+                  <ellipse cx="20" cy="13" rx="7" ry="5" fill="#FFEB3B" />
+                  <ellipse cx="20" cy="20" rx="8" ry="6" fill="#FFEB3B" />
+                  <ellipse cx="20" cy="27" rx="7" ry="5" fill="#FFEB3B" />
+                  <ellipse cx="13" cy="20" rx="3" ry="2.5" fill="#FFD600" />
+                  <ellipse cx="27" cy="20" rx="3" ry="2.5" fill="#FFD600" />
+                  <ellipse cx="20" cy="20" rx="2" ry="2" fill="#FFD600" />
+                  <rect x="18" y="30" width="4" height="4" rx="2" fill="#FFEB3B" />
+                </g>
               </svg>
             </div>
             <span className="text-xl font-bold text-foreground tracking-tight hidden sm:block">
-              Portfolio
+              Hive N Thrive
             </span>
           </Link>
 
