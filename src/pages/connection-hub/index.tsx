@@ -316,9 +316,9 @@ const ConnectionHub = () => {
           </motion.div>
         )}
 
-        <main className="pt-30 pb-100">
+        <main className="pt-5 pb-20">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="relative w-full mb-20">
+            <div className="relative w-full mb-10">
               {/* Full-width video background and overlay, sized to cover hero text only */}
               <div className="relative w-full" style={{ height: '600px', maxHeight: '85vh' }}>
                 <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 h-full">
