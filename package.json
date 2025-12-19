@@ -2,6 +2,7 @@
   "name": "personal-portfolio",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Yutongchai.github.io/Portfolio",
   "rocketCritical": {
     "dependencies": [
       "@dhiwise/component-tagger",
@@ -63,7 +64,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist",
+    "redeploy": "npm run build && npm run deploy"
   },
   "eslintConfig": {
     "extends": [
@@ -84,6 +87,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^6.0.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/line-clamp": "^0.1.0",
