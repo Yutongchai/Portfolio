@@ -316,48 +316,50 @@ const ConnectionHub = () => {
           </motion.div>
         )}
 
-        <main className="pt-32 pb-20">
+        <main className="pt-30 pb-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="relative w-full mb-16">
-              {/* Full-width video background */}
-              <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 h-[600px] md:h-[700px]">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                >
-                  <source
-                    src="/Portfolio/station_games.mp4"
-                    type="video/mp4"
-                  />
-                </video>
-                {/* Gradient overlay for better text visibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent"></div>
-                <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-transparent"></div>
-              </div>
-
-              {/* Content centered over video */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="relative z-10 text-center pt-32 pb-40 px-6"
-              >
-                <div className="inline-flex items-center space-x-2 bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur-sm">
-                  <Icon name="Users" size={16} />
-                  <span>Team Building Services</span>
+            <div className="relative w-full mb-20">
+              {/* Full-width video background and overlay, sized to cover hero text only */}
+              <div className="relative w-full" style={{ height: '600px', maxHeight: '85vh' }}>
+                <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 h-full">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover rounded-3xl shadow-xl"
+                  >
+                    <source
+                      src="/Portfolio/station_games.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                  {/* Gradient overlay for better text visibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent rounded-3xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-transparent rounded-3xl"></div>
                 </div>
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
-                  Build Stronger Teams with Hive & Thrive
-                </h1>
-                <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
-                  Discover engaging workshops, custom events, and expert
-                  coaching designed to boost collaboration, trust, and
-                  performance in your organization.
-                </p>
-              </motion.div>
+
+                {/* Content centered over video */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="relative z-10 text-center pt-32 pb-16 px-6"
+                >
+                  <div className="inline-flex items-center space-x-2 bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur-sm">
+                    <Icon name="Users" size={16} />
+                    <span>Team Building Services</span>
+                  </div>
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
+                    Build Stronger Teams with Hive & Thrive
+                  </h1>
+                  <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
+                    Discover engaging workshops, custom events, and expert
+                    coaching designed to boost collaboration, trust, and
+                    performance in your organization.
+                  </p>
+                </motion.div>
+              </div>
             </div>
             <div className="mb-20">
               <motion.div

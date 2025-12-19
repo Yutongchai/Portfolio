@@ -18,7 +18,7 @@ import collageImg from '../../components/collage.jpg';
 import mainPicImg from '../../components/mainPic.jpg';
 import trainingImg from '../../components/training.jpg';
 import discussImg from '../../components/discuss.jpg';
-import stationGamesVideo from '../../components/station_games.mp4';
+const stationGamesVideo = '/Portfolio/station_games.mp4';
 import teamworkImg from '../../components/teamwork.jpg';
 
 
