@@ -90,14 +90,14 @@ const HeroSection = ({ personalInfo }: HeroSectionProps) => {
             
             {/* CTA Button with Energetic Gradient */}
             <motion.button
-              className="relative px-8 py-4 font-semibold rounded-2xl overflow-hidden group transition-butter shadow-lg hover:shadow-2xl"
+              className="relative px-8 py-4 font-semibold rounded-2xl overflow-hidden group transition-butter shadow-lg hover:shadow-2xl bg-primary"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="absolute inset-0 bg-gradient-electric" />
+              <div className="absolute inset-0 bg-primary" />
               <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-butter" />
               <span className="relative z-10 text-white">Let's Work Together</span>
             </motion.button>
