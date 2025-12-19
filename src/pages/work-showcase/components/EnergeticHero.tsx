@@ -90,10 +90,8 @@ const EnergeticHero = () => {
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-electric rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-butter" />
               <div className="relative glass px-6 py-3 rounded-full flex items-center space-x-2">
-                <Icon name="Sparkles" size={18} className="text-primary animate-pulse-glow" />
-                <span className="text-sm font-semibold text-gradient">
-                  Portfolio 2025
-                </span>
+            {/*     <Icon name="Sparkles" size={18} className="text-primary animate-pulse-glow" />
+               */}
               </div>
             </div>
           </motion.div>

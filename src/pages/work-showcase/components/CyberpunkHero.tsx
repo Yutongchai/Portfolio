@@ -161,10 +161,8 @@ const CyberpunkHero: React.FC = () => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="inline-flex items-center space-x-2 bg-accent/20 border border-accent px-6 py-3 rounded-sm mb-8 glow-cyan"
           >
-            <Icon name="Zap" size={20} className="text-accent" />
-            <span className="text-accent font-bold text-sm tracking-widest uppercase">
-              Portfolio 2025
-            </span>
+           {/*  <Icon name="Zap" size={20} className="text-accent" />
+            */}
           </motion.div>
 
           {/* Main title with glitch effect */}
