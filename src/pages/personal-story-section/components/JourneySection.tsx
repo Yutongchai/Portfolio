@@ -59,7 +59,7 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
           transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-5xl lg:text-6xl font-bold text-white mb-4">
-            My Journey
+            Our Journey
           </h2>
           <p className="text-2xl handwritten text-white/90">
             A timeline of growth

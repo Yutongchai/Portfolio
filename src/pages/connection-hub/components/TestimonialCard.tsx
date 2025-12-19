@@ -48,12 +48,14 @@ const TestimonialCard = ({ testimonial, index }: TestimonialCardProps) => {
         ))}
       </div>
 
-      <p className="text-foreground leading-relaxed">{testimonial.content}</p>
+      <p className="text-foreground leading-relaxed">
+        {testimonial.content || 'Hive & Thrive transformed our team! The workshops were engaging, fun, and truly brought us closer together. Our collaboration and morale have never been higher.'}
+      </p>
 
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-          <Icon name="CheckCircle2" size={16} className="text-success" />
-          <span>Verified Client</span>
+          <Icon name="Users" size={16} className="text-accent" />
+          <span>Team Building Client</span>
         </div>
       </div>
     </motion.div>

@@ -118,7 +118,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                   )}
                 </div>
 
-                <div className="p-8 max-h-[calc(100vh-32rem)] overflow-y-auto">
+                <div className="p-8 max-h-[calc(100vh-12rem)] overflow-y-auto">
                   <div className="flex items-start justify-between mb-6">
                     <div>
                       <div className="flex items-center space-x-3 mb-2">
@@ -132,7 +132,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                       <h2 className="text-3xl font-bold text-foreground mb-2">
                         {project.title}
                       </h2>
-                      <p className="text-muted-foreground">
+                      <p className="text-muted-foreground text-lg leading-relaxed mb-6" style={{minHeight: '4rem'}}>
                         {project.longDescription}
                       </p>
                     </div>

@@ -9,16 +9,16 @@ import PersonalStorySection from './pages/personal-story-section';
 
 const Routes: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Portfolio">
       <ErrorBoundary>
         <ScrollToTop />
         <RouterRoutes>
           {/* Define your routes here */}
-        <Route path="/" element={<PersonalStorySection />} />
-        <Route path="/work-showcase" element={<WorkShowcase />} />
-        <Route path="/connection-hub" element={<ConnectionHub />} />
-        <Route path="/personal-story-section" element={<PersonalStorySection />} />
-        <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<PersonalStorySection />} />
+          <Route path="/work-showcase" element={<WorkShowcase />} />
+          <Route path="/connection-hub" element={<ConnectionHub />} />
+          <Route path="/personal-story-section" element={<PersonalStorySection />} />
+          <Route path="*" element={<NotFound />} />
         </RouterRoutes>
       </ErrorBoundary>
     </BrowserRouter>

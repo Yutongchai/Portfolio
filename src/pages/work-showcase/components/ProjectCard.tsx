@@ -77,7 +77,7 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
           {project.title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-5">
           {project.description}
         </p>
 
