@@ -76,7 +76,7 @@ const Header = () => {
               </svg>
             </div>
             <span className="text-xl font-bold text-foreground tracking-tight hidden sm:block">
-              Hive N Thrive
+              EITO Group
             </span>
           </Link>
 

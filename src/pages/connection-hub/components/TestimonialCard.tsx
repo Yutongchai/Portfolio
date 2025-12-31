@@ -49,7 +49,7 @@ const TestimonialCard = ({ testimonial, index }: TestimonialCardProps) => {
       </div>
 
       <p className="text-foreground leading-relaxed">
-        {testimonial.content || 'Hive & Thrive transformed our team! The workshops were engaging, fun, and truly brought us closer together. Our collaboration and morale have never been higher.'}
+        {testimonial.content || 'EITO Group transformed our team! The workshops were engaging, fun, and truly brought us closer together. Our collaboration and morale have never been higher.'}
       </p>
 
       <div className="mt-6 pt-6 border-t border-border">

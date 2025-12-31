@@ -30,10 +30,10 @@ const PersonalStorySection = () => {
   });
 
   const personalInfo: PersonalInfo = {
-    name: "Hive & Thrive",
+    name: "EITO Group",
     title: "Team Building & Collaboration Experts",
     tagline: "Building stronger teams, one connection at a time",
-    bio: "At Hive & Thrive, we believe that the foundation of every successful organization is a united, motivated, and collaborative team. With years of experience in designing and facilitating engaging team-building experiences, our mission is to help groups unlock their full potential, foster trust, and create lasting bonds that drive collective success.",
+    bio: "At EITO Group, we believe that the foundation of every successful organization is a united, motivated, and collaborative team. With years of experience in designing and facilitating engaging team-building experiences, our mission is to help groups unlock their full potential, foster trust, and create lasting bonds that drive collective success.",
     image: myPhoto, // Use your local image
     alt: "A diverse group of professionals participating in a fun team-building activity, smiling and collaborating together.",
   };
@@ -88,7 +88,7 @@ const PersonalStorySection = () => {
     {
       id: 1,
       year: "2018",
-      title: "Hive & Thrive Founded",
+      title: "EITO Group Founded",
       description:
         "A group of passionate facilitators came together to create unique team-building experiences, inspired by the power of collaboration and community.",
       icon: "Rocket",

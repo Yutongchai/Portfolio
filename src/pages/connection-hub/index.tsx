@@ -120,7 +120,7 @@ const ConnectionHub = () => {
         "https://img.rocket.new/generatedImages/rocket_gen_img_115d61d2c-1765988781101.png",
       alt: "Smiling woman at team building event",
       content:
-        "Hive & Thrive created an unforgettable team building experience for our staff. The activities were fun, meaningful, and brought our team closer together. Highly recommended!",
+        "EITO Group created an unforgettable team building experience for our staff. The activities were fun, meaningful, and brought our team closer together. Highly recommended!",
       rating: 5,
     },
     {
@@ -132,7 +132,7 @@ const ConnectionHub = () => {
         "https://img.rocket.new/generatedImages/rocket_gen_img_180a4ae64-1763294358352.png",
       alt: "Team leader at outdoor workshop",
       content:
-        "Our team loved the custom workshop from Hive & Thrive. The facilitators were engaging and the results were immediate—better communication and more trust.",
+        "Our team loved the custom workshop from EITO Group. The facilitators were engaging and the results were immediate—better communication and more trust.",
       rating: 5,
     },
     {
@@ -144,7 +144,7 @@ const ConnectionHub = () => {
         "https://img.rocket.new/generatedImages/rocket_gen_img_18d4825d1-1763293841178.png",
       alt: "Project lead at team building session",
       content:
-        "The team building adventure was a game changer for our project team. We left energized, motivated, and ready to tackle new challenges together. Thank you Hive & Thrive!",
+        "The team building adventure was a game changer for our project team. We left energized, motivated, and ready to tackle new challenges together. Thank you EITO Group!",
       rating: 5,
     },
   ];
@@ -288,14 +288,14 @@ const ConnectionHub = () => {
   return (
     <>
       <Helmet>
-        <title>Hive & Thrive - Team Building Services</title>
+        <title>EITO Group - Team Building Services</title>
         <meta
           name="description"
-          content="Contact Hive & Thrive for team building workshops, custom events, and corporate training. Multiple ways to connect and book your next team experience."
+          content="Contact EITO Group for team building workshops, custom events, and corporate training. Multiple ways to connect and book your next team experience."
         />
         <meta
           name="keywords"
-          content="team building, corporate events, workshops, group activities, Hive & Thrive"
+          content="team building, corporate events, workshops, group activities, EITO Group"
         />
       </Helmet>
 
@@ -351,7 +351,7 @@ const ConnectionHub = () => {
                     <span>Team Building Services</span>
                   </div>
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
-                    Build Stronger Teams with Hive & Thrive
+                    Build Stronger Teams with EITO Group
                   </h1>
                   <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
                     Discover engaging workshops, custom events, and expert
@@ -489,7 +489,7 @@ const ConnectionHub = () => {
                 </h2>
                 <p className="text-muted-foreground text-lg mb-8">
                   Book a team building workshop, request a custom event, or
-                  consult with our expert coaches. Hive & Thrive is here to help
+                  consult with our expert coaches. EITO Group is here to help
                   your team connect, grow, and succeed together!
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
