@@ -199,24 +199,24 @@ const WorkShowcase = () => {
 
         <EnergeticHero />
 
-        <main className="pt-32 pb-20 px-6 lg:px-12" id="projects-section">
+        <main className="pt-20 sm:pt-32 pb-12 sm:pb-20 px-3 sm:px-6 lg:px-12" id="projects-section">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-16">
+              className="text-center mb-12 sm:mb-16">
 
-              <div className="inline-flex items-center space-x-2 bg-accent/10 text-accent px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <div className="inline-flex items-center space-x-2 bg-accent/10 text-accent px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
                 <Icon name="Briefcase" size={16} />
                 <span>Featured Work</span>
               </div>
 
-              <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6">
                 Project Showcase
               </h1>
 
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
                 Explore a curated collection of projects that demonstrate
                 technical expertise, creative problem-solving, and commitment to
                 delivering exceptional digital experiences.
@@ -238,7 +238,7 @@ const WorkShowcase = () => {
 
 
             {filteredProjects.length > 0 ?
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {filteredProjects.map((project) =>
               <ProjectCard
                 key={project.id}
@@ -251,15 +251,15 @@ const WorkShowcase = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-20">
+              className="text-center py-12 sm:py-20">
 
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-muted rounded-full mb-6">
-                  <Icon name="Search" size={40} className="text-muted-foreground" />
+                <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-muted rounded-full mb-4 sm:mb-6">
+                  <Icon name="Search" size={40} className="text-muted-foreground w-8 sm:w-10 h-8 sm:h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
                   No Projects Found
                 </h3>
-                <p className="text-muted-foreground mb-6">
+                <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
                   Try adjusting your filters to see more results
                 </p>
                 <Button
@@ -279,20 +279,20 @@ const WorkShowcase = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="mt-20 text-center">
+              className="mt-12 sm:mt-20 text-center">
 
-              <div className="bg-gradient-to-r from-accent/10 via-accent/5 to-accent/10 rounded-2xl p-12">
-                <h2 className="text-3xl font-bold text-foreground mb-4">
+              <div className="bg-gradient-to-r from-accent/10 via-accent/5 to-accent/10 rounded-xl sm:rounded-2xl p-6 sm:p-12">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">
                   Interested in Working Together?
                 </h2>
-                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+                <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
                   Let's discuss how we can bring your ideas to life with
                   innovative solutions and exceptional execution.
                 </p>
                 <Button
                   variant="default"
                   size="lg"
-                  className="bg-accent hover:bg-cta text-accent-foreground font-semibold"
+                  className="bg-accent hover:bg-cta text-accent-foreground font-semibold text-sm sm:text-base"
                   iconName="Mail"
                   iconPosition="right"
                   onClick={() => window.location.href = '/connection-hub'}>

@@ -16,9 +16,9 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
       transition={{ duration: 0.5 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative bg-card rounded-2xl overflow-hidden shadow-elevation hover:shadow-accent transition-all duration-500"
+      className="group relative bg-card rounded-lg sm:rounded-2xl overflow-hidden shadow-elevation hover:shadow-accent transition-all duration-500"
     >
-      <div className="relative h-80 overflow-hidden">
+      <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden">
         <motion.div
           animate={{ scale: isHovered ? 1.1 : 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -39,7 +39,7 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
         />
 
         {project.featured && (
-          <div className="absolute top-4 right-4 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold flex items-center space-x-1">
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-accent text-accent-foreground px-2 sm:px-3 py-1 rounded-full text-xs font-semibold flex items-center space-x-1">
             <Icon name="Star" size={12} />
             <span>Featured</span>
           </div>
@@ -49,13 +49,13 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="absolute bottom-0 left-0 right-0 p-6"
+          className="absolute bottom-0 left-0 right-0 p-4 sm:p-6"
         >
           <Button
             variant="default"
             size="default"
             fullWidth
-            className="bg-accent hover:bg-cta text-accent-foreground font-semibold"
+            className="bg-accent hover:bg-cta text-accent-foreground font-semibold text-xs sm:text-sm"
             iconName="ArrowRight"
             iconPosition="right"
             onClick={() => onViewDetails(project)}
@@ -65,19 +65,19 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
         </motion.div>
       </div>
 
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-accent uppercase tracking-wider">
+      <div className="p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <span className="text-xs font-semibold text-accent uppercase tracking-wider line-clamp-1">
             {project.category}
           </span>
-          <span className="text-xs text-muted-foreground">{project.year}</span>
+          <span className="text-xs text-muted-foreground flex-shrink-0">{project.year}</span>
         </div>
 
-        <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300">
+        <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors duration-300 line-clamp-2">
           {project.title}
         </h3>
 
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-5">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-3">
           {project.description}
         </p>
 

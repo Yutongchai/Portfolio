@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
+import ThemeToggle from './ThemeToggle';
 
 interface NavigationItem {
   label: string;
@@ -48,20 +49,20 @@ const Header = () => {
       }`}
     >
       <div className="w-full">
-        <div className="flex items-center justify-between h-20 px-6 lg:px-12">
+        <div className="flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6 lg:px-12">
           <Link
             to="/"
-            className="flex items-center space-x-3 group"
+            className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0"
             aria-label="Home"
           >
             <div className="relative">
               <svg
-                width="40"
-                height="40"
+                width="36"
+                height="36"
                 viewBox="0 0 40 40"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="transition-transform duration-300 group-hover:scale-110"
+                className="w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-300 group-hover:scale-110"
               >
                 <g>
                   <ellipse cx="20" cy="20" rx="16" ry="16" fill="var(--color-primary)" />
@@ -75,7 +76,7 @@ const Header = () => {
                 </g>
               </svg>
             </div>
-            <span className="text-xl font-bold text-foreground tracking-tight hidden sm:block">
+            <span className="text-base sm:text-lg md:text-xl font-bold text-foreground tracking-tight hidden sm:block">
               EITO Group
             </span>
           </Link>
@@ -85,7 +86,7 @@ const Header = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                className={`relative px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                   isActivePath(item.path)
                     ? 'text-accent' :'text-foreground hover:text-accent'
                 }`}
@@ -103,7 +104,9 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <ThemeToggle />
+            
             <Button
               variant="default"
               size="default"
@@ -118,14 +121,14 @@ const Header = () => {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors duration-300"
+              className="lg:hidden p-2 rounded-lg hover:bg-muted transition-colors duration-300 touch-manipulation"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >
               <Icon
                 name={isMobileMenuOpen ? 'X' : 'Menu'}
                 size={24}
-                className="text-foreground"
+                className="text-foreground w-6 h-6 sm:w-7 sm:h-7"
               />
             </button>
           </div>
@@ -133,18 +136,18 @@ const Header = () => {
       </div>
 
       <div
-        className={`lg:hidden fixed inset-0 top-20 bg-background/98 backdrop-blur-lg transition-all duration-300 ${
+        className={`lg:hidden fixed inset-0 top-16 sm:top-20 bg-background/98 backdrop-blur-lg transition-all duration-300 overflow-y-auto ${
           isMobileMenuOpen
             ? 'opacity-100 pointer-events-auto' :'opacity-0 pointer-events-none'
         }`}
       >
-        <nav className="flex flex-col p-6 space-y-2">
+        <nav className="flex flex-col p-4 sm:p-6 space-y-2">
           {navigationItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center space-x-3 px-4 py-4 rounded-lg text-base font-medium transition-all duration-300 ${
+              className={`flex items-center space-x-3 px-4 py-3 sm:py-4 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 touch-manipulation ${
                 isActivePath(item.path)
                   ? 'bg-accent/10 text-accent' :'text-foreground hover:bg-muted'
               }`}
@@ -153,19 +156,23 @@ const Header = () => {
                 <Icon
                   name={item.icon}
                   size={20}
-                  className={isActivePath(item.path) ? 'text-accent' : ''}
+                  className={`w-5 h-5 sm:w-6 sm:h-6 ${isActivePath(item.path) ? 'text-accent' : ''}`}
                 />
               )}
               <span>{item.label}</span>
             </Link>
           ))}
 
-          <div className="pt-6 mt-6 border-t border-border">
+          <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-border space-y-4">
+            <div className="flex items-center justify-center">
+              <ThemeToggle />
+            </div>
+            
             <Button
               variant="default"
               size="lg"
               fullWidth
-              className="bg-accent hover:bg-cta text-accent-foreground font-semibold shadow-button hover:shadow-accent"
+              className="bg-accent hover:bg-cta text-accent-foreground font-semibold text-sm sm:text-base py-3 sm:py-4"
               iconName="Mail"
               iconPosition="left"
               iconSize={20}

@@ -316,18 +316,18 @@ const ConnectionHub = () => {
           </motion.div>
         )}
 
-        <main className="pt-5 pb-20">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="relative w-full mb-10">
+        <main className="pt-4 sm:pt-5 pb-12 sm:pb-20">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-12">
+            <div className="relative w-full mb-8 sm:mb-10">
               {/* Full-width video background and overlay, sized to cover hero text only */}
-              <div className="relative w-full" style={{ height: '600px', maxHeight: '85vh' }}>
+              <div className="relative w-full" style={{ height: 'clamp(300px, 60vh, 600px)' }}>
                 <div className="absolute inset-0 w-screen left-1/2 -translate-x-1/2 h-full">
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover rounded-3xl shadow-xl"
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg sm:rounded-3xl shadow-lg sm:shadow-xl"
                   >
                     <source
                       src="/Portfolio/station_games.mp4"
@@ -335,8 +335,8 @@ const ConnectionHub = () => {
                     />
                   </video>
                   {/* Gradient overlay for better text visibility */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent rounded-3xl"></div>
-                  <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-transparent rounded-3xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent rounded-lg sm:rounded-3xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-transparent rounded-lg sm:rounded-3xl"></div>
                 </div>
 
                 {/* Content centered over video */}
@@ -344,16 +344,16 @@ const ConnectionHub = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="relative z-10 text-center pt-32 pb-16 px-6"
+                  className="relative z-10 text-center pt-12 sm:pt-20 md:pt-32 pb-8 sm:pb-12 md:pb-16 px-3 sm:px-6"
                 >
-                  <div className="inline-flex items-center space-x-2 bg-accent/20 text-accent px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur-sm">
+                  <div className="inline-flex items-center space-x-2 bg-accent/20 text-accent px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 backdrop-blur-sm">
                     <Icon name="Users" size={16} />
                     <span>Team Building Services</span>
                   </div>
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
+                  <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 sm:mb-6">
                     Build Stronger Teams with EITO Group
                   </h1>
-                  <p className="text-xl text-foreground max-w-3xl mx-auto leading-relaxed">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground max-w-3xl mx-auto leading-relaxed px-2">
                     Discover engaging workshops, custom events, and expert
                     coaching designed to boost collaboration, trust, and
                     performance in your organization.
@@ -361,23 +361,23 @@ const ConnectionHub = () => {
                 </motion.div>
               </div>
             </div>
-            <div className="mb-20">
+            <div className="mb-12 sm:mb-20">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-center mb-12"
+                className="text-center mb-8 sm:mb-12"
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 sm:mb-4">
                   Choose Your Preferred Method
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-xs sm:text-sm md:text-base text-muted-foreground px-2">
                   Multiple ways to reach out - pick what works best for you
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
                 {contactMethods.map((method, index) => (
                   <ContactMethodCard
                     key={method.id}
@@ -391,13 +391,13 @@ const ConnectionHub = () => {
               <QuickActions actions={quickActions} />
             </div>
 
-            <div className="mb-20">
+            <div className="mb-12 sm:mb-20">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="text-center mb-12"
+                className="text-center mb-8 sm:mb-12"
               >
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                   Connect on Social Media

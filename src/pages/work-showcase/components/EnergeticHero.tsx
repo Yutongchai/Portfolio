@@ -15,32 +15,32 @@ const EnergeticHero = () => {
   const floatingOrbs = [
     {
       size: 'w-96 h-96',
-      gradient: 'from-blue-500 via-cyan-500 to-blue-600',
+      gradient: 'from-primary/30 via-secondary/30 to-primary/40',
       position: 'top-20 -left-48',
       delay: 0,
     },
     {
       size: 'w-[500px] h-[500px]',
-      gradient: 'from-purple-500 via-pink-500 to-purple-600',
+      gradient: 'from-secondary/30 via-tertiary/30 to-secondary/40',
       position: 'top-1/3 -right-64',
       delay: 0.2,
     },
     {
       size: 'w-80 h-80',
-      gradient: 'from-cyan-400 via-blue-400 to-cyan-500',
+      gradient: 'from-tertiary/30 via-primary/30 to-tertiary/40',
       position: 'bottom-32 left-1/4',
       delay: 0.4,
     },
     {
       size: 'w-72 h-72',
-      gradient: 'from-green-400 via-emerald-400 to-green-500',
+      gradient: 'from-accent/20 via-primary/20 to-accent/30',
       position: 'bottom-20 right-1/4',
       delay: 0.6,
     },
   ];
 
   return (
-    <div ref={ref} className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-background via-slate-50 to-blue-50">
+    <div ref={ref} className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-background via-primary/5 to-secondary/10">
       {/* Animated Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden">
         {floatingOrbs.map((orb, index) => (
@@ -63,11 +63,11 @@ const EnergeticHero = () => {
 
         {/* Animated Grid Pattern */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
-              linear-gradient(to right, #3B82F6 1px, transparent 1px),
-              linear-gradient(to bottom, #3B82F6 1px, transparent 1px)
+              linear-gradient(to right, var(--color-primary) 1px, transparent 1px),
+              linear-gradient(to bottom, var(--color-primary) 1px, transparent 1px)
             `,
             backgroundSize: '64px 64px'
           }}
@@ -77,19 +77,19 @@ const EnergeticHero = () => {
       {/* Main Content */}
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center"
+        className="relative z-10 flex flex-col items-center justify-center min-h-screen px-3 sm:px-6 text-center"
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto w-full">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center space-x-2 mb-8"
+            className="inline-flex items-center space-x-2 mb-6 sm:mb-8"
           >
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-electric rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-butter" />
-              <div className="relative glass px-6 py-3 rounded-full flex items-center space-x-2">
+              <div className="relative glass px-4 sm:px-6 py-2 sm:py-3 rounded-full flex items-center space-x-2">
             {/*     <Icon name="Sparkles" size={18} className="text-primary animate-pulse-glow" />
                */}
               </div>
@@ -101,9 +101,9 @@ const EnergeticHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold mb-6 leading-none"
+            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold mb-4 sm:mb-6 leading-none"
           >
-            <span className="inline-block animate-bounce-in text-gradient-vivid">
+            <span className="inline-block animate-bounce-in text-primary">
               Work Showcase
             </span>
           </motion.h1>
@@ -113,12 +113,12 @@ const EnergeticHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-muted-foreground mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed px-2 sm:px-4"
           >
             Crafting exceptional digital experiences with
-            <span className="text-gradient font-semibold"> creativity</span>,
-            <span className="text-gradient font-semibold"> innovation</span>, and
-            <span className="text-gradient font-semibold"> passion</span>
+            <span className="text-secondary font-semibold"> creativity</span>,
+            <span className="text-tertiary font-semibold"> innovation</span>, and
+            <span className="text-accent font-semibold"> passion</span>
           </motion.p>
 
           {/* Stats Cards */}
@@ -126,12 +126,12 @@ const EnergeticHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto mb-8 sm:mb-12 px-2 sm:px-4"
           >
             {[
-              { value: '50+', label: 'Projects Delivered', icon: 'Briefcase', gradient: 'from-blue-500 to-cyan-500' },
-              { value: '98%', label: 'Client Satisfaction', icon: 'Heart', gradient: 'from-purple-500 to-pink-500' },
-              { value: '24/7', label: 'Innovation Mode', icon: 'Zap', gradient: 'from-green-500 to-emerald-500' }
+              { value: '50+', label: 'Projects Delivered', icon: 'Briefcase', gradient: 'from-primary to-secondary' },
+              { value: '98%', label: 'Client Satisfaction', icon: 'Heart', gradient: 'from-secondary to-tertiary' },
+              { value: '24/7', label: 'Innovation Mode', icon: 'Zap', gradient: 'from-tertiary to-accent' }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -201,11 +201,11 @@ const EnergeticHero = () => {
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Scroll to explore
             </span>
-            <div className="w-6 h-10 rounded-full border-2 border-primary/30 flex items-start justify-center p-2">
+            <div className="w-6 h-10 rounded-full border-2 border-primary/50 flex items-start justify-center p-2">
               <motion.div
                 animate={{ y: [0, 12, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                className="w-1.5 h-1.5 bg-gradient-electric rounded-full"
+                className="w-1.5 h-1.5 bg-primary rounded-full"
               />
             </div>
           </motion.div>
@@ -219,10 +219,10 @@ const EnergeticHero = () => {
         transition={{ duration: 1, delay: 1 }}
         className="absolute inset-0 pointer-events-none"
       >
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-        <div className="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
-        <div className="absolute top-0 right-0 h-full w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
+        <div className="absolute top-0 right-0 h-full w-px bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
       </motion.div>
     </div>
   );

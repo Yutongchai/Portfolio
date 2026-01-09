@@ -1,8 +1,21 @@
 import React from "react";
 import Routes from "./Routes";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ContentProvider } from "./contexts/ContentContext";
+import { AdminProvider } from "./contexts/AdminContext";
+import AdminPanel from "./components/admin/AdminPanel";
 
 const App: React.FC = () => {
-  return <Routes />;
+  return (
+    <ThemeProvider>
+      <AdminProvider>
+        <ContentProvider>
+          <Routes />
+          <AdminPanel />
+        </ContentProvider>
+      </AdminProvider>
+    </ThemeProvider>
+  );
 };
 
 export default App;

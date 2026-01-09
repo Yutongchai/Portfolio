@@ -9,67 +9,99 @@ module.exports = {
   ],
   prefix: '',
   theme: {
+    screens: {
+      'xs': '320px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     container: {
       center: true,
-      padding: '2rem',
+      padding: {
+        'DEFAULT': '1rem',
+        'sm': '1rem',
+        'md': '1.5rem',
+        'lg': '2rem',
+        'xl': '2rem',
+        '2xl': '2rem',
+      },
       screens: {
+        'sm': '100%',
+        'md': '728px',
+        'lg': '984px',
+        'xl': '1240px',
         '2xl': '1400px',
       },
     },
     extend: {
       colors: {
-        border: 'var(--color-border)', /* gray-200 */
-        input: 'var(--color-input)', /* gray-200 */
-        ring: 'var(--color-ring)', /* gold */
-        background: 'var(--color-background)', /* gray-50 */
-        foreground: 'var(--color-foreground)', /* gray-900 */
+        // Foundation (60%) - Light backgrounds
+        border: 'var(--color-border)',
+        input: 'var(--color-input)',
+        ring: 'var(--color-ring)',
+        background: 'var(--color-background)',
+        foreground: 'var(--color-foreground)',
+        
+        // Primary (30%) - Main UI elements
+        // Citrus: #e1620b & #fcb22f | Jewel: #12a28f & #695da5
         primary: {
-          DEFAULT: 'var(--color-primary)', /* black */
-          foreground: 'var(--color-primary-foreground)', /* white */
+          DEFAULT: 'var(--color-primary)',
+          light: 'var(--color-primary-light)',
+          foreground: 'var(--color-primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--color-secondary)', /* gray-800 */
-          foreground: 'var(--color-secondary-foreground)', /* white */
+          DEFAULT: 'var(--color-secondary)',
+          foreground: 'var(--color-secondary-foreground)',
         },
+        
+        // Accent (10%) - Buttons, notifications, links
+        // #ee424c (red) & #0074b4 (blue)
+        accent: {
+          DEFAULT: 'var(--color-accent)',
+          secondary: 'var(--color-accent-secondary)',
+          foreground: 'var(--color-accent-foreground)',
+        },
+        
+        // Supporting colors
         destructive: {
-          DEFAULT: 'var(--color-destructive)', /* red-500 */
-          foreground: 'var(--color-destructive-foreground)', /* white */
+          DEFAULT: 'var(--color-error)',
+          foreground: 'var(--color-error-foreground)',
         },
         muted: {
-          DEFAULT: 'var(--color-muted)', /* gray-100 */
-          foreground: 'var(--color-muted-foreground)', /* gray-500 */
-        },
-        accent: {
-          DEFAULT: 'var(--color-accent)', /* gold */
-          foreground: 'var(--color-accent-foreground)', /* black */
+          DEFAULT: 'var(--color-muted)',
+          foreground: 'var(--color-muted-foreground)',
         },
         popover: {
-          DEFAULT: 'var(--color-popover)', /* white */
-          foreground: 'var(--color-popover-foreground)', /* gray-900 */
+          DEFAULT: 'var(--color-popover)',
+          foreground: 'var(--color-popover-foreground)',
         },
         card: {
-          DEFAULT: 'var(--color-card)', /* white */
-          foreground: 'var(--color-card-foreground)', /* gray-900 */
+          DEFAULT: 'var(--color-card)',
+          foreground: 'var(--color-card-foreground)',
         },
         success: {
-          DEFAULT: 'var(--color-success)', /* green-500 */
-          foreground: 'var(--color-success-foreground)', /* white */
+          DEFAULT: 'var(--color-success)',
+          foreground: 'var(--color-success-foreground)',
         },
         warning: {
-          DEFAULT: 'var(--color-warning)', /* amber-500 */
-          foreground: 'var(--color-warning-foreground)', /* black */
+          DEFAULT: 'var(--color-warning)',
+          foreground: 'var(--color-warning-foreground)',
         },
         error: {
-          DEFAULT: 'var(--color-error)', /* red-500 */
-          foreground: 'var(--color-error-foreground)', /* white */
-        },
-        trust: {
-          DEFAULT: 'var(--color-trust)', /* slate-700 */
-          foreground: 'var(--color-trust-foreground)', /* white */
+          DEFAULT: 'var(--color-error)',
+          foreground: 'var(--color-error-foreground)',
         },
         cta: {
-          DEFAULT: 'var(--color-cta)', /* dark-goldenrod */
-          foreground: 'var(--color-cta-foreground)', /* white */
+          DEFAULT: 'var(--color-cta)',
+          foreground: 'var(--color-cta-foreground)',
+        },
+        
+        // Legacy support
+        trust: {
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
         },
       },
       borderRadius: {
@@ -82,8 +114,21 @@ module.exports = {
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'hero': ['4rem', { lineHeight: '1.1', fontWeight: '700' }],
-        'tagline': ['1.5rem', { lineHeight: '1.5', fontWeight: '500' }],
+        'xs': ['0.75rem', { lineHeight: '1rem' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base': ['1rem', { lineHeight: '1.5rem' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '5xl': ['3rem', { lineHeight: '1' }],
+        '6xl': ['3.75rem', { lineHeight: '1' }],
+        '7xl': ['4.5rem', { lineHeight: '1' }],
+        '8xl': ['6rem', { lineHeight: '1' }],
+        '9xl': ['8rem', { lineHeight: '1' }],
+        'hero': ['clamp(2rem, 8vw, 4rem)', { lineHeight: '1.1', fontWeight: '700' }],
+        'tagline': ['clamp(1rem, 4vw, 1.5rem)', { lineHeight: '1.5', fontWeight: '500' }],
       },
       spacing: {
         '18': '4.5rem',

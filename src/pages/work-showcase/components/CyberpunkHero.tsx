@@ -24,7 +24,17 @@ const CyberpunkHero: React.FC = () => {
 
   useEffect(() => {
     const particleCount = 50;
-    const colors = ['#00ffff', '#ff00ff', '#0066ff', '#ff00aa', '#00ff88'];
+    // Get theme colors from CSS variables
+    const getColor = (varName: string) => {
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    };
+    
+    const colors = [
+      getColor('--color-primary') || '#fcb22f',
+      getColor('--color-secondary') || '#e1620b',
+      getColor('--color-tertiary') || '#12a28f',
+      getColor('--color-accent') || '#ee424c'
+    ];
     
     const newParticles: Particle[] = Array.from({ length: particleCount }, (_, i) => ({
       id: i,
@@ -82,10 +92,11 @@ const CyberpunkHero: React.FC = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 150) {
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.2 - distance / 750})`;
+            ctx.strokeStyle = `${primaryColor}${Math.floor((0.2 - distance / 750) * 255).toString(16).padStart(2, '0')}`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -126,7 +137,7 @@ const CyberpunkHero: React.FC = () => {
       <motion.div
         className="absolute w-96 h-96 rounded-full blur-3xl opacity-30 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, var(--color-neon-cyan) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)',
           x: mouseXSpring,
           y: mouseYSpring,
           translateX: '-50%',
@@ -137,7 +148,7 @@ const CyberpunkHero: React.FC = () => {
       <motion.div
         className="absolute w-80 h-80 rounded-full blur-3xl opacity-25 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, var(--color-neon-magenta) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, var(--color-secondary) 0%, transparent 70%)',
           x: mouseXSpring,
           y: mouseYSpring,
           translateX: '-30%',
@@ -173,7 +184,7 @@ const CyberpunkHero: React.FC = () => {
             className="text-7xl lg:text-9xl font-black mb-6 relative"
             data-text="WORK SHOWCASE"
           >
-            <span className="glitch glow-text-cyan text-primary">
+            <span className="glitch text-primary font-black">
               WORK SHOWCASE
             </span>
           </motion.h1>
@@ -186,7 +197,7 @@ const CyberpunkHero: React.FC = () => {
             className="text-2xl lg:text-3xl text-foreground/80 mb-12 font-light tracking-wide"
           >
             Cutting-Edge Digital Experiences
-            <span className="text-accent glow-text-magenta"> // </span>
+            <span className="text-secondary font-bold"> // </span>
             Where Innovation Meets Design
           </motion.p>
 
@@ -208,7 +219,7 @@ const CyberpunkHero: React.FC = () => {
                 className="border border-primary/30 rounded-sm p-6 bg-card/50 backdrop-blur-sm hover-glow cursor-pointer"
               >
                 <Icon name={stat.icon as any} size={32} className="text-accent mb-3 mx-auto" />
-                <div className="text-4xl font-bold text-primary glow-text-cyan mb-2">
+                <div className="text-4xl font-bold text-primary mb-2">
                   {stat.value}
                 </div>
                 <div className="text-sm text-muted-foreground uppercase tracking-wider">
@@ -262,8 +273,8 @@ const CyberpunkHero: React.FC = () => {
             transition={{ repeat: Infinity, duration: 2 }}
             className="flex flex-col items-center space-y-2"
           >
-            <div className="w-px h-16 bg-gradient-to-b from-transparent via-accent to-transparent" />
-            <Icon name="MousePointer" size={24} className="text-accent" />
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary to-transparent" />
+            <Icon name="MousePointer" size={24} className="text-primary" />
           </motion.div>
         </motion.div>
       </div>
