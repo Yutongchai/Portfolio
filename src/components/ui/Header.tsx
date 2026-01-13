@@ -49,7 +49,7 @@ const Header = () => {
       }`}
     >
       <div className="w-full">
-        <div className="flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6 lg:px-12">
+        <div className="flex items-center justify-between h-20 sm:h-24 lg:h-28 px-3 sm:px-6 lg:px-12">
           <Link
             to="/"
             className="flex items-center space-x-2 sm:space-x-3 group flex-shrink-0"
@@ -114,7 +114,14 @@ const Header = () => {
               iconName="Mail"
               iconPosition="left"
               iconSize={18}
-              onClick={() => (window.location.href = '/connection-hub')}
+              onClick={() => {
+                const element = document.querySelector('[class*="Connect on Social Media"]')?.closest('div');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.location.href = '/Portfolio/connection-hub';
+                }
+              }}
             >
               Let's Talk
             </Button>
@@ -136,7 +143,7 @@ const Header = () => {
       </div>
 
       <div
-        className={`lg:hidden fixed inset-0 top-16 sm:top-20 bg-background/98 backdrop-blur-lg transition-all duration-300 overflow-y-auto ${
+        className={`lg:hidden fixed inset-0 top-20 sm:top-24 bg-background/98 backdrop-blur-lg transition-all duration-300 overflow-y-auto ${
           isMobileMenuOpen
             ? 'opacity-100 pointer-events-auto' :'opacity-0 pointer-events-none'
         }`}
@@ -178,7 +185,7 @@ const Header = () => {
               iconSize={20}
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                window.location.href = '/connection-hub';
+                window.location.href = '/Portfolio/connection-hub';
               }}
             >
               Start a Conversation

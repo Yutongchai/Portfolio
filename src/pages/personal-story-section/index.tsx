@@ -4,12 +4,12 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import Header from "../../components/ui/Header";
 import HeroSection from "./components/HeroSection";
 import CoreValuesSection from "./components/CoreValuesSection";
-import SkillsSection from "./components/SkillsSection";
+import ActivitiesSection from "./components/ActivitiesSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
 import ParallaxBackground from "./components/ParallaxBackground";
 import SectionWrapper from "./components/SectionWrapper";
-import { PersonalInfo, CoreValue, Skill, Journey, Philosophy } from "./types";
+import { PersonalInfo, CoreValue, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
   useEffect(() => {
@@ -69,21 +69,6 @@ const PersonalStorySection = () => {
     },
   ];
 
-  const skills: Skill[] = [
-    { id: 1, name: "Facilitation", level: 95, category: "Team Building" },
-    { id: 2, name: "Communication", level: 92, category: "Team Building" },
-    { id: 3, name: "Conflict Resolution", level: 90, category: "Team Building" },
-    { id: 4, name: "Event Planning", level: 88, category: "Organization" },
-    { id: 5, name: "Motivation", level: 93, category: "Team Building" },
-    { id: 6, name: "Problem Solving", level: 89, category: "Team Building" },
-    { id: 7, name: "Creativity", level: 87, category: "Engagement" },
-    { id: 8, name: "Empathy", level: 91, category: "Team Building" },
-    { id: 9, name: "Leadership", level: 94, category: "Organization" },
-    { id: 10, name: "Active Listening", level: 90, category: "Team Building" },
-    { id: 11, name: "Trust Building", level: 96, category: "Team Building" },
-    { id: 12, name: "Group Dynamics", level: 88, category: "Team Building" },
-  ];
-
   const journeys: Journey[] = [
     {
       id: 1,
@@ -130,18 +115,17 @@ const PersonalStorySection = () => {
   const philosophies: Philosophy[] = [
     {
       id: 1,
-      quote:
-        "Alone we can do so little; together we can do so much.",
+      quote: "Alone we can do so little; together we can do so much.",
       author: "Helen Keller",
       context:
         "This reminds us that teamwork multiplies our impact and helps us achieve what we couldn't do alone.",
     },
     {
       id: 2,
-      quote: "Coming together is a beginning. Keeping together is progress. Working together is success.",
+      quote:
+        "Coming together is a beginning. Keeping together is progress. Working together is success.",
       author: "Henry Ford",
-      context:
-        "True success is built on ongoing collaboration and unity.",
+      context: "True success is built on ongoing collaboration and unity.",
     },
     {
       id: 3,
@@ -160,10 +144,10 @@ const PersonalStorySection = () => {
     },
     {
       id: 5,
-      quote: "Great things in business are never done by one person. They're done by a team of people.",
+      quote:
+        "Great things in business are never done by one person. They're done by a team of people.",
       author: "Steve Jobs",
-      context:
-        "We celebrate the achievements that come from working together.",
+      context: "We celebrate the achievements that come from working together.",
     },
     {
       id: 6,
@@ -194,7 +178,7 @@ const PersonalStorySection = () => {
         </SectionWrapper>
 
         <SectionWrapper delay={0.2}>
-          <SkillsSection skills={skills} />
+          <ActivitiesSection />
         </SectionWrapper>
 
         <SectionWrapper delay={0.3}>
