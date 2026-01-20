@@ -1,7 +1,7 @@
-import { motion } from "framer-motion";
-import Image from "../../../components/AppImage";
-import Icon from "../../../components/AppIcon";
-import Button from "../../../components/ui/Button";
+import { motion } from 'framer-motion';
+import Image from '../../../components/AppImage';
+import Icon from '../../../components/AppIcon';
+import Button from '../../../components/ui/Button';
 import { Activity } from '../types/activities';
 
 interface ActivityCardProps {
@@ -11,12 +11,7 @@ interface ActivityCardProps {
   getCategoryColor: (category: string) => string;
 }
 
-const ActivityCard = ({
-  activity,
-  index,
-  onViewMore,
-  getCategoryColor,
-}: ActivityCardProps) => {
+const ActivityCard = ({ activity, index, onViewMore, getCategoryColor }: ActivityCardProps) => {
   return (
     <motion.div
       className="relative bg-background rounded-3xl shadow-xl overflow-hidden card-hover group"
@@ -26,7 +21,7 @@ const ActivityCard = ({
       transition={{
         duration: 0.6,
         delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94]
       }}
     >
       {/* Featured Badge */}
@@ -47,11 +42,7 @@ const ActivityCard = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
         {/* Category Chip */}
-        <div
-          className={`absolute top-4 left-4 bg-gradient-to-r ${getCategoryColor(
-            activity.category
-          )} text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg`}
-        >
+        <div className={`absolute top-4 left-4 bg-gradient-to-r ${getCategoryColor(activity.category)} text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg`}>
           {activity.category}
         </div>
 
@@ -84,9 +75,7 @@ const ActivityCard = ({
           </div>
           <div className="flex items-center space-x-2">
             <Icon name="Users" size={16} className="text-accent" />
-            <span>
-              {activity.min_participants}-{activity.max_participants} people
-            </span>
+            <span>{activity.min_participants}-{activity.max_participants} people</span>
           </div>
         </div>
 

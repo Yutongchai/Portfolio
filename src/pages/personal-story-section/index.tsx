@@ -5,10 +5,12 @@ import Header from "../../components/ui/Header";
 import HeroSection from "./components/HeroSection";
 import CoreValuesSection from "./components/CoreValuesSection";
 import ActivitiesSection from "./components/ActivitiesSection";
+import ActivitiesSection from "./components/ActivitiesSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
 import ParallaxBackground from "./components/ParallaxBackground";
 import SectionWrapper from "./components/SectionWrapper";
+import { PersonalInfo, CoreValue, Journey, Philosophy } from "./types";
 import { PersonalInfo, CoreValue, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
@@ -178,6 +180,7 @@ const PersonalStorySection = () => {
         </SectionWrapper>
 
         <SectionWrapper delay={0.2}>
+          <ActivitiesSection />
           <ActivitiesSection />
         </SectionWrapper>
 

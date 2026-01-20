@@ -68,15 +68,14 @@ const ActivityModal = ({ activity, isOpen, onClose }: ActivityModalProps) => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 overflow-y-auto"
           >
-            <div className="min-h-screen px-4 py-8 flex items-start justify-center" onClick={onClose}>
-              <div className="relative w-full max-w-4xl bg-background rounded-2xl shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="min-h-screen px-4 py-8 flex items-start justify-center">
+              <div className="relative w-full max-w-4xl bg-background rounded-2xl shadow-2xl">
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 z-10 p-2 bg-background/80 backdrop-blur-sm rounded-full hover:bg-muted transition-colors duration-300 group"
-                  aria-label="Close modal (ESC)"
-                  title="Close (ESC)"
+                  className="absolute top-4 right-4 z-10 p-2 bg-background/80 backdrop-blur-sm rounded-full hover:bg-muted transition-colors duration-300"
+                  aria-label="Close modal"
                 >
-                  <Icon name="X" size={24} className="text-foreground group-hover:text-accent transition-colors" />
+                  <Icon name="X" size={24} className="text-foreground" />
                 </button>
 
                 {/* Image Header */}
