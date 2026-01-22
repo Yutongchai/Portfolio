@@ -1,5 +1,6 @@
 import React from "react";
 import Routes from "./Routes";
+import supabase from "./config/supabaseClient";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ContentProvider } from "./contexts/ContentContext";
 import { AdminProvider } from "./contexts/AdminContext";

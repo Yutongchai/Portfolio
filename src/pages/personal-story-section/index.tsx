@@ -1,19 +1,23 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import myPhoto from "../../components/mainPic.jpg";
 import { motion, useScroll, useSpring } from "framer-motion";
-import Header from "../../components/ui/Header";
+import PillNav from "../../components/ui/PillNav";
+import Footer from "../../components/ui/Footer";
+import LogoImg from "../../components/Logo.png";
 import HeroSection from "./components/HeroSection";
-import CoreValuesSection from "./components/CoreValuesSection";
-import ActivitiesSection from "./components/ActivitiesSection";
-import ActivitiesSection from "./components/ActivitiesSection";
+import BeliefsValuesSection from "./components/BeliefsValuesSection";
+import SolutionsSection from "./components/SolutionsSection";
+import OurRoleSection from "./components/OurRoleSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
-import ParallaxBackground from "./components/ParallaxBackground";
 import SectionWrapper from "./components/SectionWrapper";
-import { PersonalInfo, CoreValue, Journey, Philosophy } from "./types";
-import { PersonalInfo, CoreValue, Journey, Philosophy } from "./types";
+import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
+  const location = useLocation();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
     // Enable smooth scrolling
@@ -33,43 +37,13 @@ const PersonalStorySection = () => {
 
   const personalInfo: PersonalInfo = {
     name: "EITO Group",
-    title: "Team Building & Collaboration Experts",
-    tagline: "Building stronger teams, one connection at a time",
-    bio: "At EITO Group, we believe that the foundation of every successful organization is a united, motivated, and collaborative team. With years of experience in designing and facilitating engaging team-building experiences, our mission is to help groups unlock their full potential, foster trust, and create lasting bonds that drive collective success.",
+    title:
+      "We Build Unforgettable Team Experiences — For People, For Culture, For Growth.",
+    tagline: " ",
+    bio: "When people connect, companies grow. ",
     image: myPhoto, // Use your local image
     alt: "A diverse group of professionals participating in a fun team-building activity, smiling and collaborating together.",
   };
-
-  const coreValues: CoreValue[] = [
-    {
-      id: 1,
-      icon: "Users",
-      title: "Collaboration",
-      description:
-        "We believe that the best results come from working together, sharing ideas, and supporting one another as a team.",
-    },
-    {
-      id: 2,
-      icon: "Sparkles",
-      title: "Engagement",
-      description:
-        "Our activities are designed to energize, inspire, and involve every participant, making teamwork fun and memorable.",
-    },
-    {
-      id: 3,
-      icon: "Lightbulb",
-      title: "Growth Mindset",
-      description:
-        "We encourage continuous learning, open communication, and embracing challenges as opportunities to grow together.",
-    },
-    {
-      id: 4,
-      icon: "Heart",
-      title: "Trust & Respect",
-      description:
-        "We foster an environment where every voice is valued, and trust is built through honesty, empathy, and mutual respect.",
-    },
-  ];
 
   const journeys: Journey[] = [
     {
@@ -161,38 +135,62 @@ const PersonalStorySection = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <>
+      <Helmet>
+        <title>EITO Group</title>
+        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
+      </Helmet>
+      <div className="min-h-screen bg-background relative">
       {/* Progress bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
         style={{ scaleX }}
       />
 
-      <ParallaxBackground />
-
-      <Header />
+      <PillNav
+        logo={LogoImg}
+        logoAlt="EITO Group Logo"
+        items={[
+          { label: 'Story', href: '/personal-story-section' },
+          { label: 'Work', href: '/work-showcase' },
+          { label: 'Connect', href: '/connection-hub' }
+        ]}
+        activeHref={location.pathname}
+        ease="power2.easeOut"
+        baseColor="#000000"
+        pillColor="#ffffff"
+        hoveredPillTextColor="#000000"
+        pillTextColor="#000000"
+        initialLoadAnimation={false}
+      />
 
       <main className="pt-20 relative z-10">
         <HeroSection personalInfo={personalInfo} />
 
         <SectionWrapper delay={0.1}>
-          <CoreValuesSection values={coreValues} />
+          <BeliefsValuesSection />
         </SectionWrapper>
 
         <SectionWrapper delay={0.2}>
-          <ActivitiesSection />
-          <ActivitiesSection />
+          <SolutionsSection />
         </SectionWrapper>
 
-        <SectionWrapper delay={0.3}>
-          <JourneySection journeys={journeys} />
+        <SectionWrapper delay={0.25}>
+          <OurRoleSection />
         </SectionWrapper>
+
+   {/*      <SectionWrapper delay={0.3}>
+          <JourneySection journeys={journeys} />
+        </SectionWrapper> */}
 
         <SectionWrapper delay={0.4}>
           <PhilosophySection philosophies={philosophies} />
         </SectionWrapper>
       </main>
-    </div>
+
+      <Footer />
+      </div>
+    </>
   );
 };
 

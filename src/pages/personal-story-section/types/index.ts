@@ -9,7 +9,8 @@ export interface PersonalInfo {
 
 export interface CoreValue {
   id: number;
-  icon: string;
+  icon?: string;
+  emoji?: string;
   title: string;
   description: string;
 }

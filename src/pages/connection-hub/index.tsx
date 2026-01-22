@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
-import Header from "../../components/ui/Header";
+import PillNav from "../../components/ui/PillNav";
+import Footer from "../../components/ui/Footer";
 import Icon from "../../components/AppIcon";
+import LogoImg from "../../components/Logo.png";
 import ContactMethodCard from "./components/ContactMethodCard";
 import SocialMediaGrid from "./components/SocialMediaGrid";
 import TestimonialCard from "./components/TestimonialCard";
@@ -21,6 +24,8 @@ import {
 } from "./types";
 
 const ConnectionHub = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const contactMethods: ContactMethod[] = [
@@ -225,7 +230,7 @@ const ConnectionHub = () => {
       icon: "Image",
       description: "See photos and videos from past events",
       action: () => {
-        window.location.href = "/Portfolio/work-showcase";
+        navigate("/work-showcase");
       },
     },
     {
@@ -288,7 +293,8 @@ const ConnectionHub = () => {
   return (
     <>
       <Helmet>
-        <title>EITO Group - Team Building Services</title>
+        <title>EITO Group</title>
+        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
         <meta
           name="description"
           content="Contact EITO Group for team building workshops, custom events, and corporate training. Multiple ways to connect and book your next team experience."
@@ -300,7 +306,22 @@ const ConnectionHub = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <Header />
+        <PillNav
+          logo={LogoImg}
+          logoAlt="EITO Group Logo"
+          items={[
+            { label: 'Story', href: '/personal-story-section' },
+            { label: 'Work', href: '/work-showcase' },
+            { label: 'Connect', href: '/connection-hub' }
+          ]}
+          activeHref={location.pathname}
+          ease="power2.easeOut"
+          baseColor="#000000"
+          pillColor="#ffffff"
+          hoveredPillTextColor="#000000"
+          pillTextColor="#000000"
+          initialLoadAnimation={false}
+        />
 
         {showSuccessMessage && (
           <motion.div
@@ -517,92 +538,7 @@ const ConnectionHub = () => {
           </div>
         </main>
 
-        <footer className="border-t border-border bg-card">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              <div>
-                <h3 className="text-lg font-bold text-foreground mb-4">
-                  Quick Links
-                </h3>
-                <ul className="space-y-2">
-                  <li>
-                    <a
-                      href="/personal-story-section"
-                      className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                    >
-                      About Me
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/work-showcase"
-                      className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                    >
-                      Portfolio
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/connection-hub"
-                      className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                    >
-                      Contact
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-foreground mb-4">
-                  Contact Info
-                </h3>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-center space-x-2">
-                    <Icon name="Mail" size={16} />
-                    <span>hello@portfolio.com</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <Icon name="Phone" size={16} />
-                    <span>+1 (555) 123-4567</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <Icon name="MapPin" size={16} />
-                    <span>San Francisco, CA</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-bold text-foreground mb-4">
-                  Follow Me
-                </h3>
-                <div className="flex items-center space-x-4">
-                  {socialLinks.slice(0, 4).map((social) => (
-                    <a
-                      key={social.id}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-lg bg-muted hover:bg-accent/10 flex items-center justify-center transition-all duration-300 hover:scale-110"
-                    >
-                      <Icon
-                        name={social.icon}
-                        size={20}
-                        className="text-foreground hover:text-accent"
-                      />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8 border-t border-border text-center text-muted-foreground text-sm">
-              <p>
-                © {new Date().getFullYear()} Portfolio. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

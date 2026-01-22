@@ -1,16 +1,15 @@
 
-import { useState, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import Header from '../../components/ui/Header';
-import Icon from '../../components/AppIcon';
+import { Carousel, Card } from './components/ProjectCarousel';
 import EnergeticHero from './components/EnergeticHero';
-import ProjectCard from './components/ProjectCard';
-import ProjectModal from './components/ProjectModal';
-import ProjectFilters from './components/ProjectFilters';
-import ProjectStats from './components/ProjectStats';
-import { Project, FilterOption, SortOption } from './types';
+import { Project } from './types';
 import { Button } from '../../components/ui/Button';
+import PillNav from '../../components/ui/PillNav';
+import Footer from '../../components/ui/Footer';
+import LogoImg from '../../components/Logo.png';
+import Icon from '../../components/AppIcon';
 
 // Import images and video as ES modules
 import differentImg from '../../components/different.jpg';
@@ -18,15 +17,13 @@ import collageImg from '../../components/collage.jpg';
 import mainPicImg from '../../components/mainPic.jpg';
 import trainingImg from '../../components/training.jpg';
 import discussImg from '../../components/discuss.jpg';
-const stationGamesVideo = '/Portfolio/station_games.mp4';
+import stationGamesVideo from '../../components/station_games.mp4';
 import teamworkImg from '../../components/teamwork.jpg';
 
 
 const WorkShowcase = () => {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const projects: Project[] = [
     {
@@ -133,69 +130,137 @@ const WorkShowcase = () => {
     }
   ];
 
+  const cards = projects.map((project) => ({
+    src: project.image,
+    title: project.title,
+    category: project.category,
+    content: (
+      <div className="space-y-6">
+        <p className="text-base text-neutral-600 dark:text-neutral-400">
+          {project.longDescription}
+        </p>
+        
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div>
+            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Client</h4>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.client}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Duration</h4>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.duration}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Year</h4>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.year}</p>
+          </div>
+        </div>
 
-  const categories: FilterOption[] = useMemo(() => {
-    const categoryMap = new Map<string, number>();
+        <div>
+          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Challenge</h4>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.challenge}</p>
+        </div>
 
-    projects.forEach((project) => {
-      const count = categoryMap.get(project.category) || 0;
-      categoryMap.set(project.category, count + 1);
-    });
+        <div>
+          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Solution</h4>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.solution}</p>
+        </div>
 
-    return Array.from(categoryMap.entries()).map(([value, count]) => ({
-      value,
-      label: value,
-      count
-    }));
-  }, [projects]);
+        <div>
+          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Outcome</h4>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">{project.outcome}</p>
+        </div>
 
-  const filteredProjects = useMemo(() => {
-    let filtered = projects;
+        {project.metrics && (
+          <div className="grid grid-cols-2 gap-4">
+            {project.metrics.map((metric, idx) => (
+              <div key={idx} className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4">
+                <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{metric.value}</p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">{metric.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(
-        (project) => project.category === selectedCategory
-      );
-    }
+        {project.testimonial && (
+          <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg p-6 mt-6">
+            <p className="text-sm italic text-neutral-700 dark:text-neutral-300 mb-4">
+              "{project.testimonial.quote}"
+            </p>
+            <div className="flex items-center gap-3">
+              <img 
+                src={project.testimonial.avatar} 
+                alt={project.testimonial.author}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <div>
+                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                  {project.testimonial.author}
+                </p>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                  {project.testimonial.position} at {project.testimonial.company}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-    switch (sortBy) {
-      case 'recent':
-        return filtered.sort((a, b) => b.year.localeCompare(a.year));
-      case 'featured':
-        return filtered.sort((a, b) => {
-          if (a.featured && !b.featured) return -1;
-          if (!a.featured && b.featured) return 1;
-          return 0;
-        });
-      case 'alphabetical':
-        return filtered.sort((a, b) => a.title.localeCompare(b.title));
-      default:
-        return filtered;
-    }
-  }, [projects, selectedCategory, sortBy]);
-
-  const handleViewDetails = (project: Project) => {
-    setSelectedProject(project);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300);
-  };
+        {project.gallery && project.gallery.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            {project.gallery.map((item, idx) => (
+              <div key={idx} className="rounded-lg overflow-hidden">
+                {item.url.endsWith('.mp4') ? (
+                  <video 
+                    src={item.url} 
+                    controls 
+                    className="w-full h-48 object-cover"
+                  />
+                ) : (
+                  <img 
+                    src={item.url} 
+                    alt={item.alt}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                {item.caption && (
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 text-center">
+                    {item.caption}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ),
+  }));
 
   return (
     <>
       <Helmet>
-        <title>Work Showcase - Portfolio</title>
+        <title>EITO Group</title>
+        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
         <meta
           name="description"
-          content="Explore my portfolio of web development projects, mobile applications, and digital solutions. View detailed case studies and technical implementations." />
-
+          content="Explore our portfolio of team building projects and corporate services. View detailed case studies and successful implementations." />
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <Header />
+        <PillNav
+          logo={LogoImg}
+          logoAlt="EITO Group Logo"
+          items={[
+            { label: 'Story', href: '/personal-story-section' },
+            { label: 'Work', href: '/work-showcase' },
+            { label: 'Connect', href: '/connection-hub' }
+          ]}
+          activeHref={location.pathname}
+          ease="power2.easeOut"
+          baseColor="#000000"
+          pillColor="#ffffff"
+          hoveredPillTextColor="#000000"
+          pillTextColor="#000000"
+          initialLoadAnimation={false}
+        />
 
         <EnergeticHero />
 
@@ -223,56 +288,9 @@ const WorkShowcase = () => {
               </p>
             </motion.div>
 
-            <ProjectStats
-              totalProjects={projects.length}
-              filteredCount={filteredProjects.length}
-              categories={categories.length} />
-
-
-            <ProjectFilters
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-              sortBy={sortBy}
-              onSortChange={setSortBy} />
-
-
-            {filteredProjects.length > 0 ?
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                {filteredProjects.map((project) =>
-              <ProjectCard
-                key={project.id}
-                project={project}
-                onViewDetails={handleViewDetails} />
-
-              )}
-              </div> :
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12 sm:py-20">
-
-                <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-muted rounded-full mb-4 sm:mb-6">
-                  <Icon name="Search" size={40} className="text-muted-foreground w-8 sm:w-10 h-8 sm:h-10" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                  No Projects Found
-                </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
-                  Try adjusting your filters to see more results
-                </p>
-                <Button
-                variant="outline"
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSortBy('featured');
-                }}>
-
-                  Reset Filters
-                </Button>
-              </motion.div>
-            }
+            <Carousel items={cards.map((card, index) => (
+              <Card key={card.title} card={card} index={index} layout={true} />
+            ))} />
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -295,7 +313,7 @@ const WorkShowcase = () => {
                   className="bg-accent hover:bg-cta text-accent-foreground font-semibold text-sm sm:text-base"
                   iconName="Mail"
                   iconPosition="right"
-                  onClick={() => window.location.href = '/connection-hub'}>
+                  onClick={() => navigate('/connection-hub')}>
 
                   Start a Conversation
                 </Button>
@@ -304,13 +322,10 @@ const WorkShowcase = () => {
           </div>
         </main>
 
-        <ProjectModal
-          project={selectedProject}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal} />
-
+        <Footer />
       </div>
-    </>);
+    </>
+  );
 
 };
 

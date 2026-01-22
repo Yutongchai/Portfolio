@@ -1,0 +1,102 @@
+.client-dome-root {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  --radius: 520px;
+  --circ: calc(var(--radius) * 3.14);
+  --rot-y: calc((360deg / var(--segments-x)) / 2);
+  --rot-x: calc((360deg / var(--segments-y)) / 2);
+  --item-width: calc(var(--circ) / var(--segments-x));
+  --item-height: calc(var(--circ) / var(--segments-y));
+}
+
+.client-dome-root * {
+  box-sizing: border-box;
+}
+
+.client-dome-sphere,
+.client-dome-item,
+.client-dome-item__image {
+  transform-style: preserve-3d;
+}
+
+.client-dome-main {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  background: transparent;
+}
+
+.client-dome-stage {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  perspective: calc(var(--radius) * 2);
+  perspective-origin: 50% 50%;
+  contain: layout paint size;
+}
+
+.client-dome-sphere {
+  transform: translateZ(calc(var(--radius) * -1));
+  will-change: transform;
+}
+
+.client-dome-overlay,
+.client-dome-overlay--blur {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.client-dome-overlay {
+  background-image: radial-gradient(rgba(255, 255, 255, 0) 65%, #ffffff 100%);
+}
+
+.client-dome-overlay--blur {
+  -webkit-mask-image: radial-gradient(rgba(255, 255, 255, 0) 70%, #ffffff 90%);
+  mask-image: radial-gradient(rgba(255, 255, 255, 0) 70%, #ffffff 90%);
+  backdrop-filter: blur(3px);
+}
+
+.client-dome-item {
+  width: calc(var(--item-width) * var(--item-size-x));
+  height: calc(var(--item-height) * var(--item-size-y));
+  position: absolute;
+  top: -999px;
+  bottom: -999px;
+  left: -999px;
+  right: -999px;
+  margin: auto;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+
+.client-dome-item__image {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inset: 10px;
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+  backface-visibility: hidden;
+  padding: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.client-dome-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  backface-visibility: hidden;
+  filter: var(--image-filter, none);
+}

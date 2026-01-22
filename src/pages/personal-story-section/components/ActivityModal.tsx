@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
@@ -12,6 +13,8 @@ interface ActivityModalProps {
 }
 
 const ActivityModal = ({ activity, isOpen, onClose }: ActivityModalProps) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -170,7 +173,7 @@ const ActivityModal = ({ activity, isOpen, onClose }: ActivityModalProps) => {
                       className="bg-accent hover:bg-cta text-accent-foreground font-semibold"
                       iconName="Calendar"
                       iconPosition="left"
-                      onClick={() => window.location.href = '/Portfolio/connection-hub'}
+                      onClick={() => navigate('/connection-hub')}
                     >
                       Book This Activity
                     </Button>
@@ -180,7 +183,7 @@ const ActivityModal = ({ activity, isOpen, onClose }: ActivityModalProps) => {
                       className="sm:w-auto"
                       iconName="Mail"
                       iconPosition="left"
-                      onClick={() => window.location.href = '/Portfolio/connection-hub'}
+                      onClick={() => navigate('/connection-hub')}
                     >
                       Ask a Question
                     </Button>
