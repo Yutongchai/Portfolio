@@ -17,7 +17,7 @@ import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
   const location = useLocation();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
     // Enable smooth scrolling
@@ -40,7 +40,7 @@ const PersonalStorySection = () => {
     title:
       "We Build Unforgettable Team Experiences — For People, For Culture, For Growth.",
     tagline: " ",
-    bio: "When people connect, companies grow. ",
+    bio: " When people connect, companies grow. ",
     image: myPhoto, // Use your local image
     alt: "A diverse group of professionals participating in a fun team-building activity, smiling and collaborating together.",
   };
@@ -141,54 +141,93 @@ const PersonalStorySection = () => {
         <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
       </Helmet>
       <div className="min-h-screen bg-background relative">
-      {/* Progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
-        style={{ scaleX }}
-      />
+        {/* Progress bar */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
+          style={{ scaleX }}
+        />
 
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: 'Story', href: '/personal-story-section' },
-          { label: 'Work', href: '/work-showcase' },
-          { label: 'Connect', href: '/connection-hub' }
-        ]}
-        activeHref={location.pathname}
-        ease="power2.easeOut"
-        baseColor="#000000"
-        pillColor="#ffffff"
-        hoveredPillTextColor="#000000"
-        pillTextColor="#000000"
-        initialLoadAnimation={false}
-      />
+        <PillNav
+          logo={LogoImg}
+          logoAlt="EITO Group Logo"
+          items={[
+            { label: "Story", href: "/personal-story-section" },
+            { label: "Work", href: "/work-showcase" },
+            { label: "Connect", href: "/connection-hub" },
+          ]}
+          activeHref={location.pathname}
+          ease="power2.easeOut"
+          baseColor="#000000"
+          pillColor="#ffffff"
+          hoveredPillTextColor="#000000"
+          pillTextColor="#000000"
+          initialLoadAnimation={false}
+        />
 
-      <main className="pt-20 relative z-10">
-        <HeroSection personalInfo={personalInfo} />
+        <main className="pt-20 relative z-10">
+          <HeroSection personalInfo={personalInfo} />
 
-        <SectionWrapper delay={0.1}>
-          <BeliefsValuesSection />
-        </SectionWrapper>
+          <SectionWrapper delay={0.1}>
+            <BeliefsValuesSection />
+          </SectionWrapper>
 
-        <SectionWrapper delay={0.2}>
-          <SolutionsSection />
-        </SectionWrapper>
+          <SectionWrapper delay={0.2}>
+            <SolutionsSection />
+          </SectionWrapper>
 
-        <SectionWrapper delay={0.25}>
-          <OurRoleSection />
-        </SectionWrapper>
+          <SectionWrapper delay={0.25}>
+            <OurRoleSection />
+          </SectionWrapper>
 
-   {/*      <SectionWrapper delay={0.3}>
+          {/*      <SectionWrapper delay={0.3}>
           <JourneySection journeys={journeys} />
         </SectionWrapper> */}
 
-        <SectionWrapper delay={0.4}>
-          <PhilosophySection philosophies={philosophies} />
-        </SectionWrapper>
-      </main>
+          <SectionWrapper delay={0.4}>
+            <PhilosophySection philosophies={philosophies} />
+          </SectionWrapper>
 
-      <Footer />
+         {/*  <SectionWrapper delay={0.5}>
+            <div className="py-20 px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="max-w-4xl mx-auto text-center"
+              >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
+                  Ready to See What We've Done?
+                </h2>
+                <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
+                  Explore our portfolio of memorable team experiences, successful workshops, and transformative events.
+                </p>
+                <a
+                  href="/work-showcase"
+                  className="inline-flex items-center justify-center space-x-2 bg-accent hover:bg-primary text-accent-foreground font-semibold px-10 py-5 rounded-xl shadow-button hover:shadow-accent transition-all duration-300 hover:scale-105 text-lg"
+                >
+                  <span>View Our Work</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </a>
+              </motion.div>
+            </div>
+          </SectionWrapper> */}
+        </main>
+
+        <Footer />
       </div>
     </>
   );

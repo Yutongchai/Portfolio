@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
 import { useContent } from '../../../contexts/ContentContext';
 import InlineTextEditor from '../../../components/admin/InlineTextEditor';
-import Ballpit from './Ballpit';
+import RotatingText from './RotatingText';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -22,18 +22,47 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.6]);
 
+  // Background image slideshow
+  const backgroundImages = [
+    '/Portfolio/_JIN3046.jpg',
+    '/Portfolio/different.jpg',
+    '/Portfolio/collage.jpg',
+    '/Portfolio/mainPic.jpg',
+    '/Portfolio/training.jpg',
+    '/Portfolio/discuss.jpg',
+    '/Portfolio/teamwork.jpg',
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
+
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Ballpit Background */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, overflow: 'hidden', zIndex: 0 }}>
-        <Ballpit
-          count={100}
-          gravity={0.01}
-          friction={0.9975}
-          wallBounce={0.95}
-          followCursor={false}
-          colors={[0xFFD700, 0xFFA500, 0x87CEEB]}
-        />
+      {/* Slideshow Background */}
+      <div className="absolute inset-0 z-0">
+        {backgroundImages.map((image, index) => (
+          <motion.div
+            key={image}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${image})`,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: index === currentImageIndex ? 1 : 0,
+            }}
+            transition={{ duration: 1.5 }}
+          />
+        ))}
+        {/* Semi-transparent overlay */}
+        <div className="absolute inset-0 bg-black/50" />
       </div>
       
       <motion.div 
@@ -51,7 +80,8 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
             <div className="space-y-4 sm:space-y-6">
               {/* Large Bold Name - Primary Accent Color */}
               <motion.h1 
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-primary leading-none"
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none"
+                style={{ color: '#fcb22f' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -60,24 +90,33 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
                   value={personalInfo.name}
                   onChange={(value) => updatePersonal({ name: value })}
                   label="Name"
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-primary leading-none"
+                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none"
+                  style={{ color: '#e1620b' }}
                 />
               </motion.h1>
               
               {/* Expressive Handwritten Subtitle */}
-              <motion.p 
+              <motion.div 
                 className="text-3xl sm:text-4xl md:text-5xl handwritten text-foreground/90"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <InlineTextEditor
-                  value={personalInfo.title}
-                  onChange={(value) => updatePersonal({ title: value })}
-                  label="Title"
-                  className="text-3xl sm:text-4xl md:text-5xl handwritten text-foreground/90"
+                <span className="font-bold" style={{ color: '#ffffff' }}>We Build Unforgettable Team Experiences — For </span>
+                <RotatingText
+                  texts={['People.', 'Culture.', 'Growth.']}
+                  mainClassName="inline-flex font-extrabold"
+                  style={{ color: '#fcb22f' }}
+                  staggerFrom="last"
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "-120%" }}
+                  staggerDuration={0.025}
+                  splitLevelClassName="overflow-hidden"
+                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                  rotationInterval={2000}
                 />
-              </motion.p>
+              </motion.div>
               
               {/* Clean Body Text */}
               <motion.p 
@@ -105,7 +144,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
             
             {/* Bio Text */}
             <motion.p 
-              className="text-lg sm:text-xl text-foreground/80 leading-relaxed"
+              className="text-lg sm:text-xl leading-relaxed text-white font-bold"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -115,7 +154,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
                 onChange={(value) => updatePersonal({ bio: value })}
                 multiline
                 label="Bio"
-                className="text-lg sm:text-xl text-foreground/80 leading-relaxed"
+                className="text-lg sm:text-xl leading-relaxed text-white font-bold"
               />
             </motion.p>
           </motion.div>

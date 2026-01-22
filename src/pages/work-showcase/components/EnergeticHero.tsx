@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Icon from '../../../components/AppIcon';
+import { TextGenerateEffect } from '../../../components/ui/TextGenerateEffect';
 
 const EnergeticHero = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -101,61 +102,13 @@ const EnergeticHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold mb-4 sm:mb-6 leading-none"
+            className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl mb-4 sm:mb-6 leading-tight"
           >
-            <span className="inline-block animate-bounce-in text-primary">
-              Work Showcase
-            </span>
+            <TextGenerateEffect 
+              words="Build Culture. Create Impact. Celebrate Growth."
+              className="animate-bounce-in text-primary"
+            />
           </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-muted-foreground mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed px-2 sm:px-4"
-          >
-            Crafting exceptional digital experiences with
-            <span className="text-secondary font-semibold"> creativity</span>,
-            <span className="text-tertiary font-semibold"> innovation</span>, and
-            <span className="text-accent font-semibold"> passion</span>
-          </motion.p>
-
-          {/* Stats Cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto mb-8 sm:mb-12 px-2 sm:px-4"
-          >
-            {[
-              { value: '50+', label: 'Projects Delivered', icon: 'Briefcase', gradient: 'from-primary to-secondary' },
-              { value: '98%', label: 'Client Satisfaction', icon: 'Heart', gradient: 'from-secondary to-tertiary' },
-              { value: '24/7', label: 'Innovation Mode', icon: 'Zap', gradient: 'from-tertiary to-accent' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -8 }}
-                className="group relative"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-butter`} />
-                <div className="relative glass rounded-3xl p-8 card-energetic">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${stat.gradient} rounded-2xl flex items-center justify-center mb-4 mx-auto`}>
-                    <Icon name={stat.icon} size={24} className="text-white" />
-                  </div>
-                  <div className="text-4xl font-bold text-foreground mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground font-medium">
-                    {stat.label}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
 
           {/* CTA Button */}
           <motion.div
@@ -185,31 +138,6 @@ const EnergeticHero = () => {
             </motion.button>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="flex flex-col items-center space-y-3"
-          >
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Scroll to explore
-            </span>
-            <div className="w-6 h-10 rounded-full border-2 border-primary/50 flex items-start justify-center p-2">
-              <motion.div
-                animate={{ y: [0, 12, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                className="w-1.5 h-1.5 bg-primary rounded-full"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </motion.div>
 
       {/* Decorative Elements */}

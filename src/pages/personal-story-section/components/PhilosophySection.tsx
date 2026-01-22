@@ -84,8 +84,8 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         {/* 3D Dome Gallery */}
         <ClientDomeGallery
           images={clients}
-          fit={1.2}
-          minRadius={800}
+          fit={0.5}
+          minRadius={1000}
           maxVerticalRotationDeg={0}
           segments={34}
           dragDampening={2}
@@ -104,9 +104,9 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               What Our Clients Say
             </h3>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {/* <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Real reviews from real teams who've experienced the EITO difference
-            </p>
+            </p> */}
           </div>
           <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
         </motion.div>

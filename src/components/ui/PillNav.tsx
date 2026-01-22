@@ -117,17 +117,7 @@ const PillNav = ({
     }
 
     if (initialLoadAnimation) {
-      const logo = logoRef.current;
       const navItems = navItemsRef.current;
-
-      if (logo) {
-        gsap.set(logo, { scale: 0 });
-        gsap.to(logo, {
-          scale: 1,
-          duration: 0.6,
-          ease
-        });
-      }
 
       if (navItems) {
         gsap.set(navItems, { width: 0, overflow: 'hidden' });
@@ -253,7 +243,6 @@ const PillNav = ({
             className="pill-logo"
             to={logoHref}
             aria-label="Home"
-            onMouseEnter={handleLogoEnter}
             role="menuitem"
             ref={logoRef}
           >
@@ -264,7 +253,6 @@ const PillNav = ({
             className="pill-logo"
             href={logoHref}
             aria-label="Home"
-            onMouseEnter={handleLogoEnter}
             ref={logoRef}
           >
             <img src={logo} alt={logoAlt} ref={logoImgRef} />

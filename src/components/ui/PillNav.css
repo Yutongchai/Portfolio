@@ -15,7 +15,7 @@
 
 .pill-nav {
   --nav-h: 42px;
-  --logo: 36px;
+  --logo: 56px;
   --pill-pad-x: 18px;
   --pill-gap: 3px;
   width: 100%;
@@ -31,7 +31,7 @@
   display: flex;
   align-items: center;
   height: var(--nav-h);
-  background: var(--base, #000);
+  background: #12a28f;
   border-radius: 9999px;
   margin-right: 2rem;
 }
@@ -102,7 +102,7 @@
   left: 50%;
   bottom: 0;
   border-radius: 50%;
-  background: var(--base, #000);
+  background: #0074b4;
   z-index: 1;
   display: block;
   pointer-events: none;
@@ -128,7 +128,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: var(--hover-text, #fff);
+  color: #ffffff;
   z-index: 3;
   display: inline-block;
   will-change: transform, opacity;
@@ -142,7 +142,7 @@
   transform: translateX(-50%);
   width: 12px;
   height: 12px;
-  background: var(--base, #000);
+  background: #12a28f;
   border-radius: 50px;
   z-index: 4;
 }

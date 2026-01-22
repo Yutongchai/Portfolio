@@ -5,6 +5,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { ContentProvider } from "./contexts/ContentContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import AdminPanel from "./components/admin/AdminPanel";
+import ScrollToTopButton from "./components/ui/ScrollToTopButton";
 
 const App: React.FC = () => {
   return (
@@ -12,7 +13,8 @@ const App: React.FC = () => {
       <AdminProvider>
         <ContentProvider>
           <Routes />
-          <AdminPanel />
+          {/* <AdminPanel /> */}
+          <ScrollToTopButton />
         </ContentProvider>
       </AdminProvider>
     </ThemeProvider>
