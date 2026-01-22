@@ -5,4 +5,17 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/Portfolio/',
+  build: {
+    // Enable source maps for better debugging
+    sourcemap: false,
+    // Use content-based hashing for cache busting
+    rollupOptions: {
+      output: {
+        // Generate unique filenames based on content hash
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    }
+  }
 })
