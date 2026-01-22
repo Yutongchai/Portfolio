@@ -9,6 +9,13 @@
   --color-border: #e5e5e5;
   --color-text: #1a1a1a;
   --color-text-muted: #737373;
+  
+  /* Smooth scroll behavior */
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 /* Citrus Theme (Orange & Yellow) - Default */

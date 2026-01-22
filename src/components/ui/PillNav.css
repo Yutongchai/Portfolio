@@ -43,7 +43,7 @@
 }
 
 .pill-logo {
-  height: var(--nav-h);
+  height: 100px;
   background: transparent;
   padding: 0;
   display: inline-flex;

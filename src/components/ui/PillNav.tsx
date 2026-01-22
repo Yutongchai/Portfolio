@@ -23,6 +23,7 @@ interface PillNavProps {
   pillTextColor?: string;
   onMobileMenuClick?: () => void;
   initialLoadAnimation?: boolean;
+  onItemClick?: (href: string) => void;
 }
 
 const PillNav = ({
@@ -38,7 +39,8 @@ const PillNav = ({
   hoveredPillTextColor = '#060010',
   pillTextColor,
   onMobileMenuClick,
-  initialLoadAnimation = true
+  initialLoadAnimation = true,
+  onItemClick
 }: PillNavProps) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -264,9 +266,14 @@ const PillNav = ({
             {items.map((item, i) => (
               <li key={item.href || `item-${i}`} role="none">
                 {isRouterLink(item.href) ? (
-                  <Link
+                  <button
                     role="menuitem"
-                    to={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (onItemClick) {
+                        onItemClick(item.href);
+                      }
+                    }}
                     className={`pill${activeHref === item.href ? ' is-active' : ''}`}
                     aria-label={item.ariaLabel || item.label}
                     onMouseEnter={() => handleEnter(i)}
@@ -285,7 +292,7 @@ const PillNav = ({
                         {item.label}
                       </span>
                     </span>
-                  </Link>
+                  </button>
                 ) : (
                   <a
                     role="menuitem"
@@ -294,6 +301,12 @@ const PillNav = ({
                     aria-label={item.ariaLabel || item.label}
                     onMouseEnter={() => handleEnter(i)}
                     onMouseLeave={() => handleLeave(i)}
+                    onClick={(e) => {
+                      if (onItemClick && item.href.startsWith('#')) {
+                        e.preventDefault();
+                        onItemClick(item.href);
+                      }
+                    }}
                   >
                     <span
                       className="hover-circle"
@@ -331,18 +344,29 @@ const PillNav = ({
           {items.map((item, i) => (
             <li key={item.href || `mobile-item-${i}`}>
               {isRouterLink(item.href) ? (
-                <Link
-                  to={item.href}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMobileMenuOpen(false);
+                    if (onItemClick) {
+                      onItemClick(item.href);
+                    }
+                  }}
                   className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
-                </Link>
+                </button>
               ) : (
                 <a
                   href={item.href}
                   className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    setIsMobileMenuOpen(false);
+                    if (onItemClick && item.href.startsWith('#')) {
+                      e.preventDefault();
+                      onItemClick(item.href);
+                    }
+                  }}
                 >
                   {item.label}
                 </a>

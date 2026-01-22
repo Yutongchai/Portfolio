@@ -1,17 +1,20 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
-import { useContent } from '../../../contexts/ContentContext';
-import InlineTextEditor from '../../../components/admin/InlineTextEditor';
 import RotatingText from './RotatingText';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
 }
 
+const defaultPersonalInfo: PersonalInfo = {
+  name: "Yutong Chai",
+  tagline: "Building experiences that bring teams together",
+  bio: "With a passion for creating meaningful connections, I specialize in designing team-building experiences that foster collaboration, growth, and lasting impact."
+};
+
 const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
-  const { content, updatePersonal } = useContent();
-  const personalInfo = propPersonalInfo || content.personal;
+  const personalInfo = propPersonalInfo || defaultPersonalInfo;
   
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -86,13 +89,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <InlineTextEditor
-                  value={personalInfo.name}
-                  onChange={(value) => updatePersonal({ name: value })}
-                  label="Name"
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none"
-                  style={{ color: '#e1620b' }}
-                />
+                {personalInfo.name}
               </motion.h1>
               
               {/* Expressive Handwritten Subtitle */}
@@ -125,12 +122,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <InlineTextEditor
-                  value={personalInfo.tagline}
-                  onChange={(value) => updatePersonal({ tagline: value })}
-                  label="Tagline"
-                  className="text-lg sm:text-xl md:text-2xl text-foreground/70 font-light leading-relaxed"
-                />
+                {personalInfo.tagline}
               </motion.p>
             </div>
             
@@ -149,13 +141,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <InlineTextEditor
-                value={personalInfo.bio}
-                onChange={(value) => updatePersonal({ bio: value })}
-                multiline
-                label="Bio"
-                className="text-lg sm:text-xl leading-relaxed text-white font-bold"
-              />
+              {personalInfo.bio}
             </motion.p>
           </motion.div>
         </div>

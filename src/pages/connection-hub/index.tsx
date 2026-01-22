@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
-import PillNav from "../../components/ui/PillNav";
 import Footer from "../../components/ui/Footer";
 import Icon from "../../components/AppIcon";
-import LogoImg from "../../components/Logo.png";
 import ContactMethodCard from "./components/ContactMethodCard";
 import { HoverEffect } from "../../components/ui/HoverEffect";
 import TestimonialCard from "./components/TestimonialCard";
@@ -25,7 +23,6 @@ import {
 
 const ConnectionHub = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const contactMethods: ContactMethod[] = [
@@ -268,23 +265,6 @@ const ConnectionHub = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <PillNav
-          logo={LogoImg}
-          logoAlt="EITO Group Logo"
-          items={[
-            { label: "Story", href: "/personal-story-section" },
-            { label: "Work", href: "/work-showcase" },
-            { label: "Connect", href: "/connection-hub" },
-          ]}
-          activeHref={location.pathname}
-          ease="power2.easeOut"
-          baseColor="#000000"
-          pillColor="#ffffff"
-          hoveredPillTextColor="#000000"
-          pillTextColor="#000000"
-          initialLoadAnimation={false}
-        />
-
         {showSuccessMessage && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}

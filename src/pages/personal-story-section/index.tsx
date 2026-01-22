@@ -1,11 +1,7 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import myPhoto from "../../components/mainPic.jpg";
-import { motion, useScroll, useSpring } from "framer-motion";
-import PillNav from "../../components/ui/PillNav";
 import Footer from "../../components/ui/Footer";
-import LogoImg from "../../components/Logo.png";
 import HeroSection from "./components/HeroSection";
 import BeliefsValuesSection from "./components/BeliefsValuesSection";
 import SolutionsSection from "./components/SolutionsSection";
@@ -16,10 +12,7 @@ import SectionWrapper from "./components/SectionWrapper";
 import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
-  const location = useLocation();
-
   useEffect(() => {
-    window.scrollTo(0, 0);
     // Enable smooth scrolling
     document.documentElement.style.scrollBehavior = "smooth";
 
@@ -27,13 +20,6 @@ const PersonalStorySection = () => {
       document.documentElement.style.scrollBehavior = "auto";
     };
   }, []);
-
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
 
   const personalInfo: PersonalInfo = {
     name: "EITO Group",
@@ -141,30 +127,7 @@ const PersonalStorySection = () => {
         <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
       </Helmet>
       <div className="min-h-screen bg-background relative">
-        {/* Progress bar */}
-        <motion.div
-          className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
-          style={{ scaleX }}
-        />
-
-        <PillNav
-          logo={LogoImg}
-          logoAlt="EITO Group Logo"
-          items={[
-            { label: "Story", href: "/personal-story-section" },
-            { label: "Work", href: "/work-showcase" },
-            { label: "Connect", href: "/connection-hub" },
-          ]}
-          activeHref={location.pathname}
-          ease="power2.easeOut"
-          baseColor="#000000"
-          pillColor="#ffffff"
-          hoveredPillTextColor="#000000"
-          pillTextColor="#000000"
-          initialLoadAnimation={false}
-        />
-
-        <main className="pt-20 relative z-10">
+        <main className="relative z-10">
           <HeroSection personalInfo={personalInfo} />
 
           <SectionWrapper delay={0.1}>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Icon from '../AppIcon';
 import Button from './Button';
@@ -7,24 +6,52 @@ import ThemeToggle from './ThemeToggle';
 
 interface NavigationItem {
   label: string;
-  path: string;
+  sectionId: string;
   icon?: string;
 }
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('story');
 
   const navigationItems: NavigationItem[] = [
-    { label: 'Story', path: '/personal-story-section', icon: 'User' },
-    { label: 'Work', path: '/work-showcase', icon: 'Briefcase' },
-    { label: 'Connect', path: '/connection-hub', icon: 'MessageCircle' },
+    { label: 'Story', sectionId: 'story', icon: 'User' },
+    { label: 'Work', sectionId: 'work', icon: 'Briefcase' },
+    { label: 'Connect', sectionId: 'connect', icon: 'MessageCircle' },
   ];
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 80; // Height of the header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      
+      // Detect active section
+      const sections = ['story', 'work', 'connect'];
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -39,7 +66,7 @@ const Header = () => {
     }
   }, [isMobileMenuOpen]);
 
-  const isActivePath = (path: string) => location.pathname === path;
+  const isActiveSection = (sectionId: string) => activeSection === sectionId;
 
   return (
     <motion.header
@@ -55,8 +82,8 @@ const Header = () => {
       <div className="w-full">
         <div className="flex items-center justify-between h-20 sm:h-24 px-6 lg:px-12 max-w-7xl mx-auto">
           {/* Logo with Premium Animation */}
-          <Link
-            to="/"
+          <button
+            onClick={() => scrollToSection('story')}
             className="flex items-center space-x-3 flex-shrink-0"
             aria-label="Home"
           >
@@ -90,16 +117,16 @@ const Header = () => {
             <span className="text-xl sm:text-2xl font-black bg-gradient-to-r from-[#12a28f] via-[#fcb22f] to-[#ee424c] bg-clip-text text-transparent hidden sm:block">
               EITO Group
             </span>
-          </Link>
+          </button>
 
           {/* Desktop Navigation with Premium Style */}
           <nav className="hidden lg:flex items-center space-x-2">
             {navigationItems.map((item) => {
-              const isActive = isActivePath(item.path);
+              const isActive = isActiveSection(item.sectionId);
               return (
-                <Link
-                  key={item.path}
-                  to={item.path}
+                <button
+                  key={item.sectionId}
+                  onClick={() => scrollToSection(item.sectionId)}
                   className="relative"
                 >
                   <div
@@ -123,7 +150,7 @@ const Header = () => {
                       <span>{item.label}</span>
                     </span>
                   </div>
-                </Link>
+                </button>
               );
             })}
           </nav>
@@ -134,9 +161,9 @@ const Header = () => {
             
             {/* Premium CTA Button */}
             <div className="hidden lg:block">
-              <Link
-                to="/connection-hub"
-                className="block"
+              <button
+                onClick={() => scrollToSection('connect')}
+                className="relative px-6 py-3 font-bold text-sm rounded-full overflow-hidden"
               >
                 <button className="relative px-6 py-3 font-bold text-sm rounded-full overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#ee424c] to-[#fcb22f] rounded-full" />
@@ -145,7 +172,7 @@ const Header = () => {
                     Let's Talk
                   </span>
                 </button>
-              </Link>
+              </button>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -177,18 +204,17 @@ const Header = () => {
           >
             <nav className="flex flex-col p-6 space-y-2 max-w-md mx-auto">
               {navigationItems.map((item, index) => {
-                const isActive = isActivePath(item.path);
+                const isActive = isActiveSection(item.sectionId);
                 return (
                   <motion.div
-                    key={item.path}
+                    key={item.sectionId}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Link
-                      to={item.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block"
+                    <button
+                      onClick={() => scrollToSection(item.sectionId)}
+                      className="block w-full"
                     >
                       <div
                         className={`flex items-center space-x-3 px-6 py-4 rounded-2xl text-base font-semibold ${
@@ -202,7 +228,7 @@ const Header = () => {
                         )}
                         <span>{item.label}</span>
                       </div>
-                    </Link>
+                    </button>
                   </motion.div>
                 );
               })}
@@ -214,18 +240,16 @@ const Header = () => {
                 transition={{ delay: 0.3 }}
                 className="pt-6 mt-4 border-t border-white/10"
               >
-                <Link
-                  to="/connection-hub"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <button
+                  onClick={() => scrollToSection('connect')}
+                  className="w-full relative px-6 py-4 font-bold text-base rounded-2xl overflow-hidden"
                 >
-                  <button className="w-full relative px-6 py-4 font-bold text-base rounded-2xl overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#ee424c] to-[#fcb22f] rounded-2xl" />
-                    <span className="relative z-10 text-white flex items-center justify-center gap-2">
-                      <Icon name="Mail" size={20} />
-                      Start a Conversation
-                    </span>
-                  </button>
-                </Link>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#ee424c] to-[#fcb22f] rounded-2xl" />
+                  <span className="relative z-10 text-white flex items-center justify-center gap-2">
+                    <Icon name="Mail" size={20} />
+                    Start a Conversation
+                  </span>
+                </button>
               </motion.div>
             </nav>
           </motion.div>

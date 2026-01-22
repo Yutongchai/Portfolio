@@ -1,13 +1,11 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { Carousel, Card } from "./components/ProjectCarousel";
 import EnergeticHero from "./components/EnergeticHero";
 import { Project } from "./types";
 import { Button } from "../../components/ui/Button";
-import PillNav from "../../components/ui/PillNav";
 import Footer from "../../components/ui/Footer";
-import LogoImg from "../../components/Logo.png";
 import Icon from "../../components/AppIcon";
 
 // Import images and video as ES modules
@@ -20,7 +18,6 @@ import stationGamesVideo from "../../components/station_games.mp4";
 import teamworkImg from "../../components/teamwork.jpg";
 
 const WorkShowcase = () => {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const projects: Project[] = [
@@ -332,23 +329,6 @@ const WorkShowcase = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <PillNav
-          logo={LogoImg}
-          logoAlt="EITO Group Logo"
-          items={[
-            { label: "Story", href: "/personal-story-section" },
-            { label: "Work", href: "/work-showcase" },
-            { label: "Connect", href: "/connection-hub" },
-          ]}
-          activeHref={location.pathname}
-          ease="power2.easeOut"
-          baseColor="#000000"
-          pillColor="#ffffff"
-          hoveredPillTextColor="#000000"
-          pillTextColor="#000000"
-          initialLoadAnimation={false}
-        />
-
         <EnergeticHero />
 
         <main
