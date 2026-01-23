@@ -1,11 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
+import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 
 const AdminDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    heroImages: 0,
+    clientLogos: 0,
+    projects: 0,
+    testimonials: 0,
+  });
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      // Fetch hero images count (only active)
+      const { count: heroCount } = await supabase
+        .from('hero_images')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
+      // Fetch client logos count (only active)
+      const { count: logosCount } = await supabase
+        .from('client_logos')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
+      setStats({
+        heroImages: heroCount || 0,
+        clientLogos: logosCount || 0,
+        projects: 0,
+        testimonials: 0,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -58,7 +94,10 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Manage hero section background images and animations
             </p>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button 
+              onClick={() => navigate('/admin/hero-images')}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
               Manage Hero Images
             </Button>
           </div>
@@ -74,7 +113,10 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Add, edit, or remove client logos from the sphere gallery
             </p>
-            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+            <Button 
+              onClick={() => navigate('/admin/client-logos')}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+            >
               Manage Client Logos
             </Button>
           </div>
@@ -151,19 +193,19 @@ const AdminDashboard: React.FC = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">-</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.heroImages}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Hero Images</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">-</div>
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.clientLogos}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Client Logos</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 dark:text-green-400">-</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.projects}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Projects</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">-</div>
+              <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{stats.testimonials}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Testimonials</div>
             </div>
           </div>

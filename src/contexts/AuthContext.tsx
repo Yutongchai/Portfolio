@@ -18,53 +18,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [checkedEmails, setCheckedEmails] = useState<Set<string>>(new Set());
-  const [inactivityTimeout, setInactivityTimeout] = useState<NodeJS.Timeout | null>(null);
-
-  // Auto logout after 18 hours of inactivity
-  const setupInactivityTimer = () => {
-    // Clear existing timeout
-    if (inactivityTimeout) {
-      clearTimeout(inactivityTimeout);
-    }
-
-    // Set new timeout for 18 hours (64800000 ms)
-    const timeout = setTimeout(async () => {
-      console.log('Session expired after 18 hours of inactivity');
-      await supabase.auth.signOut();
-      setIsAdmin(false);
-      setCheckedEmails(new Set());
-    }, 18 * 60 * 60 * 1000); // 18 hours in milliseconds
-
-    setInactivityTimeout(timeout);
-  };
-
-  // Reset inactivity timer on user activity
-  useEffect(() => {
-    if (!user) return;
-
-    const resetTimer = () => {
-      setupInactivityTimer();
-    };
-
-    // Listen for user activity
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
-    events.forEach(event => {
-      window.addEventListener(event, resetTimer);
-    });
-
-    // Initial timer setup
-    setupInactivityTimer();
-
-    return () => {
-      events.forEach(event => {
-        window.removeEventListener(event, resetTimer);
-      });
-      if (inactivityTimeout) {
-        clearTimeout(inactivityTimeout);
-      }
-    };
-  }, [user]);
+  const [adminCheckCache, setAdminCheckCache] = useState<{ email: string; isAdmin: boolean; timestamp: number } | null>(null);
 
   useEffect(() => {
     // Check active session
@@ -94,12 +48,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (currentSession?.user?.email) {
           await checkAdminStatus(currentSession.user.email);
+          setLoading(false);
         } else {
           setIsAdmin(false);
-          setCheckedEmails(new Set());
+          setLoading(false);
         }
-        
-        setLoading(false);
       }
     );
 
@@ -108,43 +61,74 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const checkAdminStatus = async (userEmail: string) => {
-    // Skip if already checked for this email
-    if (checkedEmails.has(userEmail)) {
-      return;
-    }
-
+  const checkAdminStatus = async (userEmail: string, forceCheck: boolean = false) => {
     try {
-      setCheckedEmails(prev => new Set(prev).add(userEmail));
-      
       if (!userEmail) {
         setIsAdmin(false);
         return;
       }
 
-      // Query without timeout first to see if it completes
-      const { data, error } = await supabase
+      // Check cache first - valid for 5 minutes
+      const now = Date.now();
+      if (!forceCheck && adminCheckCache && 
+          adminCheckCache.email === userEmail && 
+          now - adminCheckCache.timestamp < 5 * 60 * 1000) {
+        setIsAdmin(adminCheckCache.isAdmin);
+        console.log(`Admin check (cached) for ${userEmail}: ${adminCheckCache.isAdmin}`);
+        return;
+      }
+
+      // Add timeout to prevent hanging (10 seconds)
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Admin check timeout')), 10000); // 10 second timeout
+      });
+
+      const queryPromise = supabase
         .from('site_settings')
         .select('setting_value')
         .eq('setting_key', 'admin_emails')
-        .limit(1);
+        .single();
+
+      const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
 
       if (error) {
+        // If timeout or error, use cached value if available
+        if (adminCheckCache && adminCheckCache.email === userEmail) {
+          setIsAdmin(adminCheckCache.isAdmin);
+          console.log(`Admin check error, using cached value for ${userEmail}: ${adminCheckCache.isAdmin}`);
+          return;
+        }
         console.error('Error checking admin status:', error);
         setIsAdmin(false);
         return;
       }
 
-      if (!data || data.length === 0) {
+      if (!data) {
+        console.warn('No admin_emails setting found in site_settings');
         setIsAdmin(false);
         return;
       }
       
       // Parse JSON array from setting_value
-      const adminEmails = JSON.parse(data[0]?.setting_value || '[]');
+      const adminEmails = JSON.parse(data.setting_value || '[]');
       const isUserAdmin = adminEmails.includes(userEmail);
+      
+      // Update cache
+      setAdminCheckCache({
+        email: userEmail,
+        isAdmin: isUserAdmin,
+        timestamp: now
+      });
+      
+      console.log(`Admin check for ${userEmail}: ${isUserAdmin}`);
       setIsAdmin(isUserAdmin);
     } catch (error) {
+      // Use cached value on error
+      if (adminCheckCache && adminCheckCache.email === userEmail) {
+        setIsAdmin(adminCheckCache.isAdmin);
+        console.log(`Admin check error, using cached value for ${userEmail}: ${adminCheckCache.isAdmin}`);
+        return;
+      }
       console.error('Error checking admin status:', error);
       setIsAdmin(false);
     }
@@ -166,7 +150,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     await supabase.auth.signOut();
     setIsAdmin(false);
-    setCheckedEmails(new Set());
   };
 
   const value = {

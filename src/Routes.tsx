@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from './pages/Home';
-import { AdminLogin, AdminRegister, AdminDashboard, ProtectedRoute } from './pages/admin';
+import { AdminLogin, AdminRegister, AdminDashboard, HeroImagesManager, ClientLogosManager, ProtectedRoute } from './pages/admin';
 
 const Routes: React.FC = () => {
   return (
@@ -20,6 +20,8 @@ const Routes: React.FC = () => {
             <ProtectedRoute>
               <RouterRoutes>
                 <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="hero-images" element={<HeroImagesManager />} />
+                <Route path="client-logos" element={<ClientLogosManager />} />
                 {/* Add more admin routes here as needed */}
                 <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
               </RouterRoutes>

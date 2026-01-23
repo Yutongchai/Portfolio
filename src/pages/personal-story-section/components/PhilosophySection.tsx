@@ -1,22 +1,8 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ClientDomeGallery from './ClientDomeGallery';
 import { GoogleReviewTestimonials } from './GoogleReviewTestimonials';
-
-// Client logos - you can replace these URLs with actual client logos
-const clients = [
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-  '/Portfolio/customers/advelsoft.jpg',
-  '/Portfolio/customers/colgate.png',
-];
+import { supabase } from '../../../config/supabaseClient';
 
 // Google Reviews - replace with actual Google Review data
 const googleReviews = [
@@ -59,6 +45,35 @@ interface PhilosophySectionProps {
 }
 
 const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
+  const [clients, setClients] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchClientLogos = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('client_logos')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          // logo_url already contains the full public URL
+          const logoUrls = data.map(logo => logo.logo_url);
+          setClients(logoUrls);
+          console.log('Fetched client logos:', logoUrls);
+        } else {
+          console.log('No active client logos found');
+        }
+      } catch (error) {
+        console.error('Error fetching client logos:', error);
+      }
+    };
+
+    fetchClientLogos();
+  }, []);
+
   return (
     <section className="relative py-20 overflow-hidden bg-white">
       <div className="relative z-10 w-full">
@@ -82,15 +97,17 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         </motion.div>
 
         {/* 3D Dome Gallery */}
-        <ClientDomeGallery
-          images={clients}
-          fit={0.5}
-          minRadius={1000}
-          maxVerticalRotationDeg={0}
-          segments={34}
-          dragDampening={2}
-          grayscale={false}
-        />
+        {clients.length > 0 && (
+          <ClientDomeGallery
+            images={clients}
+            fit={0.5}
+            minRadius={1000}
+            maxVerticalRotationDeg={0}
+            segments={34}
+            dragDampening={2}
+            grayscale={false}
+          />
+        )}
 
         {/* Google Reviews Testimonials */}
         <motion.div 

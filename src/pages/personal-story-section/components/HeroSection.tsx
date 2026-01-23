@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
 import RotatingText from './RotatingText';
+import { supabase } from '../../../config/supabaseClient';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -25,20 +26,57 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.6]);
 
-  // Background image slideshow
-  const backgroundImages = [
-    '/Portfolio/_JIN3046.jpg',
-    '/Portfolio/different.jpg',
-    '/Portfolio/collage.jpg',
-    '/Portfolio/mainPic.jpg',
-    '/Portfolio/training.jpg',
-    '/Portfolio/discuss.jpg',
-    '/Portfolio/teamwork.jpg',
-  ];
-
+  // Background images from database
+  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  // Fetch hero images from database
   useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('hero_images')
+          .select('image_url')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setBackgroundImages(data.map(img => img.image_url));
+        } else {
+          // Fallback to hardcoded images if no images in database
+          setBackgroundImages([
+            '/Portfolio/_JIN3046.jpg',
+            '/Portfolio/different.jpg',
+            '/Portfolio/collage.jpg',
+            '/Portfolio/mainPic.jpg',
+            '/Portfolio/training.jpg',
+            '/Portfolio/discuss.jpg',
+            '/Portfolio/teamwork.jpg',
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching hero images:', error);
+        // Fallback to hardcoded images on error
+        setBackgroundImages([
+          '/Portfolio/_JIN3046.jpg',
+          '/Portfolio/different.jpg',
+          '/Portfolio/collage.jpg',
+          '/Portfolio/mainPic.jpg',
+          '/Portfolio/training.jpg',
+          '/Portfolio/discuss.jpg',
+          '/Portfolio/teamwork.jpg',
+        ]);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
+
+  useEffect(() => {
+    if (backgroundImages.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
     }, 5000); // Change image every 5 seconds
