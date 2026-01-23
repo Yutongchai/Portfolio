@@ -7,12 +7,18 @@ import ProjectModal from '../components/ProjectModal';
 
 interface Project {
     id: string;
-    company_name: string;
+    title: string;
+    category?: string | null;
     description: string | null;
+    long_description?: string | null;
+    client?: string | null;
+    year?: string | null;
+    role?: string | null;
+    duration?: string | null;
+    outcome?: string | null;
     type_id: string | null;
     type_key?: string | null;
     type_description?: string | null;
-    project_date?: string | null;
     featured_image_url?: string | null;
     image_alt?: string | null;
     is_active: boolean;
@@ -27,6 +33,7 @@ const ProjectsManager: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProject, setSelectedProject] = useState<Project | undefined>(undefined);
     const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; title: string } | null>(null);
 
     useEffect(() => {
@@ -87,7 +94,18 @@ const ProjectsManager: React.FC = () => {
 
     const handleModalClose = () => {
         setIsModalOpen(false);
+        setSelectedProject(undefined);
         fetchProjects();
+    };
+
+    const handleEditProject = (project: Project) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+    };
+
+    const handleAddNewProject = () => {
+        setSelectedProject(undefined);
+        setIsModalOpen(true);
     };
 
     return (
@@ -135,7 +153,8 @@ const ProjectsManager: React.FC = () => {
             <main className="h-[calc(100vh-120px)] flex gap-4 px-4 sm:px-6 lg:px-8 py-4">
                 {/* Left Side - Project List */}
                 <div className="w-1/2 overflow-y-auto">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Projects</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Projects ({projects.length})</h2>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 mb-4 block">Select a project to edit its details or delete it.</span>
                     {loading ? (
                         <div className="flex items-center justify-center h-64">
                             <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
@@ -151,11 +170,15 @@ const ProjectsManager: React.FC = () => {
                                     {projects.map((project) => (
                                         <div
                                             key={project.id}
-                                            className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 p-4"
+                                            onClick={() => handleEditProject(project)}
+                                            className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 p-4 cursor-pointer"
                                         >
                                             {/* Delete Button */}
                                             <button
-                                                onClick={() => handleDelete(project.id, project.company_name)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(project.id, project.title);
+                                                }}
                                                 className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
                                                 title="Delete project"
                                             >
@@ -169,10 +192,10 @@ const ProjectsManager: React.FC = () => {
                                                 {/* Project Info */}
                                                 <div className="flex-1 min-w-0">
                                                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                                                        {project.company_name}
+                                                        {project.title}
                                                     </h3>
                                                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                                        {project.type_key || '—'} • {project.project_date || ''}
+                                                        {project.type_key || '—'} • {project.year || ''}
                                                     </p>
                                                     <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
                                                         {project.description}
@@ -211,7 +234,7 @@ const ProjectsManager: React.FC = () => {
                                         <div className="p-4">
                                             <div className="flex items-center justify-between mb-2">
                                                 <h4 className="text-lg font-bold text-gray-900 dark:text-white">
-                                                    {project.company_name}
+                                                    {project.title}
                                                 </h4>
                                                 <span className="text-sm text-gray-600 dark:text-gray-400">
                                                     {project.type_key || '—'}
@@ -251,7 +274,11 @@ const ProjectsManager: React.FC = () => {
 
             {/* Modal */}
             {isModalOpen && (
-                <ProjectModal onClose={handleModalClose} />
+                <ProjectModal 
+                    onClose={handleModalClose} 
+                    project={selectedProject}
+                    onSaved={handleModalClose}
+                />
             )}
 
             {/* Delete Confirmation Dialog */}

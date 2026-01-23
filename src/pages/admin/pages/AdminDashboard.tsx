@@ -32,11 +32,21 @@ const AdminDashboard: React.FC = () => {
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
 
+      const { count: projectsCount } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
+      const { count: testimonialsCount } = await supabase
+        .from('testimonials')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+
       setStats({
         heroImages: heroCount || 0,
         clientLogos: logosCount || 0,
-        projects: 0,
-        testimonials: 0,
+        projects: projectsCount || 0,
+        testimonials: testimonialsCount || 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);

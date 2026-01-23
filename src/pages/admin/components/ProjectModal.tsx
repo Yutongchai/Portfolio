@@ -16,7 +16,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
     const [error, setError] = useState<string | null>(null);
 
     // Basic Info
-    const [id, setId] = useState(project?.id || '');
+    const [id, setId] = useState(project?.id || ''); // Auto-generated UUID, not user-editable
     const [title, setTitle] = useState(project?.title || '');
     const [category, setCategory] = useState(project?.category || '');
     type ProjectType = { id: string; type_key: string; description?: string | null; display_order?: number | null };
@@ -254,8 +254,8 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
 
             // Prepare project payload (projects table)
             const projectPayload: any = {
-                // keep id if provided (slug style), otherwise let DB generate
-                ...(id ? { id } : {}),
+                // Generate UUID for new projects
+                ...(!project ? { id: uuidv4() } : {}),
                 title,
                 category,
                 description,
@@ -347,16 +347,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
 
-                        <div className="grid grid-cols-3 gap-4">
-                            <Input
-                                label="Project ID"
-                                value={id}
-                                onChange={(e) => setId(e.target.value)}
-                                placeholder="e.g., csr-2025"
-                                disabled={!!project}
-                                required
-                            />
-
+                        <div className="grid grid-cols-2 gap-4">
                             <Input
                                 label="Year"
                                 value={year}
@@ -451,6 +442,24 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
 
                     </div>
 
+                    {/* Long Description */}
+                    <div className="space-y-4 border-t pt-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Full Description</h3>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Long Description
+                            </label>
+                            <textarea
+                                value={longDescription}
+                                onChange={(e) => setLongDescription(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                rows={4}
+                                placeholder="Detailed project description for case study"
+                                required
+                            />
+                        </div>
+                    </div>
+
                     {/* Project Details */}
                     <div className="space-y-4 border-t pt-4">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Project Details</h3>
@@ -472,6 +481,162 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 required
                             />
                         </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Input
+                                label="Role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                placeholder="e.g., Project Manager"
+                            />
+
+                            <Input
+                                label="Category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                placeholder="e.g., Web Development"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Outcome / Results
+                            </label>
+                            <textarea
+                                value={outcome}
+                                onChange={(e) => setOutcome(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                rows={3}
+                                placeholder="Key outcomes and results achieved"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Technologies (comma-separated)
+                            </label>
+                            <textarea
+                                value={technologies}
+                                onChange={(e) => setTechnologies(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                rows={2}
+                                placeholder="e.g., React, TypeScript, Tailwind CSS"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Metrics */}
+                    <div className="space-y-4 border-t pt-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Key Metrics</h3>
+                            <Button type="button" onClick={addMetric} className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                                + Add Metric
+                            </Button>
+                        </div>
+
+                        {metrics.map((metric, index) => (
+                            <div key={index} className="space-y-2 bg-gray-50 dark:bg-gray-700/50 p-3 rounded">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Metric {index + 1}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeMetric(index)}
+                                        className="text-red-600 hover:text-red-800 text-sm"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                                <Input
+                                    label="Label"
+                                    value={metric.label}
+                                    onChange={(e) => updateMetric(index, 'label', e.target.value)}
+                                    placeholder="e.g., Engagement Increase"
+                                />
+                                <Input
+                                    label="Value"
+                                    value={metric.value}
+                                    onChange={(e) => updateMetric(index, 'value', e.target.value)}
+                                    placeholder="e.g., 50%"
+                                />
+                                <Input
+                                    label="Icon"
+                                    value={metric.icon}
+                                    onChange={(e) => updateMetric(index, 'icon', e.target.value)}
+                                    placeholder="e.g., TrendingUp"
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Testimonial */}
+                    <div className="space-y-4 border-t pt-4">
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                id="hasTestimonial"
+                                checked={hasTestimonial}
+                                onChange={(e) => setHasTestimonial(e.target.checked)}
+                                className="w-4 h-4"
+                            />
+                            <label htmlFor="hasTestimonial" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Add Client Testimonial
+                            </label>
+                        </div>
+
+                        {hasTestimonial && (
+                            <div className="space-y-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded">
+                                <Input
+                                    label="Quote"
+                                    value={testimonialQuote}
+                                    onChange={(e) => setTestimonialQuote(e.target.value)}
+                                    placeholder="Client testimonial quote"
+                                />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <Input
+                                        label="Author"
+                                        value={testimonialAuthor}
+                                        onChange={(e) => setTestimonialAuthor(e.target.value)}
+                                        placeholder="e.g., John Doe"
+                                    />
+                                    <Input
+                                        label="Position"
+                                        value={testimonialPosition}
+                                        onChange={(e) => setTestimonialPosition(e.target.value)}
+                                        placeholder="e.g., CEO"
+                                    />
+                                </div>
+                                <Input
+                                    label="Company"
+                                    value={testimonialCompany}
+                                    onChange={(e) => setTestimonialCompany(e.target.value)}
+                                    placeholder="Client company name"
+                                />
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Avatar
+                                    </label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleTestimonialAvatarUpload}
+                                        disabled={uploading}
+                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                                    />
+                                    {testimonialAvatar && (
+                                        <div className="mt-2">
+                                            <img src={testimonialAvatar} alt="Avatar" className="w-16 h-16 object-cover rounded-full" />
+                                        </div>
+                                    )}
+                                </div>
+                                <Input
+                                    label="Alt Text"
+                                    value={testimonialAlt}
+                                    onChange={(e) => setTestimonialAlt(e.target.value)}
+                                    placeholder="Avatar alt text"
+                                />
+                            </div>
+                        )}
                     </div>
 
 
@@ -552,7 +717,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4 border-t sticky bottom-0 bg-white dark:bg-gray-800">
+                    <div className="flex gap-3 pt-4 border-t sticky bottom--1 bg-white dark:bg-gray-800">
                         <Button
                             type="button"
                             onClick={onClose}
