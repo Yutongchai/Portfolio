@@ -94,7 +94,7 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Manage hero section background images and animations
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/admin/hero-images')}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             >
@@ -113,7 +113,7 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Add, edit, or remove client logos from the sphere gallery
             </p>
-            <Button 
+            <Button
               onClick={() => navigate('/admin/client-logos')}
               className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             >
@@ -132,7 +132,10 @@ const AdminDashboard: React.FC = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Create and manage portfolio project showcase cards
             </p>
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+            <Button
+              onClick={() => navigate('/admin/projects')}
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
+            >
               Manage Projects
             </Button>
           </div>
@@ -153,21 +156,7 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Site Settings Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Site Settings
-              </h2>
-              <span className="text-2xl">⚙️</span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Configure site-wide settings and admin access
-            </p>
-            <Button className="w-full bg-gray-600 hover:bg-gray-700 text-white">
-              Site Settings
-            </Button>
-          </div>
+
 
           {/* Media Library Card */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">

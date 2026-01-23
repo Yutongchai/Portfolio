@@ -4,15 +4,13 @@ export interface Project {
   category: string;
   description: string;
   longDescription: string;
-  image: string;
-  alt: string;
+  featured_image_url: string;
+  image_alt: string;
   technologies: string[];
   year: string;
   client: string;
-  role: string;
+  role?: string;
   duration: string;
-  challenge: string;
-  solution: string;
   outcome: string;
   metrics: ProjectMetric[];
   testimonial?: Testimonial;

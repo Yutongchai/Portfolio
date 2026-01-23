@@ -106,10 +106,9 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                           <button
                             key={index}
                             onClick={() => setActiveGalleryIndex(index)}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                              index === activeGalleryIndex
-                                ? 'bg-accent w-8' :'bg-background/50'
-                            }`}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === activeGalleryIndex
+                              ? 'bg-accent w-8' : 'bg-background/50'
+                              }`}
                             aria-label={`Go to image ${index + 1}`}
                           />
                         ))}
@@ -132,7 +131,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                       <h2 className="text-3xl font-bold text-foreground mb-2">
                         {project.title}
                       </h2>
-                      <p className="text-muted-foreground text-lg leading-relaxed mb-6" style={{minHeight: '4rem'}}>
+                      <p className="text-muted-foreground text-lg leading-relaxed mb-6" style={{ minHeight: '4rem' }}>
                         {project.longDescription}
                       </p>
                     </div>
@@ -176,105 +175,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                     </div>
                   </div>
 
-                  <div className="space-y-6 mb-8">
-                    <div>
-                      <h3 className="text-lg font-bold text-foreground mb-3 flex items-center space-x-2">
-                        <Icon name="AlertCircle" size={20} className="text-accent" />
-                        <span>Challenge</span>
-                      </h3>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {project.challenge}
-                      </p>
-                    </div>
 
-                    <div>
-                      <h3 className="text-lg font-bold text-foreground mb-3 flex items-center space-x-2">
-                        <Icon name="Lightbulb" size={20} className="text-accent" />
-                        <span>Solution</span>
-                      </h3>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {project.solution}
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-lg font-bold text-foreground mb-3 flex items-center space-x-2">
-                        <Icon name="TrendingUp" size={20} className="text-accent" />
-                        <span>Outcome</span>
-                      </h3>
-                      <p className="text-muted-foreground leading-relaxed mb-4">
-                        {project.outcome}
-                      </p>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {project.metrics.map((metric, index) => (
-                          <div
-                            key={index}
-                            className="p-4 bg-muted rounded-lg text-center"
-                          >
-                            <Icon
-                              name={metric.icon}
-                              size={24}
-                              className="text-accent mx-auto mb-2"
-                            />
-                            <p className="text-2xl font-bold text-foreground mb-1">
-                              {metric.value}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {metric.label}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mb-8">
-                    <h3 className="text-lg font-bold text-foreground mb-3">
-                      Technologies Used
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map((tech, index) => (
-                        <span
-                          key={index}
-                          className="px-3 py-1 bg-accent/10 text-accent text-sm font-medium rounded-lg"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {project.testimonial && (
-                    <div className="p-6 bg-muted rounded-xl mb-8">
-                      <div className="flex items-start space-x-4">
-                        <Image
-                          src={project.testimonial.avatar}
-                          alt={project.testimonial.alt}
-                          className="w-16 h-16 rounded-full object-cover flex-shrink-0"
-                        />
-                        <div>
-                          <Icon
-                            name="Quote"
-                            size={24}
-                            className="text-accent mb-2"
-                          />
-                          <p className="text-foreground italic mb-4">
-                            "{project.testimonial.quote}"
-                          </p>
-                          <div>
-                            <p className="text-sm font-semibold text-foreground">
-                              {project.testimonial.author}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {project.testimonial.position} at{' '}
-                              {project.testimonial.company}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   {project.link && (
                     <Button

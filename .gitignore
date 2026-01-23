@@ -1,2 +1,5 @@
 node_modules/
 .env
+
+# Server env (do not commit real service role keys)
+/server/.env

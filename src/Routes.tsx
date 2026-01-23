@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from './pages/Home';
-import { AdminLogin, AdminRegister, AdminDashboard, HeroImagesManager, ClientLogosManager, ProtectedRoute } from './pages/admin';
+import { AdminLogin, AdminRegister, AdminDashboard, HeroImagesManager, ClientLogosManager, ProjectsManager, ProtectedRoute } from './pages/admin';
 
 const Routes: React.FC = () => {
   return (
-    <BrowserRouter basename="/Portfolio">
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ErrorBoundary>
         <RouterRoutes>
           <Route path="/" element={<Home />} />
@@ -22,6 +22,7 @@ const Routes: React.FC = () => {
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="hero-images" element={<HeroImagesManager />} />
                 <Route path="client-logos" element={<ClientLogosManager />} />
+                <Route path="projects" element={<ProjectsManager />} />
                 {/* Add more admin routes here as needed */}
                 <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
               </RouterRoutes>

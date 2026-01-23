@@ -6,12 +6,14 @@ import Button from '../../../components/ui/Button';
 import HeroImageModal from '../components/HeroImageModal';
 
 interface HeroImage {
-  id: string;
-  title: string;
+  id: number;
+  title: string | null;
+  subtitle: string | null;
   image_url: string;
-  alt_text: string | null;
   is_active: boolean;
+  display_order: number;
   created_at: string;
+  updated_at: string;
 }
 
 const HeroImagesManager: React.FC = () => {
@@ -20,7 +22,7 @@ const HeroImagesManager: React.FC = () => {
   const [images, setImages] = useState<HeroImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; imageUrl: string } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; imageUrl: string } | null>(null);
 
   useEffect(() => {
     fetchImages();
@@ -44,7 +46,7 @@ const HeroImagesManager: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string, imageUrl: string) => {
+  const handleDelete = async (id: number, imageUrl: string) => {
     setDeleteConfirm({ id, imageUrl });
   };
 
@@ -113,55 +115,114 @@ const HeroImagesManager: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
-          </div>
-        ) : (
-          <>
+      {/* Main Content - Split Screen Layout */}
+      <main className="h-[calc(100vh-120px)] flex gap-4 px-4 sm:px-6 lg:px-8 py-4">
+        {/* Left Side - Image List */}
+        <div className="w-1/2 overflow-y-auto">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Images</h2>
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
+            </div>
+          ) : (
+            <>
+              {images.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  No hero images yet. Click "Add New Image" to get started.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {images.map((image) => (
+                    <div
+                      key={image.id}
+                      className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800"
+                    >
+                      {/* Delete Button X - top right */}
+                      <button
+                        onClick={() => handleDelete(image.id, image.image_url)}
+                        className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
+                        title="Delete image"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+
+                      {/* Image Preview */}
+                      <div className="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                        <img
+                          src={image.image_url}
+                          alt={image.title || 'Hero image'}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Image Info */}
+                      <div className="p-2">
+                        {image.title && (
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{image.title}</p>
+                        )}
+                        {image.subtitle && (
+                          <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{image.subtitle}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Right Side - Live Preview */}
+        <div className="w-1/2 sticky top-0">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Live Preview</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600">
             {images.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                No hero images yet. Click "Add New Image" to get started.
+              <div className="h-96 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                No images to preview
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {images.map((image) => (
-                  <div
-                    key={image.id}
-                    className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800"
-                  >
-                    {/* Delete Button X - top right */}
-                    <button
-                      onClick={() => handleDelete(image.id, image.image_url)}
-                      className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
-                      title="Delete image"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-
-                    {/* Image Preview */}
-                    <div className="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-                      <img
-                        src={image.image_url}
-                        alt={image.alt_text || image.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* Image Info */}
-                    <div className="p-4">
-                      {/* Title and alt text commented out as per user preference */}
-                    </div>
+              <div className="relative h-[600px] overflow-hidden">
+                {/* Hero Section Preview */}
+                {images.slice(0, 1).map((image) => (
+                  <div key={image.id} className="relative h-full w-full">
+                    <img
+                      src={image.image_url}
+                      alt={image.title || 'Hero'}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Overlay with title/subtitle if present */}
+                    {(image.title || image.subtitle) && (
+                      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white p-8">
+                        {image.title && (
+                          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">{image.title}</h1>
+                        )}
+                        {image.subtitle && (
+                          <p className="text-xl md:text-2xl text-center">{image.subtitle}</p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
+                {/* Indicator if there are more images */}
+                {images.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                    {images.map((_, idx) => (
+                      <div
+                        key={idx}
+                        className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
-          </>
-        )}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+            Preview shows the first active image as it will appear on your homepage
+          </p>
+        </div>
       </main>
 
       {/* Modal */}

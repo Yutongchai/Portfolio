@@ -1,185 +1,89 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
+import { useState, useEffect } from "react";
 import { Carousel, Card } from "./components/ProjectCarousel";
 import EnergeticHero from "./components/EnergeticHero";
 import { Project } from "./types";
 import { Button } from "../../components/ui/Button";
 import Footer from "../../components/ui/Footer";
 import Icon from "../../components/AppIcon";
+import { supabase } from "../../config/supabaseClient";
 
-// Import images and video as ES modules
-import differentImg from "../../components/different.jpg";
-import collageImg from "../../components/collage.jpg";
-import mainPicImg from "../../components/mainPic.jpg";
-import trainingImg from "../../components/training.jpg";
-import discussImg from "../../components/discuss.jpg";
-import stationGamesVideo from "../../components/station_games.mp4";
-import teamworkImg from "../../components/teamwork.jpg";
 
 const WorkShowcase = () => {
   const navigate = useNavigate();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const projects: Project[] = [
-    {
-      id: "csr",
-      title: "Advelsoft",
-      category: "Team Building",
-      description:
-        "Empowering teams to make a positive impact through community service and social responsibility projects.",
-      longDescription:
-        "Our CSR programs engage teams in meaningful activities that benefit local communities, foster empathy, and build a sense of purpose. From volunteering to fundraising, we help organizations create lasting change together.",
-      image: "/Portfolio/events/_JIN3517.jpg",
-      alt: "Team participating in a CSR event outdoors",
-      technologies: ["Community Engagement", "Volunteering", "Fundraising"],
-      year: "2025",
-      client: "GlobalCorp",
-      role: "CSR Facilitator",
-      duration: "3 months",
-      challenge:
-        "Engaging employees in CSR activities while balancing work commitments.",
-      solution:
-        "Designed flexible, gamified CSR events that fit team schedules and maximized participation.",
-      outcome:
-        "Increased employee engagement by 50% and raised $20,000 for local charities.",
-      metrics: [
-        { label: "Engagement Increase", value: "50%", icon: "TrendingUp" },
-        { label: "Funds Raised", value: "$20,000", icon: "Gift" },
-      ],
-      testimonial: {
-        quote:
-          "The CSR program brought our team closer and made a real difference in our community.",
-        author: "Emily Chen",
-        position: "HR Manager",
-        company: "GlobalCorp",
-        avatar: mainPicImg,
-        alt: "Smiling woman at CSR event",
-      },
-      gallery: [
-       
-        {
-          url: "/Portfolio/events/_JIN3347.jpg",
-          alt: "Team celebrating with raised fists",
-          caption: "Team Victory",
-        },
-        {
-          url: "/Portfolio/events/_JIN3300.jpg",
-          alt: "Team hands forming huddle with wristbands",
-          caption: "Team Unity",
-        },
-        {
-          url: "/Portfolio/events/_JIN3303.jpg",
-          alt: "Team members at workshop table",
-          caption: "Workshop Session",
-        },
-        {
-          url: "/Portfolio/events/_JIN3367.jpg",
-          alt: "Team engaged in sorting activity",
-          caption: "Team Challenge",
-        },
-      ],
-      featured: true,
-    },
-    {
-      id: "gamified",
-      title: "Gamified Training",
-      category: "Training & Development",
-      description:
-        "Boosting learning outcomes with interactive, game-based training modules for teams.",
-      longDescription:
-        "Our gamified training solutions use challenges, leaderboards, and rewards to make learning fun and effective. Teams collaborate, compete, and grow their skills in a dynamic environment.",
-      image: trainingImg,
-      alt: "Team engaged in gamified training session",
-      technologies: ["Gamification", "eLearning", "Team Challenges"],
-      year: "2025",
-      client: "EduTech",
-      role: "Training Designer",
-      duration: "2 months",
-      challenge: "Making training engaging for remote and in-person teams.",
-      solution:
-        "Developed hybrid modules with interactive games and real-time feedback.",
-      outcome:
-        "Training completion rates rose to 95% and team satisfaction improved.",
-      metrics: [
-        { label: "Completion Rate", value: "95%", icon: "CheckCircle" },
-        { label: "Satisfaction", value: "High", icon: "Smile" },
-      ],
-      testimonial: {
-        quote:
-          "The gamified training kept everyone motivated and made learning enjoyable.",
-        author: "Michael Lee",
-        position: "Team Lead",
-        company: "EduTech",
-        avatar: discussImg,
-        alt: "Team lead at training session",
-      },
-      gallery: [
-        {
-          url: trainingImg,
-          alt: "Training session",
-          caption: "Training Session",
-        },
-        {
-          url: stationGamesVideo,
-          alt: "Gamified video",
-          caption: "Training Video",
-        },
-      ],
-      featured: true,
-    },
-    {
-      id: "teambuilding",
-      title: "Team Building Adventure",
-      category: "Team Building",
-      description:
-        "Strengthening collaboration and trust through immersive team building experiences.",
-      longDescription:
-        "Our team building adventures are designed to challenge, inspire, and unite teams. From outdoor activities to creative workshops, we help teams discover new strengths and build lasting bonds.",
-      image: teamworkImg,
-      alt: "Team working together outdoors",
-      technologies: ["Collaboration", "Workshops", "Outdoor Activities"],
-      year: "2025",
-      client: "InnovateX",
-      role: "Team Building Coach",
-      duration: "1 month",
-      challenge: "Encouraging collaboration among diverse team members.",
-      solution: "Facilitated activities that promoted communication and trust.",
-      outcome:
-        "Team performance improved and feedback was overwhelmingly positive.",
-      metrics: [
-        { label: "Performance Boost", value: "30%", icon: "TrendingUp" },
-        { label: "Positive Feedback", value: "98%", icon: "ThumbsUp" },
-      ],
-      testimonial: {
-        quote: "The team building adventure was transformative for our group.",
-        author: "Samantha Wong",
-        position: "Project Manager",
-        company: "InnovateX",
-        avatar: teamworkImg,
-        alt: "Project manager at team building event",
-      },
-      gallery: [
-        {
-          url: teamworkImg,
-          alt: "Teamwork outdoors",
-          caption: "Outdoor Teamwork",
-        },
-        {
-          url: collageImg,
-          alt: "Team building collage",
-          caption: "Event Collage",
-        },
-      ],
-      featured: true,
-    },
-  ];
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+
+      if (error) throw error;
+
+      // Map database fields to Project type
+      const mappedProjects: Project[] = (data || []).map(project => {
+        // DB rows may have legacy fields; use casts to avoid TS errors
+        const featured_image_url = (project as any).featured_image_url || project.image_url || '';
+        const image_alt = (project as any).image_alt || project.alt_text || project.title || '';
+
+        return {
+          id: project.id,
+          title: project.title,
+          category: project.category,
+          description: project.description,
+          longDescription: project.long_description,
+          technologies: project.technologies || [],
+          year: project.year,
+          client: project.client,
+          role: project.role || '',
+          duration: project.duration,
+          outcome: project.outcome,
+          metrics: project.metrics || [],
+          testimonial: project.testimonial || undefined,
+          gallery: project.gallery || [],
+          featured: project.featured || false,
+          featured_image_url,
+          image_alt,
+        } as Project;
+      });
+
+      setProjects(mappedProjects);
+      console.log('Fetched projects:', mappedProjects);
+      console.log('First project gallery:', mappedProjects[0]?.gallery);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setProjects([]); // Set empty array on error
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const cards = projects.map((project) => ({
-    src: project.image,
+    src: project.featured_image_url,
     title: project.title,
     category: project.category,
     content: (
       <div className="space-y-6">
+        {/* Main Project Image */}
+        <div className="rounded-lg overflow-hidden">
+          <img
+            src={project.featured_image_url}
+            alt={project.image_alt}
+            className="w-full h-64 md:h-96 object-cover"
+          />
+        </div>
+
         <p className="text-base text-neutral-600 dark:text-neutral-400">
           {project.longDescription}
         </p>
@@ -210,34 +114,6 @@ const WorkShowcase = () => {
             </p>
           </div>
         </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Challenge
-          </h4>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {project.challenge}
-          </p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Solution
-          </h4>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {project.solution}
-          </p>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Outcome
-          </h4>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {project.outcome}
-          </p>
-        </div>
-
         {project.metrics && (
           <div className="grid grid-cols-2 gap-4">
             {project.metrics.map((metric, idx) => (
@@ -353,16 +229,26 @@ const WorkShowcase = () => {
               </p> */}
             </motion.div>
 
-            <Carousel
-              items={cards.map((card, index) => (
-                <Card
-                  key={card.title}
-                  card={card}
-                  index={index}
-                  layout={true}
-                />
-              ))}
-            />
+            {loading ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="text-lg text-gray-600 dark:text-gray-400">Loading projects...</div>
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="text-lg text-gray-600 dark:text-gray-400">No projects available</div>
+              </div>
+            ) : (
+              <Carousel
+                items={cards.map((card, index) => (
+                  <Card
+                    key={card.title}
+                    card={card}
+                    index={index}
+                    layout={true}
+                  />
+                ))}
+              />
+            )}
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}

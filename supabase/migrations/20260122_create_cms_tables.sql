@@ -261,9 +261,6 @@ VALUES (
   '2025',
   'Advelsoft',
   'CSR Facilitator',
-  '3 months',
-  'Engaging employees in CSR activities while balancing work commitments.',
-  'Designed flexible, gamified CSR events that fit team schedules and maximized participation.',
   'Increased employee engagement by 50% and raised $20,000 for local charities.',
   true,
   true

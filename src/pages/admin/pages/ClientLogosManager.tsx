@@ -6,12 +6,14 @@ import Button from '../../../components/ui/Button';
 import ClientLogoModal from '../components/ClientLogoModal';
 
 interface ClientLogo {
-  id: string;
+  id: number;
   company_name: string;
   logo_url: string;
   website_url: string | null;
   is_active: boolean;
+  display_order: number;
   created_at: string;
+  updated_at: string;
 }
 
 const ClientLogosManager: React.FC = () => {
@@ -20,7 +22,7 @@ const ClientLogosManager: React.FC = () => {
   const [logos, setLogos] = useState<ClientLogo[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; logoUrl: string } | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; logoUrl: string } | null>(null);
 
   useEffect(() => {
     fetchLogos();
@@ -44,7 +46,7 @@ const ClientLogosManager: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: string, logoUrl: string) => {
+  const handleDelete = async (id: number, logoUrl: string) => {
     setDeleteConfirm({ id, logoUrl });
   };
 
@@ -112,67 +114,101 @@ const ClientLogosManager: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
-          </div>
-        ) : (
-          <>
+      {/* Main Content - Split Screen Layout */}
+      <main className="h-[calc(100vh-120px)] flex gap-4 px-4 sm:px-6 lg:px-8 py-4">
+        {/* Left Side - Logo List */}
+        <div className="w-1/2 overflow-y-auto">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Logos</h2>
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
+            </div>
+          ) : (
+            <>
+              {logos.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  No client logos yet. Click "Add New Logo" to get started.
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {logos.map((logo) => (
+                    <div
+                      key={logo.id}
+                      className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 p-3"
+                    >
+                      {/* Delete Button X - top right */}
+                      <button
+                        onClick={() => handleDelete(logo.id, logo.logo_url)}
+                        className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
+                        title="Delete logo"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+
+                      {/* Logo Preview */}
+                      <div className="aspect-square w-full flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded p-2">
+                        <img
+                          src={logo.logo_url}
+                          alt={logo.company_name}
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+
+                      {/* Company Name */}
+                      <div className="mt-2 text-center">
+                        <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                          {logo.company_name}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Right Side - Live Preview */}
+        <div className="w-1/2 sticky top-0">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Live Preview</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border-2 border-gray-300 dark:border-gray-600">
             {logos.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                No client logos yet. Click "Add New Logo" to get started.
+              <div className="h-96 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                No logos to preview
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                {logos.map((logo) => (
-                  <div
-                    key={logo.id}
-                    className="relative group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800 p-4"
-                  >
-                    {/* Delete Button X - top right */}
-                    <button
-                      onClick={() => handleDelete(logo.id, logo.logo_url)}
-                      className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-lg opacity-0 group-hover:opacity-100"
-                      title="Delete logo"
+              <div>
+                <h3 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
+                  Our Trusted Partners
+                </h3>
+                {/* Logo Grid Preview - As it will appear on homepage */}
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                  {logos.map((logo) => (
+                    <div
+                      key={logo.id}
+                      className="aspect-square flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3 hover:shadow-md transition-shadow"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-
-                    {/* Logo Preview */}
-                    <div className="aspect-square w-full flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded p-2">
                       <img
                         src={logo.logo_url}
                         alt={logo.company_name}
-                        className="max-w-full max-h-full object-contain"
+                        className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                        title={logo.company_name}
                       />
                     </div>
-
-                    {/* Company Name */}
-                    <div className="mt-3 text-center">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                        {logo.company_name}
-                      </p>
-                      {logo.website_url && (
-                        <a
-                          href={logo.website_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline truncate block"
-                        >
-                          Visit site
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
+                  {logos.length} {logos.length === 1 ? 'logo' : 'logos'} displayed
+                </p>
               </div>
             )}
-          </>
-        )}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+            Preview shows how logos will appear in the client section of your homepage
+          </p>
+        </div>
       </main>
 
       {/* Modal */}
