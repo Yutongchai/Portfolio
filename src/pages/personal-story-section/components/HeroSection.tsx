@@ -6,15 +6,19 @@ import { supabase } from '../../../config/supabaseClient';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
+  preview?: boolean;
 }
 
 const defaultPersonalInfo: PersonalInfo = {
-  name: "Yutong Chai",
+  name: "EITO Group",
+  title: "Product / Experience Designer",
   tagline: "Building experiences that bring teams together",
-  bio: "With a passion for creating meaningful connections, I specialize in designing team-building experiences that foster collaboration, growth, and lasting impact."
+  bio: "With a passion for creating meaningful connections, I specialize in designing team-building experiences that foster collaboration, growth, and lasting impact.",
+  image: '/Portfolio/EITO.jpg',
+  alt: 'Portrait of EITO Group'
 };
 
-const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
+const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSectionProps) => {
   const personalInfo = propPersonalInfo || defaultPersonalInfo;
   
   const ref = useRef<HTMLDivElement>(null);
@@ -83,6 +87,35 @@ const HeroSection = ({ personalInfo: propPersonalInfo }: HeroSectionProps) => {
 
     return () => clearInterval(interval);
   }, [backgroundImages.length]);
+
+  if (preview) {
+    return (
+      <div className="relative rounded-lg overflow-hidden shadow-lg h-72 md:h-80">
+        <div className="absolute inset-0">
+          {backgroundImages.length > 0 && (
+            <motion.div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
+              }}
+              animate={{ scale: 1.05 }}
+              transition={{ duration: 10, repeat: Infinity, repeatType: 'reverse' }}
+            />
+          )}
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+
+        <div className="relative h-full flex items-center justify-center p-4">
+          <div className="text-center space-y-3">
+            <h1 className="text-2xl md:text-3xl font-bold" style={{ color: '#fcb22f' }}>
+              {personalInfo.name}
+            </h1>
+            <p className="text-sm md:text-base text-white font-medium">We Build Team Experiences</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">

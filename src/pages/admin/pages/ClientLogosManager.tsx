@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import ClientLogoModal from '../components/ClientLogoModal';
+import ClientDomeGallery from '../../personal-story-section/components/ClientDomeGallery'; // Import the 3D gallery
 
 interface ClientLogo {
   id: number;
@@ -23,10 +24,23 @@ const ClientLogosManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; logoUrl: string } | null>(null);
+  const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
+  const [previewMode, setPreviewMode] = useState<'2d' | '3d'>('3d'); // Add preview mode toggle
 
   useEffect(() => {
     fetchLogos();
   }, []);
+
+  // Auto-rotate the previewed logo in the admin preview
+  useEffect(() => {
+    if (logos.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentLogoIndex((prev) => (prev + 1) % logos.length);
+    }, 3000); // rotate every 3s
+
+    return () => clearInterval(interval);
+  }, [logos.length]);
 
   const fetchLogos = async () => {
     try {
@@ -73,6 +87,11 @@ const ClientLogosManager: React.FC = () => {
     fetchLogos();
   };
 
+  // Extract just the image URLs for the 3D gallery
+  const logoUrls = logos.map(logo => logo.logo_url);
+  // alias as `clients` for the gallery props requested
+  const clients = logoUrls;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
@@ -115,10 +134,15 @@ const ClientLogosManager: React.FC = () => {
       </header>
 
       {/* Main Content - Split Screen Layout */}
-      <main className="h-[calc(100vh-120px)] flex gap-4 px-4 sm:px-6 lg:px-8 py-4">
+      <main className="h-[calc(100vh-120px)] flex flex-col lg:flex-row gap-4 px-4 sm:px-6 lg:px-8 py-4">
         {/* Left Side - Logo List */}
-        <div className="w-1/2 overflow-y-auto">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Logos</h2>
+        <div className="w-full lg:w-1/2 overflow-y-auto pr-2">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Logos</h2>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {logos.length} {logos.length === 1 ? 'logo' : 'logos'}
+            </span>
+          </div>
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
@@ -126,8 +150,12 @@ const ClientLogosManager: React.FC = () => {
           ) : (
             <>
               {logos.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  No client logos yet. Click "Add New Logo" to get started.
+                <div className="text-center py-12 text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                  <svg className="w-12 h-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="mt-4">No client logos yet.</p>
+                  <p className="text-sm mt-1">Click "Add New Logo" to get started.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -161,6 +189,9 @@ const ClientLogosManager: React.FC = () => {
                         <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
                           {logo.company_name}
                         </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Added: {new Date(logo.created_at).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -171,43 +202,152 @@ const ClientLogosManager: React.FC = () => {
         </div>
 
         {/* Right Side - Live Preview */}
-        <div className="w-1/2 sticky top-0">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Live Preview</h2>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 border-2 border-gray-300 dark:border-gray-600">
+        <div className="w-full lg:w-1/2 sticky top-0">
+          <div className="relative rounded-lg overflow-hidden shadow-lg h-72 md:h-80 bg-white dark:bg-gray-800 p-4 md:p-8 border-2 border-gray-300 dark:border-gray-600">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Live Preview</h2>
+
+              {/* Preview Mode Toggle */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">View:</span>
+                <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setPreviewMode('2d')}
+                    className={`px-3 py-1 text-sm font-medium transition-colors ${previewMode === '2d'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                  >
+                    2D Grid
+                  </button>
+                  <button
+                    onClick={() => setPreviewMode('3d')}
+                    className={`px-3 py-1 text-sm font-medium transition-colors ${previewMode === '3d'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }`}
+                  >
+                    3D Sphere
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {logos.length === 0 ? (
-              <div className="h-96 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                No logos to preview
+              <div className="h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                <svg className="w-16 h-16 mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <p>No logos to preview</p>
+                <p className="text-sm mt-1">Add logos to see them here</p>
               </div>
             ) : (
-              <div>
-                <h3 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
-                  Our Trusted Partners
-                </h3>
-                {/* Logo Grid Preview - As it will appear on homepage */}
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {logos.map((logo) => (
-                    <div
-                      key={logo.id}
-                      className="aspect-square flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3 hover:shadow-md transition-shadow"
-                    >
-                      <img
-                        src={logo.logo_url}
-                        alt={logo.company_name}
-                        className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                        title={logo.company_name}
+              <div className="space-y-6">
+                {/* Preview Mode Content */}
+                {previewMode === '2d' ? (
+                  <>
+                    {/* 2D Grid Preview */}
+                    <div>
+                      <h3 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">
+                        Our Trusted Partners
+                      </h3>
+
+                      {/* Small rotating carousel preview */}
+                      <div className="mb-6">
+                        <div className="flex items-center justify-center mb-4">
+                          <div className="w-48 h-48 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center p-6 shadow-md">
+                            <img
+                              src={logos[currentLogoIndex].logo_url}
+                              alt={logos[currentLogoIndex].company_name}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                          {logos.map((_, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setCurrentLogoIndex(idx)}
+                              aria-label={`Go to logo ${idx + 1}`}
+                              className={`w-2 h-2 rounded-full ${idx === currentLogoIndex ? 'bg-blue-600' : 'bg-gray-300'}`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Grid of logos */}
+                      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                        {logos.map((logo) => (
+                          <div
+                            key={logo.id}
+                            className="aspect-square flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg p-3 hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700"
+                          >
+                            <img
+                              src={logo.logo_url}
+                              alt={logo.company_name}
+                              className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                              title={logo.company_name}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* 3D Sphere Preview */}
+                    <div className="h-full rounded-lg overflow-hidden border flex items-start justify-center pb-6">
+                      <ClientDomeGallery
+                        images={clients}
+                        fit={0.8}
+                        minRadius={600}
+                        maxVerticalRotationDeg={0}
+                        segments={34}
+                        dragDampening={2}
+                        grayscale={false}
                       />
                     </div>
-                  ))}
+
+                    <div className="text-center space-y-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Drag to rotate the sphere • Logos automatically rotate
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                        Showing {logoUrls.length} logos in 3D sphere view
+                      </p>
+                    </div>
+                  </>
+                )}
+
+                {/* Stats */}
+                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Total Logos</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">{logos.length}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Preview Mode</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">{previewMode.toUpperCase()}</p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
-                  {logos.length} {logos.length === 1 ? 'logo' : 'logos'} displayed
-                </p>
               </div>
             )}
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-            Preview shows how logos will appear in the client section of your homepage
-          </p>
+
+          {/* Preview instructions */}
+          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="flex items-start gap-2">
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Live Preview:</span> Changes made to logos will instantly update in the preview above.
+                {previewMode === '3d' && ' Drag the 3D sphere to rotate it.'}
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 

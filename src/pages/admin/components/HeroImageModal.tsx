@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
 
 interface HeroImageModalProps {
   onClose: () => void;

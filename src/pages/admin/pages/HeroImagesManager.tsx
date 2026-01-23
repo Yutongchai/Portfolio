@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import HeroImageModal from '../components/HeroImageModal';
+import HeroSection from '../../personal-story-section/components/HeroSection';
 
 interface HeroImage {
   id: number;
@@ -21,6 +22,7 @@ const HeroImagesManager: React.FC = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<HeroImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; imageUrl: string } | null>(null);
 
@@ -28,7 +30,7 @@ const HeroImagesManager: React.FC = () => {
     fetchImages();
   }, []);
 
-  const fetchImages = async () => {
+  const fetchImages = async (focusLatest: boolean = false) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -38,13 +40,34 @@ const HeroImagesManager: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setImages(data || []);
+      const imgs = data || [];
+      setImages(imgs);
+      if (focusLatest && imgs.length > 0) {
+        // show the most-recent image immediately
+        setCurrentImageIndex(0);
+      }
     } catch (error) {
       console.error('Error fetching hero images:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Cycle preview images every 5 seconds; reset when images length changes
+  useEffect(() => {
+    if (images.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  // If the current index is out of bounds after add/delete, reset to 0
+  useEffect(() => {
+    if (currentImageIndex >= images.length) setCurrentImageIndex(0);
+  }, [images.length, currentImageIndex]);
 
   const handleDelete = async (id: number, imageUrl: string) => {
     setDeleteConfirm({ id, imageUrl });
@@ -62,7 +85,8 @@ const HeroImagesManager: React.FC = () => {
 
       if (error) throw error;
       setDeleteConfirm(null);
-      fetchImages();
+      // refresh and focus latest (so preview updates immediately)
+      fetchImages(true);
     } catch (error) {
       console.error('Error deleting image:', error);
       alert('Failed to delete image');
@@ -71,7 +95,8 @@ const HeroImagesManager: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    fetchImages();
+    // after adding a new image, refresh and show it immediately
+    fetchImages(true);
   };
 
   return (
@@ -177,47 +202,8 @@ const HeroImagesManager: React.FC = () => {
         {/* Right Side - Live Preview */}
         <div className="w-1/2 sticky top-0">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Live Preview</h2>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600">
-            {images.length === 0 ? (
-              <div className="h-96 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                No images to preview
-              </div>
-            ) : (
-              <div className="relative h-[600px] overflow-hidden">
-                {/* Hero Section Preview */}
-                {images.slice(0, 1).map((image) => (
-                  <div key={image.id} className="relative h-full w-full">
-                    <img
-                      src={image.image_url}
-                      alt={image.title || 'Hero'}
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Overlay with title/subtitle if present */}
-                    {(image.title || image.subtitle) && (
-                      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white p-8">
-                        {image.title && (
-                          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">{image.title}</h1>
-                        )}
-                        {image.subtitle && (
-                          <p className="text-xl md:text-2xl text-center">{image.subtitle}</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {/* Indicator if there are more images */}
-                {images.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                    {images.map((_, idx) => (
-                      <div
-                        key={idx}
-                        className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-white' : 'bg-white bg-opacity-50'}`}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600 p-4">
+            <HeroSection preview />
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
             Preview shows the first active image as it will appear on your homepage

@@ -1,13 +1,33 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import './RotatingText.css';
 
-function cn(...classes) {
+function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-const RotatingText = forwardRef((props, ref) => {
+interface RotatingTextProps extends React.HTMLAttributes<HTMLSpanElement> {
+  texts: string[];
+  transition?: any;
+  initial?: any;
+  animate?: any;
+  exit?: any;
+  animatePresenceMode?: any;
+  animatePresenceInitial?: boolean;
+  rotationInterval?: number;
+  staggerDuration?: number;
+  staggerFrom?: any;
+  loop?: boolean;
+  auto?: boolean;
+  splitBy?: string;
+  onNext?: (index: number) => void;
+  mainClassName?: string;
+  splitLevelClassName?: string;
+  elementLevelClassName?: string;
+}
+
+const RotatingText = forwardRef<HTMLSpanElement, RotatingTextProps>((props, ref) => {
   const {
     texts,
     transition = { type: 'spring', damping: 25, stiffness: 300 },
@@ -27,7 +47,7 @@ const RotatingText = forwardRef((props, ref) => {
     splitLevelClassName,
     elementLevelClassName,
     ...rest
-  } = props;
+  } = props as RotatingTextProps;
 
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
