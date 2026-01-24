@@ -76,7 +76,7 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
                   <Icon name="X" size={24} className="text-foreground" />
                 </button>
 
-                <div className="relative h-96 overflow-hidden rounded-t-2xl">
+                <div className="relative h-[40vh] md:h-[60vh] lg:h-[70vh] overflow-hidden rounded-t-2xl">
                   <Image
                     src={project.gallery[activeGalleryIndex].url}
                     alt={project.gallery[activeGalleryIndex].alt}

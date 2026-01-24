@@ -10,6 +10,9 @@ export interface Project {
   year: string;
   client: string;
   role?: string;
+  type_id: string | null;
+  type_key?: string | null;
+  type_description?: string | null;
   duration: string;
   outcome: string;
   metrics: ProjectMetric[];

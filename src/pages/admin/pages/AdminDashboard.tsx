@@ -11,7 +11,6 @@ const AdminDashboard: React.FC = () => {
     heroImages: 0,
     clientLogos: 0,
     projects: 0,
-    testimonials: 0,
   });
 
   useEffect(() => {
@@ -37,16 +36,10 @@ const AdminDashboard: React.FC = () => {
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
 
-      const { count: testimonialsCount } = await supabase
-        .from('testimonials')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
-
       setStats({
         heroImages: heroCount || 0,
         clientLogos: logosCount || 0,
         projects: projectsCount || 0,
-        testimonials: testimonialsCount || 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -150,21 +143,7 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Testimonials Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Testimonials
-              </h2>
-              <span className="text-2xl">⭐</span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Add and edit client testimonials and reviews
-            </p>
-            <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white">
-              Manage Testimonials
-            </Button>
-          </div>
+          {/* Testimonials removed — managed via Google Reviews integration */}
 
 
 
@@ -186,11 +165,11 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Quick Stats
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.heroImages}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Hero Images</div>
@@ -203,10 +182,7 @@ const AdminDashboard: React.FC = () => {
               <div className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.projects}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Projects</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{stats.testimonials}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Testimonials</div>
-            </div>
+            {/* Testimonials stat removed — using Google Reviews instead */}
           </div>
         </div>
       </main>

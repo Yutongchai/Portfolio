@@ -32,10 +32,29 @@ const WorkShowcase = () => {
       if (error) throw error;
 
       // Map database fields to Project type
+      // Fetch gallery rows separately so we use the exact `url` stored in `project_gallery`
+      const projectIds = (data || []).map((p: any) => p.id).filter(Boolean);
+      let galleryRows: any[] = [];
+      if (projectIds.length > 0) {
+        const { data: gdata, error: gerror } = await supabase
+          .from('project_gallery')
+          .select('*')
+          .in('project_id', projectIds);
+        if (gerror) throw gerror;
+        galleryRows = gdata || [];
+      }
+
       const mappedProjects: Project[] = (data || []).map(project => {
         // DB rows may have legacy fields; use casts to avoid TS errors
-        const featured_image_url = (project as any).featured_image_url || project.image_url || '';
-        const image_alt = (project as any).image_alt || project.alt_text || project.title || '';
+        const featured_image_url = (project as any).featured_image_url || '';
+        const image_alt = (project as any).image_alt || project.title || '';
+
+        const gallery = galleryRows
+          .filter((g) => g.project_id === project.id)
+          .map((g) => ({ ...g }));
+
+        // Determine type description if available
+        const typeDescription = (project as any).type_id ? (/* will be filled below */ null) : null;
 
         return {
           id: project.id,
@@ -51,12 +70,30 @@ const WorkShowcase = () => {
           outcome: project.outcome,
           metrics: project.metrics || [],
           testimonial: project.testimonial || undefined,
-          gallery: project.gallery || [],
+          gallery,
           featured: project.featured || false,
           featured_image_url,
           image_alt,
         } as Project;
       });
+
+      // Fetch project types and replace category with type description when available
+      try {
+        const { data: typesData, error: typesError } = await supabase
+          .from('project_types')
+          .select('id, type_key, description');
+        if (typesError) throw typesError;
+        const typeMap = new Map((typesData || []).map((t: any) => [t.id, t.description || t.type_key]));
+        // Apply mapping
+        for (const p of mappedProjects) {
+          const raw = (data || []).find((d: any) => d.id === p.id);
+          if (raw && raw.type_id && typeMap.has(raw.type_id)) {
+            p.category = typeMap.get(raw.type_id);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch project types:', err);
+      }
 
       setProjects(mappedProjects);
       console.log('Fetched projects:', mappedProjects);
@@ -80,7 +117,7 @@ const WorkShowcase = () => {
           <img
             src={project.featured_image_url}
             alt={project.image_alt}
-            className="w-full h-64 md:h-96 object-cover"
+            className="w-full h-40 md:h-96 object-cover"
           />
         </div>
 
@@ -132,7 +169,7 @@ const WorkShowcase = () => {
           </div>
         )}
 
-        {project.testimonial && (
+    {/*     {project.testimonial && (
           <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg p-6 mt-6">
             <p className="text-sm italic text-neutral-700 dark:text-neutral-300 mb-4">
               "{project.testimonial.quote}"
@@ -154,7 +191,7 @@ const WorkShowcase = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         {project.gallery && project.gallery.length > 0 && (
           <div className="mt-6">

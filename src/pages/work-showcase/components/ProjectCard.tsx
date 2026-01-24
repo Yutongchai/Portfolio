@@ -18,15 +18,15 @@ const ProjectCard = ({ project, onViewDetails }: ProjectCardProps) => {
       onMouseLeave={() => setIsHovered(false)}
       className="group relative bg-card rounded-lg sm:rounded-2xl overflow-hidden shadow-elevation hover:shadow-accent transition-all duration-500"
     >
-      <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden">
+      <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
         <motion.div
           animate={{ scale: isHovered ? 1.1 : 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="w-full h-full"
         >
           <Image
-            src={project.image}
-            alt={project.alt}
+            src={project.featured_image_url}
+            alt={project.image_alt}
             className="w-full h-full object-cover"
           />
         </motion.div>

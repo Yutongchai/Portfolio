@@ -4,6 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import ProjectModal from '../components/ProjectModal';
+import { Carousel, Card } from '../../work-showcase/components/ProjectCarousel';
 
 interface Project {
     id: string;
@@ -55,11 +56,23 @@ const ProjectsManager: React.FC = () => {
             const typesMap: Record<string, any> = {};
             (types || []).forEach((t: any) => { typesMap[t.id] = t; });
 
+            // convert any storage paths in gallery/featured image to public URLs
+            const normalizeUrl = (url: string) => {
+                if (!url) return '';
+                if (url.startsWith('http')) return url;
+                const { data } = supabase.storage.from('project-images').getPublicUrl(url);
+                return data?.publicUrl || url;
+            };
+
             const merged = (projectsData || []).map((p: any) => ({
                 ...p,
                 type_key: typesMap[p.type_id]?.type_key,
                 type_description: typesMap[p.type_id]?.description,
-                gallery: (galleries || []).filter((g: any) => g.project_id === p.id)
+                featured_image_url: normalizeUrl(p.featured_image_url || ''),
+                gallery: (galleries || []).filter((g: any) => g.project_id === p.id).map((g: any) => ({
+                    ...g,
+                    url: normalizeUrl(g.url)
+                }))
             }));
 
             setProjects(merged || []);
@@ -107,6 +120,93 @@ const ProjectsManager: React.FC = () => {
         setSelectedProject(undefined);
         setIsModalOpen(true);
     };
+
+    const carouselItems = projects.map((p, i) => {
+        const src = p.featured_image_url || p.gallery?.[0]?.url || '';
+        const content = (
+            <div className="space-y-6">
+                <div className="rounded-lg overflow-hidden">
+                    {src ? (
+                        <img src={src} alt={p.image_alt || p.title} className="w-full h-40 object-cover" />
+                    ) : (
+                        <div className="w-full h-40 bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm text-gray-500">No main image</div>
+                    )}
+                </div>
+
+                <p className="text-base text-neutral-600 dark:text-neutral-400">{p.long_description || p.description}</p>
+
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                    <div>
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Client</h4>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">{p.client}</p>
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Duration</h4>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">{p.duration}</p>
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Year</h4>
+                        <p className="text-sm text-neutral-600 dark:text-neutral-400">{p.year}</p>
+                    </div>
+                </div>
+
+                {/*    {p.metrics && p.metrics.length > 0 && (
+                    <div className="grid grid-cols-2 gap-4">
+                        {p.metrics.map((metric: any, idx: number) => (
+                            <div key={idx} className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4">
+                                <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{metric.value}</p>
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400">{metric.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                )} */}
+                {/* 
+                {p.testimonial && (
+                    <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg p-6 mt-6">
+                        <p className="text-sm italic text-neutral-700 dark:text-neutral-300 mb-4">"{p.testimonial.quote}"</p>
+                        <div className="flex items-center gap-3">
+                            {p.testimonial.avatar && (
+                                <img src={p.testimonial.avatar} alt={p.testimonial.author} className="w-10 h-10 rounded-full object-cover" />
+                            )}
+                            <div>
+                                <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{p.testimonial.author}</p>
+                                <p className="text-xs text-neutral-600 dark:text-neutral-400">{p.testimonial.position} {p.testimonial.company ? `at ${p.testimonial.company}` : ''}</p>
+                            </div>
+                        </div>
+                    </div>
+                )} */}
+
+                {p.gallery && p.gallery.length > 0 && (
+                    <div className="mt-6">
+                        <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Gallery</h4>
+                        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-neutral-400 scrollbar-track-neutral-200 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-800">
+                            {p.gallery.map((item: any, idx: number) => (
+                                <div key={idx} className="flex-shrink-0 w-64 snap-center">
+                                    <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                                        {item.url.endsWith('.mp4') ? (
+                                            <video src={item.url} controls className="w-full h-48 object-cover" />
+                                        ) : (
+                                            <img src={item.url} alt={item.alt} className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300" />
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+
+        return (
+            <Card
+                key={p.id}
+                index={i}
+                layout
+                compact
+                card={{ src, title: p.title, category: p.type_description || '—', content }}
+            />
+        );
+    });
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -225,47 +325,9 @@ const ProjectsManager: React.FC = () => {
                             </div>
                         ) : (
                             <div className="space-y-8">
-                                <h3 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">
-                                    Project Showcase Preview
-                                </h3>
-                                {projects.slice(0, 1).map((project) => (
-                                    <div key={project.id} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
 
-                                        <div className="p-4">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <h4 className="text-lg font-bold text-gray-900 dark:text-white">
-                                                    {project.title}
-                                                </h4>
-                                                <span className="text-sm text-gray-600 dark:text-gray-400">
-                                                    {project.type_key || '—'}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                                                {project.description}
-                                            </p>
+                                <Carousel items={carouselItems} initialScroll={0} />
 
-
-                                            {/*  */}
-                                            {/* Gallery */}
-                                            {project.gallery && project.gallery.length > 0 && (
-                                                <div className="flex gap-2 overflow-x-auto">
-                                                    {project.gallery.map((item, idx) => (
-                                                        <div key={idx} className="flex-shrink-0 w-24 h-24">
-                                                            <img
-                                                                src={item.url}
-                                                                alt={item.alt}
-                                                                className="w-full h-full object-cover rounded"
-                                                            />
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                                    Preview shows the first project card as it will appear in the carousel
-                                </p>
                             </div>
                         )}
                     </div>
@@ -274,8 +336,8 @@ const ProjectsManager: React.FC = () => {
 
             {/* Modal */}
             {isModalOpen && (
-                <ProjectModal 
-                    onClose={handleModalClose} 
+                <ProjectModal
+                    onClose={handleModalClose}
                     project={selectedProject}
                     onSaved={handleModalClose}
                 />

@@ -45,20 +45,15 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
         project?.metrics || []
     );
 
-    // Testimonial (object)
-    const [hasTestimonial, setHasTestimonial] = useState(!!project?.testimonial);
-    const [testimonialQuote, setTestimonialQuote] = useState(project?.testimonial?.quote || '');
-    const [testimonialAuthor, setTestimonialAuthor] = useState(project?.testimonial?.author || '');
-    const [testimonialPosition, setTestimonialPosition] = useState(project?.testimonial?.position || '');
-    const [testimonialCompany, setTestimonialCompany] = useState(project?.testimonial?.company || '');
-    const [testimonialAvatar, setTestimonialAvatar] = useState(project?.testimonial?.avatar || '');
-    const [testimonialAlt, setTestimonialAlt] = useState(project?.testimonial?.alt || '');
+    // Testimonials are managed externally (Google Reviews). Removed local testimonial fields.
 
     // Gallery (array of objects)
     const [gallery, setGallery] = useState<{ id?: string; url: string; alt: string }[]>(
         // keep compatibility if project.gallery has caption, map it away
         (project?.gallery || []).map((g: any) => ({ id: g.id || uuidv4(), url: g.url, alt: g.alt }))
     );
+
+    const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number }>({ current: 0, total: 0 });
 
     useEffect(() => {
         const fetchProjectTypes = async () => {
@@ -169,6 +164,28 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
         }
     };
 
+    // Compress an image file in the browser to reduce upload size
+    const compressImage = async (file: File, maxWidth = 1600, quality = 0.8): Promise<File> => {
+        try {
+            if (!file.type.startsWith('image/')) return file;
+            const imageBitmap = await createImageBitmap(file as any);
+            const scale = Math.min(1, maxWidth / imageBitmap.width);
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(imageBitmap.width * scale));
+            canvas.height = Math.max(1, Math.round(imageBitmap.height * scale));
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return file;
+            ctx.drawImage(imageBitmap, 0, 0, canvas.width, canvas.height);
+            const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
+            if (!blob) return file;
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.jpg'), { type: 'image/jpeg' });
+            return compressedFile;
+        } catch (err) {
+            console.warn('Image compression failed, uploading original file', err);
+            return file;
+        }
+    };
+
     const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -184,17 +201,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
         }
     };
 
-    const handleTestimonialAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        try {
-            const url = await uploadImage(file, 'avatars');
-            setTestimonialAvatar(url);
-        } catch (err: any) {
-            setError(err.message);
-        }
-    };
+    // Testimonial avatar upload removed (testimonials handled via external service)
 
     const handleGalleryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const file = e.target.files?.[0];
@@ -214,20 +221,47 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
     const handleGalleryMultipleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (!files.length) return;
-        try {
-            setUploading(true);
-            const uploads = await Promise.all(
-                files.map(async (file) => {
-                    const url = await uploadImage(file, 'gallery');
+        setError(null);
+        setUploading(true);
+        setUploadProgress({ current: 0, total: files.length });
+        const uploadedItems: { id: string; url: string; alt: string }[] = [];
+
+        // concurrency-limited uploader
+        const concurrency = 4;
+        let index = 0;
+
+        const worker = async () => {
+            while (true) {
+                const i = index++;
+                if (i >= files.length) return;
+                const file = files[i];
+                try {
+                    const fileToUpload = file.type.startsWith('image/') ? await compressImage(file) : file;
+                    const url = await uploadImage(fileToUpload as File, 'gallery');
                     const altText = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
-                    return { id: uuidv4(), url, alt: altText };
-                })
-            );
-            setGallery((g) => [...uploads, ...g]);
+                    uploadedItems.push({ id: uuidv4(), url, alt: altText });
+                } catch (innerErr: any) {
+                    console.error('Failed uploading file', file.name, innerErr);
+                    setError(innerErr.message || 'Failed to upload one or more files');
+                } finally {
+                    // update progress based on completed uploads
+                    setUploadProgress((prev) => ({ current: prev.current + 1, total: files.length }));
+                }
+            }
+        };
+
+        try {
+            const workers = Array.from({ length: Math.min(concurrency, files.length) }, () => worker());
+            await Promise.all(workers);
+            if (uploadedItems.length) setGallery((g) => [...uploadedItems, ...g]);
         } catch (err: any) {
-            setError(err.message);
+            console.error('Error during multiple upload:', err);
+            setError(err.message || 'Failed to upload files');
         } finally {
             setUploading(false);
+            setUploadProgress({ current: 0, total: 0 });
+            // clear input value to allow re-uploading same files if needed
+            try { (e.target as HTMLInputElement).value = ''; } catch { }
         }
     };
 
@@ -237,39 +271,43 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
         setError(null);
 
         try {
-            // Validate required fields
-            if (!title || !description || !longDescription || !featuredImageUrl || !year || !client || !duration || !outcome) {
-                throw new Error('Please fill in all required fields');
+            // Validate required fields and log which ones are missing for debugging
+            const missingFields: string[] = [];
+            if (!title) missingFields.push('title');
+            // description is optional (nullable in DB)
+            if (!longDescription) missingFields.push('longDescription');
+            if (!featuredImageUrl) missingFields.push('featuredImageUrl');
+            if (!year) missingFields.push('year');
+            if (!client) missingFields.push('client');
+            if (!duration) missingFields.push('duration');
+
+            if (missingFields.length) {
+                console.error('Missing required fields:', missingFields, {
+                    title,
+                    description: description || null,
+                    longDescription,
+                    featuredImageUrl,
+                    year,
+                    client,
+                    duration,
+                });
+                throw new Error('Please fill in all required fields: ' + missingFields.join(', '));
             }
 
-            // Prepare testimonial object
-            const testimonialObj = hasTestimonial ? {
-                quote: testimonialQuote,
-                author: testimonialAuthor,
-                position: testimonialPosition,
-                company: testimonialCompany,
-                avatar: testimonialAvatar,
-                alt: testimonialAlt
-            } : null;
+
 
             // Prepare project payload (projects table)
             const projectPayload: any = {
                 // Generate UUID for new projects
                 ...(!project ? { id: uuidv4() } : {}),
                 title,
-                category,
-                description,
                 long_description: longDescription,
                 featured_image_url: featuredImageUrl,
                 image_alt: imageAlt,
-                technologies: technologies.split(',').map(t => t.trim()).filter(t => t),
                 year,
                 client,
-                role,
                 duration,
-                outcome,
                 metrics,
-                testimonial: testimonialObj,
                 featured,
                 is_active: true,
                 type_id: typeId || null,
@@ -347,7 +385,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                     <div className="space-y-4">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-3 gap-4">
                             <Input
                                 label="Year"
                                 value={year}
@@ -390,32 +428,50 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 </Button>
                             </div> */}
                             </div>
-                        </div>
 
-                        <Input
-                            label="Title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="e.g., Corporate Social Responsibility"
-                            required
-                        />
-
-
-
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Short Description
-                            </label>
-                            <textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                rows={2}
-                                placeholder="Brief description for card preview"
+                            <Input
+                                label="Duration"
+                                value={duration}
+                                onChange={(e) => setDuration(e.target.value)}
+                                placeholder="e.g., 3 months"
                                 required
                             />
                         </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Input
+                                label="Client"
+                                value={client}
+                                onChange={(e) => setClient(e.target.value)}
+                                placeholder="e.g., GlobalCorp"
+                                required
+                            />
+                            <Input
+                                label="Title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="e.g., Corporate Social Responsibility"
+                                required
+                            />
+                        </div>
+
+
+
+                        {/* Long Description */}
+                        <div className="space-y-4 border-t pt-4">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Full Description</h3>
+                            <div>
+                                <textarea
+                                    value={longDescription}
+                                    onChange={(e) => setLongDescription(e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                    rows={4}
+                                    placeholder="Detailed project description for case study"
+                                    required
+                                    aria-multiline
+                                />
+                            </div>
+                        </div>
+
 
 
 
@@ -432,70 +488,107 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 required={!featuredImageUrl}
                             />
                             {uploading && <p className="text-sm text-blue-600 mt-1">Uploading...</p>}
-                            {featuredImageUrl && (
-                                <div className="mt-2">
-                                    <img src={featuredImageUrl} alt="Preview" className="w-full h-48 object-cover rounded" />
+                            {/** Full preview card (matches work-showcase card) */}
+                            <div className="mt-4">
+                                <div className="space-y-6 bg-white dark:bg-neutral-900 p-0">
+                                    {/* Main Project Image */}
+                                    <div className="rounded-lg overflow-hidden">
+                                        {featuredImageUrl ? (
+                                            <img
+                                                src={featuredImageUrl}
+                                                alt={imageAlt}
+                                                className="w-full h-30 object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-30 bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm text-gray-500">
+                                                No main image
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <p className="text-base text-neutral-600 dark:text-neutral-400">
+                                        {longDescription}
+                                    </p>
+
+                                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Client</h4>
+                                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{client}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Duration</h4>
+                                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{duration}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Year</h4>
+                                            <p className="text-sm text-neutral-600 dark:text-neutral-400">{year}</p>
+                                        </div>
+                                    </div>
+
+                                    {metrics && metrics.length > 0 && (
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {metrics.map((metric, idx) => (
+                                                <div key={idx} className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-4">
+                                                    <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{metric.value}</p>
+                                                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{metric.label}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Local testimonial preview removed; testimonials now come from Google Reviews */}
+
+                                    {gallery && gallery.length > 0 && (
+                                        <div className="mt-6">
+                                            <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-3">Gallery</h4>
+                                            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-neutral-400 scrollbar-track-neutral-200 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-800">
+                                                {gallery.map((item, idx) => (
+                                                    <div key={idx} className="flex-shrink-0 w-64 snap-center">
+                                                        <div className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                                                            {item.url.endsWith('.mp4') ? (
+                                                                <video src={item.url} controls className="w-full h-48 object-cover" />
+                                                            ) : (
+                                                                <img src={item.url} alt={item.alt} className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300" />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
+                            </div>
                         </div>
 
 
                     </div>
 
-                    {/* Long Description */}
-                    <div className="space-y-4 border-t pt-4">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Full Description</h3>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Long Description
-                            </label>
-                            <textarea
-                                value={longDescription}
-                                onChange={(e) => setLongDescription(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                                rows={4}
-                                placeholder="Detailed project description for case study"
-                                required
-                            />
-                        </div>
-                    </div>
 
                     {/* Project Details */}
-                    <div className="space-y-4 border-t pt-4">
+                    {/* <div className="space-y-4 border-t pt-4">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Project Details</h3>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                label="Client"
-                                value={client}
-                                onChange={(e) => setClient(e.target.value)}
-                                placeholder="e.g., GlobalCorp"
-                                required
-                            />
 
-                            <Input
-                                label="Duration"
-                                value={duration}
-                                onChange={(e) => setDuration(e.target.value)}
-                                placeholder="e.g., 3 months"
-                                required
+
+
+                              <Input
+                                label="Category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                placeholder="e.g., Web Development"
                             />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Input
+                             <Input
                                 label="Role"
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
                                 placeholder="e.g., Project Manager"
                             />
 
-                            <Input
-                                label="Category"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                placeholder="e.g., Web Development"
-                            />
+
                         </div>
 
                         <div>
@@ -508,7 +601,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 rows={3}
                                 placeholder="Key outcomes and results achieved"
-                                required
+                        
                             />
                         </div>
 
@@ -524,10 +617,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 placeholder="e.g., React, TypeScript, Tailwind CSS"
                             />
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Metrics */}
-                    <div className="space-y-4 border-t pt-4">
+                    {/* <div className="space-y-4 border-t pt-4">
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Key Metrics</h3>
                             <Button type="button" onClick={addMetric} className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
@@ -567,10 +660,10 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 />
                             </div>
                         ))}
-                    </div>
+                    </div> */}
 
                     {/* Testimonial */}
-                    <div className="space-y-4 border-t pt-4">
+                    {/* <div className="space-y-4 border-t pt-4">
                         <div className="flex items-center gap-3">
                             <input
                                 type="checkbox"
@@ -637,7 +730,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                                 />
                             </div>
                         )}
-                    </div>
+                    </div> */}
 
 
                     {/* Gallery */}
@@ -645,59 +738,45 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
                         <div className="flex items-center justify-between">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Gallery</h3>
                             <div className="flex items-center gap-2">
-                                <input
-                                    type="file"
-                                    accept="image/*,video/*"
-                                    multiple
-                                    onChange={handleGalleryMultipleUpload}
-                                    disabled={uploading}
-                                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                                />
-                                <Button type="button" onClick={addGalleryItem} className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
-                                    + Add Image/Video
-                                </Button>
-                            </div>
-                        </div>
-
-                        {gallery.map((item, index) => (
-                            <div key={index} className="space-y-2 bg-gray-50 dark:bg-gray-700/50 p-3 rounded">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Image {index + 1}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeGalleryItem(index)}
-                                        className="text-red-600 hover:text-red-800 text-sm"
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Upload Image/Video
-                                    </label>
+                                <div className="flex flex-col">
                                     <input
                                         type="file"
                                         accept="image/*,video/*"
-                                        onChange={(e) => handleGalleryImageUpload(e, index)}
+                                        multiple
+                                        onChange={handleGalleryMultipleUpload}
                                         disabled={uploading}
-                                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                                     />
+                                    {uploading && uploadProgress.total > 0 && (
+                                        <p className="text-sm text-blue-600 mt-2">Uploading {uploadProgress.current} / {uploadProgress.total}…</p>
+                                    )}
                                 </div>
 
-                                {item.url && (
-                                    <div className="mt-2">
-                                        {item.url.endsWith('.mp4') || item.url.endsWith('.mov') ? (
-                                            <video src={item.url} className="w-full h-40 object-cover rounded" controls />
-                                        ) : (
-                                            <img src={item.url} alt="Preview" className="w-full h-40 object-cover rounded" />
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* caption removed: gallery items no longer support captions in upload UI */}
                             </div>
-                        ))}
+                        </div>
+
+                        <div className="flex gap-3 overflow-x-auto py-2">
+                            {gallery.map((item, index) => (
+                                <div key={item.id || index} className="relative w-40 h-28 flex-shrink-0 rounded overflow-hidden shadow-md bg-gray-50 dark:bg-gray-700">
+                                    <button
+                                        type="button"
+                                        onClick={() => removeGalleryItem(index)}
+                                        className="absolute top-1 right-1 z-20 bg-black/60 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                        aria-label={`Remove gallery item ${index + 1}`}
+                                    >
+                                        ×
+                                    </button>
+
+                                    {item.url && (
+                                        item.url.endsWith('.mp4') || item.url.endsWith('.mov') ? (
+                                            <video src={item.url} className="w-full h-full object-cover" controls />
+                                        ) : (
+                                            <img src={item.url} alt={item.alt || `Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                                        )
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Featured */}
