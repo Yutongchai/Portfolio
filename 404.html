@@ -2,14 +2,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="refresh" content="0; url=/Portfolio/" />
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found — redirecting…</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}</style>
     <script>
-      // If JS is enabled, redirect to the app root
-      window.location.replace('/Portfolio/');
+      // Load the app's index.html from the same directory as this 404 page
+      (function () {
+        var originalPath = location.pathname + location.search + location.hash;
+        fetch('./index.html')
+          .then(function (res) { return res.text(); })
+          .then(function (html) {
+            document.open();
+            document.write(html);
+            document.close();
+            // Replace the URL with the original path so the SPA can route
+            history.replaceState(null, '', originalPath);
+          })
+          .catch(function () {
+            // Fallback: go to repository root
+            location.replace('./');
+          });
+      })();
     </script>
-    <title>Redirecting...</title>
   </head>
   <body>
-    <p>If you are not redirected, <a href="/Portfolio/">click here</a>.</p>
+    <p>Redirecting to the app… If you are not redirected, <a href="./">click here</a>.</p>
   </body>
 </html>
