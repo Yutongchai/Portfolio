@@ -10,6 +10,10 @@ const Routes: React.FC = () => {
       <ErrorBoundary>
         <RouterRoutes>
           <Route path="/" element={<Home />} />
+          {/* Allow deep links into the single-page Home sections */}
+          <Route path="/personal-story-section" element={<Home />} />
+          <Route path="/work-showcase" element={<Home />} />
+          <Route path="/connection-hub" element={<Home />} />
           
           {/* Admin Login/Register - Public */}
           <Route path="/admin/login" element={<AdminLogin />} />

@@ -305,7 +305,7 @@ const WorkShowcase = () => {
                 <Button
                   variant="default"
                   size="lg"
-                  className="bg-accent hover:bg-cta text-accent-foreground font-semibold text-sm sm:text-base"
+                  className="bg-[#ee424c] hover:bg-[#d73b45] text-white font-semibold text-sm sm:text-base"
                   iconName="Mail"
                   iconPosition="right"
                   onClick={() => navigate("/connection-hub")}

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../../../components/ui/Button';
 import ClientDomeGallery from './ClientDomeGallery';
 import { GoogleReviewTestimonials } from './GoogleReviewTestimonials';
 import { supabase } from '../../../config/supabaseClient';
@@ -46,6 +48,7 @@ interface PhilosophySectionProps {
 
 const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
   const [clients, setClients] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClientLogos = async () => {
@@ -126,6 +129,17 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             </p> */}
           </div>
           <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
+
+          <div className="mt-8 text-center">
+            <Button
+              variant="default"
+              size="lg"
+              className="bg-[#ee424c] hover:bg-[#d73b45] text-white font-semibold px-6 py-3"
+              onClick={() => navigate('/work-showcase')}
+            >
+              Learn More
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>
