@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import ClientDomeGallery from './ClientDomeGallery';
+import ClientMarquee from './ClientMarquee';
 import { GoogleReviewTestimonials } from './GoogleReviewTestimonials';
 import { supabase } from '../../../config/supabaseClient';
 
@@ -99,8 +100,29 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
           </p>
         </motion.div>
 
-        {/* 3D Dome Gallery */}
+        {/* Horizontal Scrolling Carousel */}
         {clients.length > 0 && (
+          <ClientMarquee
+        logos={clients}
+        autoScrollSpeed={0.5}
+        pauseOnHover={true}
+      />
+        )}
+
+        {/* Additional content section */}
+      <section className="py-8 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+            Ready to get started?
+          </h2>
+          <p className="text-muted-foreground">
+            Start building with us today and see the difference.
+          </p>
+        </div>
+      </section>
+
+        {/* Original 3D Dome (commented out for comparison) */}
+        {/* {clients.length > 0 && (
           <ClientDomeGallery
             images={clients}
             fit={0.5}
@@ -110,7 +132,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             dragDampening={2}
             grayscale={false}
           />
-        )}
+        )} */}
 
         {/* Google Reviews Testimonials */}
         <motion.div 
