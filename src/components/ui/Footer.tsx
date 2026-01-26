@@ -74,9 +74,20 @@ const Footer = () => {
           {/* Divider */}
           <div className="w-full max-w-md h-px bg-border" />
 
-          {/* Copyright */}
-          <div className="text-center text-sm text-muted-foreground">
+          {/* Copyright + quick admin opener */}
+          <div className="text-center text-sm text-muted-foreground flex flex-col items-center space-y-2">
             <p>© {currentYear} EITO Group. All rights reserved.</p>
+            <button
+              type="button"
+              onClick={() => {
+                const base = import.meta.env.BASE_URL || '/';
+                const href = `${base.replace(/\/$/, '')}/admin/login`.replace(/\/\//g, '/');
+                window.open(href, '_blank');
+              }}
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Open admin
+            </button>
           </div>
         </div>
       </div>
