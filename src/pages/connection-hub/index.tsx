@@ -288,7 +288,10 @@ const ConnectionHub = () => {
               className="text-center mb-12 sm:mb-20"
             >
               <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground primary-last mb-4 sm:mb-6">
-                Build Stronger Teams with EITO Group
+                Build Stronger Teams with
+              </h1>
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground primary-last mb-4 sm:mb-6">
+                EITO Group
               </h1>
               {/* <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-2">
                 Discover engaging workshops, custom events, and expert coaching
