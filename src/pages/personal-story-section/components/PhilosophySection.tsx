@@ -152,24 +152,25 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
           <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
         </motion.div>
 
-        {/* Framed banner section, 70% width, not filled */}
+        {/* Framed banner section */}
         <div className="w-full flex justify-center my-20">
           <div
-            className="w-full md:w-[80%] border-2 border-[#695da5] rounded-3xl p-10 md:p-20 flex flex-col md:flex-row items-center justify-between"
+            className="w-full md:w-[80%] border-2 border-[#695da5] rounded-[3rem] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between overflow-visible"
             style={{ minHeight: '340px', background: 'white' }}
           >
-            <div className="flex-1 min-w-0">
-              <h2 className="text-4xl md:text-5xl font-bold text-[#695da5] leading-tight mb-2">
+            <div className="flex-1 min-w-0 z-10">
+              <h2 className="text-4xl md:text-5xl font-black text-[#695da5] leading-tight mb-2 uppercase tracking-tight">
                 Ready to<br className="hidden md:block" /> Get Started?
               </h2>
-              <div className="text-3xl md:text-5xl font-light text-[#695da5] mb-8" style={{ textShadow: '0 2px 8px rgba(56,189,248,0.10)' }}>
+              <div className="text-2xl md:text-3xl font-medium text-[#fcb22f] mb-8 italic">
                 No fee required.
               </div>
-              <div className="flex flex-row gap-4">
+
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   variant="default"
                   size="lg"
-                  className="bg-white hover:bg-[#e0e7ef] text-[#695da5] font-semibold px-10 py-4 rounded-lg text-xl shadow-md border border-[#695da5] transition-colors duration-200"
+                  className="bg-white hover:bg-gray-50 text-[#695da5] font-bold px-10 py-6 rounded-2xl text-lg shadow-sm border-2 border-[#695da5] transition-all active:scale-95"
                   onClick={() => navigate('/connection-hub')}
                 >
                   Get in Touch
@@ -177,21 +178,23 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                 <Button
                   variant="default"
                   size="lg"
-                  className="bg-[#695da5] hover:bg-[#574a8e] text-white font-semibold px-10 py-4 rounded-lg text-xl shadow-md transition-colors duration-200"
+                  className="bg-[#695da5] hover:bg-[#574a8e] text-white font-bold px-10 py-6 rounded-2xl text-lg shadow-lg transition-all active:scale-95"
                   onClick={() => navigate('/work-showcase')}
                 >
-                  Check on Our Services
+                  Our Services
                 </Button>
               </div>
             </div>
-            {/* Lottie animation illustration (Handshake.lottie) */}
-            <div className="flex-1 flex justify-center items-center mt-10 md:mt-0 md:ml-8">
-              <Player
-                autoplay
-                loop
-                src="/Handshake.lottie"
-                style={{ height: 220, width: 320 }}
-                className="rounded-2xl border border-[#695da5] shadow-md bg-white"
+
+            {/* Right Side: Image with no background container */}
+            <div className="flex-1 flex justify-center items-center mt-10 md:mt-0 relative">
+              {/* Optional: Decorative EITO Element behind the person */}
+              <div className="absolute w-64 h-64 bg-[#695da5] opacity-5 rounded-full blur-3xl" />
+
+              <img
+                src="/ready.svg"
+                alt="Ready to start"
+                className="relative z-10 w-full max-w-[400px] h-auto object-contain transform md:scale-125 transition-transform duration-500 hover:scale-110"
               />
             </div>
           </div>

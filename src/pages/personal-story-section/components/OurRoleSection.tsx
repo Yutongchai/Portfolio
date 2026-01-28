@@ -55,9 +55,6 @@ const OurRoleSection = () => {
           <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">
             Our Services
           </h2>
-          <p className="text-xl text-foreground/80 leading-relaxed mb-10">
-            We partner with organisations as:
-          </p>
         </div>
 
         {/* Four selectable cards for services */}

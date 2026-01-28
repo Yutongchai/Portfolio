@@ -11,7 +11,12 @@ const Footer = () => {
     },
     {
       title: "Services",
-      links: ["Team Building", "Training Program", "CSR", "Corporate Event"]
+      links: [
+        { label: "Team Building", path: "/work-showcase/team-building" },
+        { label: "Training Program", path: "/work-showcase/training-program" },
+        { label: "CSR", path: "/work-showcase/csr" },
+        { label: "Corporate Event", path: "/work-showcase/corporate-event" }
+      ]
     },
     {
       title: "Certifications",
@@ -56,13 +61,21 @@ const Footer = () => {
               <div key={section.title}>
                 <h3 className="tracking-[0.3em] text-lg font-normal uppercase mb-6 ">{section.title}</h3>
                 <ul className="space-y-4">
-                  {section.links.map((link) => (
-                    <li key={link}>
-                      <a href={`#${link.toLowerCase().replace(/\s/g, '-')}`} className="text-black hover:opacity-60 transition-opacity">
-                        {link}
-                      </a>
-                    </li>
-                  ))}
+                  {section.title === 'Services'
+                    ? section.links.map((linkObj: any) => (
+                        <li key={linkObj.label}>
+                          <a href={linkObj.path} className="text-black hover:opacity-60 transition-opacity">
+                            {linkObj.label}
+                          </a>
+                        </li>
+                      ))
+                    : section.links.map((link: string) => (
+                        <li key={link}>
+                          <a href={`#${link.toLowerCase().replace(/\s/g, '-')}`} className="text-black hover:opacity-60 transition-opacity">
+                            {link}
+                          </a>
+                        </li>
+                      ))}
                 </ul>
                 {/* If Certifications section, show HRD.png below */}
                 {section.title === 'Certifications' && (

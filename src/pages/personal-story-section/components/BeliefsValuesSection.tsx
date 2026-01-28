@@ -1,193 +1,117 @@
+import React from 'react';
+import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+
 const BeliefsValuesSection = () => {
   const beliefs = [
     {
       title: "Engagement Through Experience",
-      description:
-        "We believe engagement is created through meaningful experiences, not just policies.",
+      description: "We believe engagement is created through meaningful experiences, not just policies.",
+      letter: "E",
+      color: "#12a28f", // Equilibrium Green
+      accent: "🟢"
     },
     {
       title: "Learning by Living",
       description: "Learning is most effective when it's lived, not lectured.",
+      letter: "I",
+      color: "#fcb22f", // Integrity Yellow
+      accent: "🟡"
     },
     {
       title: "Valued Teams Perform",
-      description:
-        "Teams perform better when every member feels seen, heard, and valued.",
+      description: "Teams perform better when every member feels seen, heard, and valued.",
+      letter: "T",
+      color: "#0074b4", // Teamwork Blue
+      accent: "🔵"
     },
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#fdfdfb] overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">
-            Our Beliefs & Values
+
+        {/* Header - 增加進場感 */}
+        <div className="text-center mb-24 relative">
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-9xl font-black text-gray-50 opacity-50 select-none">
+            BELIEFS
+          </div>
+          <h2 className="relative z-10 text-5xl sm:text-6xl font-black text-[#23242b] mb-8 tracking-tight">
+            Our Beliefs & <span className="text-[#e1620b]">Values</span>
           </h2>
-          <p className="text-xl text-foreground/80 leading-relaxed mb-8">
-            Strong organisations are not built by structure alone —
-            <br />
-            They are built by people who connect, communicate, and grow
-            together.
+          <p className="relative z-10 text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Strong organisations are not built by structure alone — they are built by
+            <span className="font-bold text-[#23242b]"> people who connect</span>, communicate, and grow together.
           </p>
         </div>
 
-        {/* Belief Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Belief Cards - 增加交互與 Logo 元素 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
           {beliefs.map((belief, index) => (
             <div
               key={index}
-              className="group relative bg-background rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-border"
+              className="group relative bg-white rounded-[2.5rem] p-10 shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-4 border border-gray-100 overflow-hidden"
             >
-              {/* Decorative gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* 背景浮水印字母 (無背景 Logo 元素) */}
+              <div
+                className="absolute -right-4 -bottom-10 text-[12rem] font-black opacity-[0.03] group-hover:opacity-10 group-hover:-translate-y-4 transition-all duration-700 pointer-events-none"
+                style={{ color: belief.color }}
+              >
+                {belief.letter}
+              </div>
 
               <div className="relative z-10">
-                {/* Icon removed: no icon property in beliefs */}
+                {/* 彩色圓點裝飾 */}
+                <div
+                  className="w-12 h-12 rounded-2xl mb-8 flex items-center justify-center text-2xl shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]"
+                  style={{ backgroundColor: `${belief.color}15` }}
+                >
+                  {belief.accent}
+                </div>
 
-                {/* Title */}
-                <h3 className="text-2xl font-bold text-foreground mb-4">
+                <h3 className="text-2xl font-extrabold text-[#23242b] mb-4 group-hover:text-[#e1620b] transition-colors">
                   {belief.title}
                 </h3>
 
-                {/* Description */}
-                <p className="text-lg text-foreground/70 leading-relaxed">
+                <p className="text-gray-500 leading-relaxed font-medium">
                   {belief.description}
                 </p>
               </div>
 
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/10 rounded-bl-full rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              {/* 底部彩色裝飾條 */}
+              <div
+                className="absolute bottom-0 left-0 h-2 w-0 group-hover:w-full transition-all duration-500"
+                style={{ backgroundColor: belief.color }}
+              />
             </div>
           ))}
         </div>
-        {/* Simple Statement Section (inspired by image) */}
-        <div className="my-16 flex justify-center">
+
+        {/* 中間過渡語句 - 更加大膽的排版 */}
+        <div className="py-20 flex justify-center border-y border-gray-100 my-20">
           <div className="text-center">
-            <p className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-              That belief is the <span style={{ color: '#fcb22f' }}>foundation</span><br />
-              <span className="text-foreground">of everything we do.</span>
+            <p className="text-4xl sm:text-6xl font-black leading-tight text-[#23242b]">
+              That belief is the <br />
+              <span
+                className="inline-block px-4 py-2 mt-2 rounded-2xl text-white transform -rotate-2"
+                style={{ backgroundColor: '#fcb22f' }}
+              >
+                FOUNDATION
+              </span><br />
+              <span className="opacity-90">of everything we do.</span>
             </p>
           </div>
         </div>
 
         {/* EITO Values Section */}
-        <div className="mt-16">
-          <div className="text-center mb-12">
-            <p className="text-lg text-foreground/70">
-              Like our name, we build the fundamentals that make teams work
+        <div className="">
+          <div className="text-center mb-16">
+            <h3 className="text-sm font-black uppercase tracking-[0.4em] text-gray-400 mb-4">Core Principles</h3>
+            <p className="text-2xl font-bold text-[#23242b]">
+              The E I T O Fundamentals
             </p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* E - Equilibrium */}
-            <div className="flex flex-col items-center text-center p-6 bg-background/50 rounded-2xl border border-border hover:border-[#12a28f] transition-all duration-300 hover:shadow-lg group">
-              <div
-                className="text-7xl font-black mb-4 animate-float"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #12a28f 0%, #0e8170 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0 4px 12px rgba(18, 162, 143, 0.3)",
-                  filter: "drop-shadow(0 2px 8px rgba(18, 162, 143, 0.4))",
-                }}
-              >
-                E
-              </div>
-              <h4 className="text-xl font-semibold text-foreground mb-2">
-                Equilibrium
-              </h4>
-              <p className="text-sm text-foreground/70">
-                Creating balance between fun and impact
-              </p>
-            </div>
-
-            {/* I - Integrity */}
-            <div className="flex flex-col items-center text-center p-6 bg-background/50 rounded-2xl border border-border hover:border-[#fcb22f] transition-all duration-300 hover:shadow-lg group">
-              <div
-                className="text-7xl font-black mb-4 animate-float"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #fcb22f 0%, #e09a1a 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0 4px 12px rgba(252, 178, 47, 0.3)",
-                  filter: "drop-shadow(0 2px 8px rgba(252, 178, 47, 0.4))",
-                }}
-              >
-                I
-              </div>
-              <h4 className="text-xl font-semibold text-foreground mb-2">
-                Integrity
-              </h4>
-              <p className="text-sm text-foreground/70">
-                Doing what we say, always
-              </p>
-            </div>
-
-            {/* T - Teamwork */}
-            <div className="flex flex-col items-center text-center p-6 bg-background/50 rounded-2xl border border-border hover:border-[#0074b4] transition-all duration-300 hover:shadow-lg group">
-              <div
-                className="text-7xl font-black mb-4 animate-float"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #0074b4 0%, #005a8d 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0 4px 12px rgba(0, 116, 180, 0.3)",
-                  filter: "drop-shadow(0 2px 8px rgba(0, 116, 180, 0.4))",
-                }}
-              >
-                T
-              </div>
-              <h4 className="text-xl font-semibold text-foreground mb-2">
-                Teamwork
-              </h4>
-              <p className="text-sm text-foreground/70">
-                Collaboration over competition
-              </p>
-            </div>
-
-            {/* O - Honour */}
-            <div className="flex flex-col items-center text-center p-6 bg-background/50 rounded-2xl border border-border hover:border-[#ee424c] transition-all duration-300 hover:shadow-lg group">
-              <div
-                className="text-7xl font-black mb-4 animate-float"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #ee424c 0%, #c9343d 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0 4px 12px rgba(238, 66, 76, 0.3)",
-                  filter: "drop-shadow(0 2px 8px rgba(238, 66, 76, 0.4))",
-                }}
-              >
-                O
-              </div>
-              <h4 className="text-xl font-semibold text-foreground mb-2">
-                Honour
-              </h4>
-              <p className="text-sm text-foreground/70">
-                Respecting people and their potential
-              </p>
-            </div>
-          </div>
+          <ImageHoverScrollSection />
         </div>
-
-        {/* Add floating animation styles */}
-        <style>{`
-          @keyframes float {
-            0%, 100% {
-              transform: translateY(0px);
-            }
-            50% {
-              transform: translateY(-10px);
-            }
-          }
-          
-          .animate-float {
-            animation: float 3s ease-in-out infinite;
-          }
-        `}</style>
       </div>
     </section>
   );

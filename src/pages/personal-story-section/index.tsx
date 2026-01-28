@@ -4,7 +4,7 @@ import myPhoto from "../../components/mainPic.jpg";
 import Footer from "../../components/ui/Footer";
 import HeroSection from "./components/HeroSection";
 import BeliefsValuesSection from "./components/BeliefsValuesSection";
-import SolutionsSection from "./components/SolutionsSection";
+import ActionsSection from "./components/ActionsSection";
 import OurRoleSection from "./components/OurRoleSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
@@ -93,7 +93,7 @@ const PersonalStorySection = () => {
           </SectionWrapper>
 
           <SectionWrapper delay={0.2}>
-            <SolutionsSection />
+            <ActionsSection />
           </SectionWrapper>
           <SectionWrapper delay={0.3}>
             <OurRoleSection />
