@@ -14,7 +14,7 @@ const Footer = () => {
       links: [
         { label: "Team Building", path: "/work-showcase/team-building" },
         { label: "Training Program", path: "/work-showcase/training-program" },
-        { label: "CSR", path: "/work-showcase/csr" },
+        { label: "CSR", path: "/work-showcase/CSR" },
         { label: "Corporate Event", path: "/work-showcase/corporate-event" }
       ]
     },
@@ -23,7 +23,6 @@ const Footer = () => {
       links: []
     }
   ];
-
   const socialLinks = [
     { name: "Facebook", icon: "Facebook", url: "https://facebook.com" },
     { name: "Instagram", icon: "Instagram", url: "https://instagram.com" },
