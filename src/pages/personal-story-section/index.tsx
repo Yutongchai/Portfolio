@@ -31,48 +31,6 @@ const PersonalStorySection = () => {
     alt: "A diverse group of professionals participating in a fun team-building activity, smiling and collaborating together.",
   };
 
-  const journeys: Journey[] = [
-    {
-      id: 1,
-      year: "2018",
-      title: "EITO Group Founded",
-      description:
-        "A group of passionate facilitators came together to create unique team-building experiences, inspired by the power of collaboration and community.",
-      icon: "Rocket",
-    },
-    {
-      id: 2,
-      year: "2019",
-      title: "First Corporate Retreat",
-      description:
-        "Organized our first large-scale retreat, helping teams break down barriers, build trust, and discover new strengths through creative challenges.",
-      icon: "Briefcase",
-    },
-    {
-      id: 3,
-      year: "2021",
-      title: "Virtual Team Building",
-      description:
-        "Adapted to the changing world by launching engaging virtual programs, keeping teams connected and motivated no matter where they are.",
-      icon: "Globe",
-    },
-    {
-      id: 4,
-      year: "2023",
-      title: "Community Impact",
-      description:
-        "Partnered with local organizations to bring team-building activities to schools and nonprofits, spreading the spirit of collaboration beyond the workplace.",
-      icon: "Users",
-    },
-    {
-      id: 5,
-      year: "2025",
-      title: "Expanding Horizons",
-      description:
-        "Launched new programs focused on leadership, diversity, and inclusion, empowering teams to thrive in a rapidly evolving world.",
-      icon: "Star",
-    },
-  ];
 
   const philosophies: Philosophy[] = [
     {
@@ -137,20 +95,18 @@ const PersonalStorySection = () => {
           <SectionWrapper delay={0.2}>
             <SolutionsSection />
           </SectionWrapper>
-
-          <SectionWrapper delay={0.25}>
+          <SectionWrapper delay={0.3}>
             <OurRoleSection />
           </SectionWrapper>
+
+
 
           {/*      <SectionWrapper delay={0.3}>
           <JourneySection journeys={journeys} />
         </SectionWrapper> */}
 
-          <SectionWrapper delay={0.4}>
-            <PhilosophySection philosophies={philosophies} />
-          </SectionWrapper>
 
-         {/*  <SectionWrapper delay={0.5}>
+          {/*  <SectionWrapper delay={0.5}>
             <div className="py-20 px-4 sm:px-6 lg:px-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -188,6 +144,10 @@ const PersonalStorySection = () => {
               </motion.div>
             </div>
           </SectionWrapper> */}
+
+          <SectionWrapper delay={0.4}>
+            <PhilosophySection philosophies={philosophies} />
+          </SectionWrapper>
         </main>
 
         <Footer />

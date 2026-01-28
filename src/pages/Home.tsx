@@ -69,13 +69,6 @@ const Home: React.FC = () => {
           { label: "Connect", href: "/connection-hub" },
         ]}
         activeHref={activeHref}
-        ease="power2.easeOut"
-        baseColor="#000000"
-        pillColor="#ffffff"
-        hoveredPillTextColor="#000000"
-        pillTextColor="#000000"
-        initialLoadAnimation={false}
-        onItemClick={(href) => handleNavigation(href)}
       />
 
       {currentPage === 'home' && <PersonalStorySection />}

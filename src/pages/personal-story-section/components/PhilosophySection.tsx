@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Player } from '@lottiefiles/react-lottie-player';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
@@ -82,7 +83,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
     <section className="relative py-20 overflow-hidden bg-white">
       <div className="relative z-10 w-full">
         {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-12 px-6"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -103,23 +104,23 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         {/* Horizontal Scrolling Carousel */}
         {clients.length > 0 && (
           <ClientMarquee
-        logos={clients}
-        autoScrollSpeed={0.5}
-        pauseOnHover={true}
-      />
+            logos={clients}
+            autoScrollSpeed={0.5}
+            pauseOnHover={true}
+          />
         )}
 
         {/* Additional content section */}
-      <section className="py-8 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-            Ready to get started?
-          </h2>
-          <p className="text-muted-foreground">
-            Start building with us today and see the difference.
-          </p>
-        </div>
-      </section>
+        <section className="py-8 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+              Start building with us today and see the difference.
+            </h2>
+            {/* <p className="text-muted-foreground">
+              Start building with us today and see the difference.
+            </p> */}
+          </div>
+        </section>
 
         {/* Original 3D Dome (commented out for comparison) */}
         {/* {clients.length > 0 && (
@@ -135,7 +136,8 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         )} */}
 
         {/* Google Reviews Testimonials */}
-        <motion.div 
+        {/* Original testimonials section (optional, can be moved below banner) */}
+        <motion.div
           className="mt-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,23 +148,54 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
               What Our Clients Say
             </h3>
-            {/* <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Real reviews from real teams who've experienced the EITO difference
-            </p> */}
           </div>
           <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
-
-          <div className="mt-8 text-center">
-            <Button
-              variant="default"
-              size="lg"
-              className="bg-[#ee424c] hover:bg-[#d73b45] text-white font-semibold px-6 py-3"
-              onClick={() => navigate('/work-showcase')}
-            >
-              Learn More
-            </Button>
-          </div>
         </motion.div>
+
+        {/* Framed banner section, 70% width, not filled */}
+        <div className="w-full flex justify-center my-20">
+          <div
+            className="w-full md:w-[80%] border-2 border-[#695da5] rounded-3xl p-10 md:p-20 flex flex-col md:flex-row items-center justify-between"
+            style={{ minHeight: '340px', background: 'white' }}
+          >
+            <div className="flex-1 min-w-0">
+              <h2 className="text-4xl md:text-5xl font-bold text-[#695da5] leading-tight mb-2">
+                Ready to<br className="hidden md:block" /> Get Started?
+              </h2>
+              <div className="text-3xl md:text-5xl font-light text-[#695da5] mb-8" style={{ textShadow: '0 2px 8px rgba(56,189,248,0.10)' }}>
+                No fee required.
+              </div>
+              <div className="flex flex-row gap-4">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="bg-white hover:bg-[#e0e7ef] text-[#695da5] font-semibold px-10 py-4 rounded-lg text-xl shadow-md border border-[#695da5] transition-colors duration-200"
+                  onClick={() => navigate('/connection-hub')}
+                >
+                  Get in Touch
+                </Button>
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="bg-[#695da5] hover:bg-[#574a8e] text-white font-semibold px-10 py-4 rounded-lg text-xl shadow-md transition-colors duration-200"
+                  onClick={() => navigate('/work-showcase')}
+                >
+                  Check on Our Services
+                </Button>
+              </div>
+            </div>
+            {/* Lottie animation illustration (Handshake.lottie) */}
+            <div className="flex-1 flex justify-center items-center mt-10 md:mt-0 md:ml-8">
+              <Player
+                autoplay
+                loop
+                src="/Handshake.lottie"
+                style={{ height: 220, width: 320 }}
+                className="rounded-2xl border border-[#695da5] shadow-md bg-white"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -42,10 +42,7 @@ const BeliefsValuesSection = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="relative z-10">
-                {/* Icon */}
-                <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
-                  {belief.icon}
-                </div>
+                {/* Icon removed: no icon property in beliefs */}
 
                 {/* Title */}
                 <h3 className="text-2xl font-bold text-foreground mb-4">
@@ -63,23 +60,13 @@ const BeliefsValuesSection = () => {
             </div>
           ))}
         </div>
-
-        {/* Full-width Banner */}
-        <div className="relative -mx-4 sm:-mx-6 lg:-mx-8 my-16 py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10" />
-
-          {/* Decorative elements */}
-          <div className="absolute top-0 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-
-          {/* Content */}
-          <div className="relative z-10 max-w-4xl mx-auto text-center">
-            <div className="inline-block px-8 py-4 bg-background/80 backdrop-blur-sm rounded-2xl shadow-lg border border-border">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground italic leading-relaxed">
-                "That belief is the foundation of everything we do."
-              </p>
-            </div>
+        {/* Simple Statement Section (inspired by image) */}
+        <div className="my-16 flex justify-center">
+          <div className="text-center">
+            <p className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+              That belief is the <span style={{ color: '#fcb22f' }}>foundation</span><br />
+              <span className="text-foreground">of everything we do.</span>
+            </p>
           </div>
         </div>
 

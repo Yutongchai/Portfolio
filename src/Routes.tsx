@@ -2,6 +2,10 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from './pages/Home';
+import TeamBuilding from './pages/work-showcase/TeamBuilding';
+import CorporateEvent from './pages/work-showcase/CorporateEvent';
+import TrainingProgram from './pages/work-showcase/TrainingProgram';
+import CSR from './pages/work-showcase/CSR';
 import { AdminLogin, AdminRegister, AdminDashboard, HeroImagesManager, ClientLogosManager, ProjectsManager, ProtectedRoute } from './pages/admin';
 
 const Routes: React.FC = () => {
@@ -13,6 +17,10 @@ const Routes: React.FC = () => {
           {/* Allow deep links into the single-page Home sections */}
           <Route path="/personal-story-section" element={<Home />} />
           <Route path="/work-showcase" element={<Home />} />
+          <Route path="/work-showcase/team-building" element={<TeamBuilding />} />
+          <Route path="/work-showcase/corporate-event" element={<CorporateEvent />} />
+          <Route path="/work-showcase/training-program" element={<TrainingProgram />} />
+          <Route path="/work-showcase/csr" element={<CSR />} />
           <Route path="/connection-hub" element={<Home />} />
           
           {/* Admin Login/Register - Public */}

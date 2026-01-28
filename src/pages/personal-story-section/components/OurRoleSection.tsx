@@ -1,22 +1,50 @@
-import { Palette, Users, Lightbulb } from "lucide-react";
+import { Users, Briefcase, GraduationCap, HeartHandshake } from "lucide-react";
 import Orb from "./Orb";
 
+import { useState } from "react";
+import "./OurRoleSection.css";
+
 const OurRoleSection = () => {
-  const roles = [
+
+  // Track which card is flipped; null means none flipped
+  const [flippedIdx, setFlippedIdx] = useState<number | null>(null);
+  const handleFlip = (idx: number) => {
+    setFlippedIdx(prev => (prev === idx ? null : idx));
+  };
+
+  // Card data
+  const cards = [
     {
-      id: 1,
-      icon: Palette,
-      title: "Experience designers",
-    },
-    {
-      id: 2,
+      label: 'Team Building',
       icon: Users,
-      title: "Engagement facilitators",
+      color: '#38bdf8',
+      image: '/TB.jpg',
+      description: 'Boost collaboration, trust, and morale with our engaging team building experiences designed for all group sizes.',
+      link: '/work-showcase/team-building',
     },
     {
-      id: 3,
-      icon: Lightbulb,
-      title: "Culture enablers",
+      label: 'Corporate Event',
+      icon: Briefcase,
+      color: '#fcb22f',
+      image: '/CE.jpg',
+      description: 'Make your next corporate event memorable and seamless with our expert planning and execution services.',
+      link: '/work-showcase/corporate-event',
+    },
+    {
+      label: 'Training Program',
+      icon: GraduationCap,
+      color: '#00ccbc',
+      image: '/GT.jpg',
+      description: 'Empower your team with tailored training programs that drive professional growth and organizational success.',
+      link: '/work-showcase/training-program',
+    },
+    {
+      label: 'CSR',
+      icon: HeartHandshake,
+      color: '#ee424c',
+      image: '/csr.jpg',
+      description: 'Create positive impact through meaningful CSR initiatives that align with your company values.',
+      link: '/work-showcase/csr',
     },
   ];
 
@@ -25,56 +53,83 @@ const OurRoleSection = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">
-            Our Role
+            Our Services
           </h2>
           <p className="text-xl text-foreground/80 leading-relaxed mb-10">
             We partner with organisations as:
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Logo in Orb */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-80 h-80 sm:w-96 sm:h-96">
-              <Orb size={400} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <img
-                  src="EITO bw.png"
-                  alt="EITO Logo"
-                  className="w-48 h-48 sm:w-64 sm:h-64 object-contain opacity-90"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Content */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              {roles.map((role) => {
-                const Icon = role.icon;
-                return (
+        {/* Four selectable cards for services */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 items-center">
+          {cards.map((card, idx) => {
+            const isFlipped = flippedIdx === idx;
+            return (
+              <div
+                key={card.label}
+                className="our-role-flip-card-container"
+                tabIndex={0}
+                onClick={() => handleFlip(idx)}
+                onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && handleFlip(idx)}
+                aria-pressed={isFlipped}
+                role="button"
+                style={{ outline: 'none' }}
+              >
+                <div className={`our-role-flip-card${isFlipped ? ' flipped' : ''}`}> 
+                  {/* Front: full background image */}
                   <div
-                    key={role.id}
-                    className="flex items-center gap-4 bg-card/30 backdrop-blur-sm p-6 rounded-xl border border-border/30 hover:border-accent/50 transition-colors duration-300"
+                    className="our-role-card-front"
+                    style={{
+                      backgroundImage: `url(${card.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      color: 'white',
+                      position: 'relative',
+                    }}
                   >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-accent" />
-                    </div>
-                    <p className="text-xl text-foreground/90 font-medium">
-                      {role.title}
-                    </p>
+                    <span
+                      className="our-role-label"
+                      style={{
+                        position: 'absolute',
+                        bottom: '1.5rem',
+                        left: 0,
+                        right: 0,
+                        textAlign: 'center',
+                        background: 'rgba(0,0,0,0.4)',
+                        borderRadius: '12px',
+                        padding: '0.5rem 1rem',
+                        margin: '0 1rem',
+                        fontWeight: 700,
+                        fontSize: '1.25rem',
+                        letterSpacing: '1px',
+                      }}
+                    >
+                      {card.label}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="pt-4 border-t border-border/20">
-              <p className="text-xl text-foreground/90 leading-relaxed font-medium">
-                Whether it's a growing team or a large organisation, our role is
-                to help people work better — together.
-              </p>
-            </div>
-          </div>
+                  {/* Back: description and Learn More button */}
+                  <div className="our-role-card-back" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
+                    <span style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '1rem', textAlign: 'center', color: '#fff' }}>{card.description}</span>
+                    <a
+                      href={card.link}
+                      className="mt-4 px-6 py-2 rounded-full font-semibold text-white"
+                      style={{
+                        background: card.color,
+                        textDecoration: 'none',
+                        transition: 'background 0.2s',
+                        marginTop: '1.5rem',
+                        display: 'inline-block',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                      }}
+                    >
+                      Learn More
+                    </a>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

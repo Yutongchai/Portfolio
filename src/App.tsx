@@ -10,7 +10,7 @@ const App: React.FC = () => {
     <ThemeProvider>
       <AuthProvider>
         <Routes />
-        <ScrollToTopButton />
+        {/* <ScrollToTopButton /> */}
         <WhatsAppFloating />
       </AuthProvider>
     </ThemeProvider>
