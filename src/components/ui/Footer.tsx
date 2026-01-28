@@ -83,7 +83,7 @@ const Footer = () => {
                 {/* If Certifications section, show HRD.png below */}
                 {section.title === 'Certifications' && (
                   <div className="mt-6 flex justify-center">
-                    <img src="/HRD.png" alt="HRD Certification" className="h-40 w-auto object-contain" />
+                    <img src={import.meta.env.BASE_URL + "/HRD.png"} alt="HRD Certification" className="h-40 w-auto object-contain" />
                   </div>
                 )}
               </div>

@@ -141,7 +141,7 @@ const CSR = () => {
             <h3 className="text-3xl font-black mb-4">Certified Excellence</h3>
             <p className="text-gray-500 text-lg">Our CSR programs are fully claimable under <strong>HRD Corp Malaysia</strong>, helping you maximize your levy while doing good.</p>
           </div>
-          <img src="/HRD.png" alt="HRD Logo" className="h-32 object-contain grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src={import.meta.env.BASE_URL + "/HRD.png"} alt="HRD Logo" className="h-32 object-contain grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </section>
 
