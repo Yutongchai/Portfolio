@@ -70,7 +70,7 @@ const PillNav = ({
 
                     {/* Dropdown Menu */}
                     <div className={`
-                      absolute left-1/2 -translate-x-1/2 pt-4 w-64
+                      absolute left-1/2 -translate-x-1/2 pt-4 w-64 z-[9999]
                       transition-all duration-300 ease-out
                       ${dropdownOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'}
                     `}>

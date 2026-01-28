@@ -104,12 +104,12 @@ const BeliefsValuesSection = () => {
 
         {/* EITO Values Section */}
         <div className="">
-          <div className="text-center mb-16">
-            <h3 className="text-sm font-black uppercase tracking-[0.4em] text-gray-400 mb-4">Core Principles</h3>
-            <p className="text-2xl font-bold text-[#23242b]">
-              The E I T O Fundamentals
-            </p>
-          </div>
+          <div className="text-center mb-16 rounded-2xl px-6 py-10" style={{ background: '#3a2c23' }}>
+              <h3 className="text-sm font-black uppercase tracking-[0.4em] text-[#fcb22f] mb-4">Core Principles</h3>
+              <p className="text-2xl font-bold text-white">
+                The E I T O Fundamentals
+              </p>
+            </div>
           <ImageHoverScrollSection />
         </div>
       </div>
