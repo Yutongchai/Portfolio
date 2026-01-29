@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PillNav from '../../components/ui/PillNav';
 import Footer from '../../components/ui/Footer';
 import LogoImg from '../../components/Logo.png';
-
+import { Globe, Heart, GraduationCap } from 'lucide-react';
 // Slider Images Data
 const sliderImages = [
   {
@@ -148,67 +148,77 @@ const CSR = () => {
       </section>
 
       {/* --- FOCUS AREAS (3 CATEGORIES) --- */}
-      <section className="py-32 px-8 bg-[#f8f8f6]">
+      <section className="py-32 px-8 bg-white">
         <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
           <div className="flex items-end justify-between mb-20">
-            <div>
-              <p className="text-[#fcb22f] font-bold tracking-widest uppercase mb-4">Focus Areas</p>
-              <h2 className="text-5xl font-black">Sub-categories</h2>
+            <div className="flex-1">
+              <p className="text-[#f68921] font-bold tracking-[0.3em] uppercase mb-4 text-sm">Focus Areas</p>
+              <h2 className="text-5xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter">
+                Sub-categories
+              </h2>
             </div>
-            <div className="hidden md:block h-0.5 w-1/3 bg-gray-200" />
+            <div className="hidden md:block h-[1px] w-1/3 bg-[#153462]/10 mb-4" />
           </div>
 
-          {/* Tabbed Pills */}
-          {(() => {
-            const tabs = [
+          {/* 3 Cards in a Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
               {
                 title: "Environmental",
-                description: "Best fit for eco-focused initiatives like tree planting and coastal cleanups.",
-                icon: "🌿",
-                color: "#12a28f",
+                description: "Eco-focused initiatives like tree planting and coastal cleanups to drive sustainability.",
+                icon: <Globe size={32} />,
+                color: "#18616e", // Brand Teal
               },
               {
                 title: "Community Outreach",
-                description: "Best fit for direct support for local social welfare programs and underprivileged groups.",
-                icon: "🤝",
-                color: "#0074b4",
+                description: "Direct support for local social welfare programs and empowering underprivileged groups.",
+                icon: <Heart size={32} />,
+                color: "#153462", // Brand Navy
               },
               {
                 title: "Education",
-                description: "Best fit for empowering the next generation through skill sharing and mentorship.",
-                icon: "🎓",
-                color: "#fcb22f",
+                description: "Empowering the next generation through skill sharing, mentorship, and literacy programs.",
+                icon: <GraduationCap size={32} />,
+                color: "#f68921", // Brand Orange
               },
-            ];
-            const [activeTab, setActiveTab] = React.useState(0);
-            return (
-              <div>
-                <div className="flex justify-center gap-8 mb-16">
-                  {tabs.map((tab, idx) => (
-                    <button
-                      key={tab.title}
-                      onClick={() => setActiveTab(idx)}
-                      className={`px-12 py-5 rounded-3xl text-xl font-bold shadow-lg transition-all duration-300 focus:outline-none ${activeTab === idx
-                        ? 'bg-white text-[#23242b] shadow-[0_8px_24px_rgba(0,0,0,0.10)]'
-                        : 'bg-gray-100 text-gray-400 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:bg-white/80'
-                        }`}
-                      style={{ minWidth: 180 }}
-                    >
-                      {tab.title}
-                    </button>
-                  ))}
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="group relative bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-[0_15px_40px_-15px_rgba(21,52,98,0.08)] transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-[#153462]/10"
+              >
+                {/* Decorative number or background element */}
+                <span className="absolute top-8 right-10 text-6xl font-black text-[#153462]/5 group-hover:text-[#f68921]/10 transition-colors">
+                  0{idx + 1}
+                </span>
+
+                {/* Icon Circle */}
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-transform duration-500 group-hover:rotate-[10deg] group-hover:scale-110"
+                  style={{
+                    backgroundColor: `${card.color}10`, // 10% opacity
+                    color: card.color
+                  }}
+                >
+                  {card.icon}
                 </div>
-                <div className="flex justify-center">
-                  <CategoryCard
-                    title={tabs[activeTab].title}
-                    description={tabs[activeTab].description}
-                    icon={tabs[activeTab].icon}
-                    color={tabs[activeTab].color}
-                  />
-                </div>
+
+                <h3 className="text-2xl font-black text-[#153462] mb-4 uppercase tracking-tight">
+                  {card.title}
+                </h3>
+
+                <p className="text-slate-500 leading-relaxed text-lg font-medium">
+                  {card.description}
+                </p>
+
+                {/* Bottom Accent Line */}
+                <div
+                  className="mt-8 h-1.5 w-12 rounded-full transition-all duration-500 group-hover:w-full"
+                  style={{ backgroundColor: card.color }}
+                />
               </div>
-            );
-          })()}
+            ))}
+          </div>
         </div>
       </section>
 

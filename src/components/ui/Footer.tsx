@@ -1,9 +1,7 @@
 import React from 'react';
-import Icon from '../AppIcon';
-import LogoImg from '../Logo.png';
+import LogoImg from '../Logo.png'
 
 const Footer = () => {
-  // 1. Data arrays make the code cleaner and easier to maintain
   const footerSections = [
     {
       title: "Company",
@@ -23,21 +21,24 @@ const Footer = () => {
       links: []
     }
   ];
-  const socialLinks = [
-    { name: "Facebook", icon: "Facebook", url: "https://facebook.com" },
-    { name: "Instagram", icon: "Instagram", url: "https://instagram.com" },
-    { name: "LinkedIn", icon: "Linkedin", url: "https://linkedin.com" },
-  ];
 
   return (
-    <footer className="bg-[#fcb22f] text-[#222] font-light">
-      {/* Top Border with Centered Logo */}
-      <div className="relative flex items-center justify-center py-8">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-gray-300"></div>
+    <footer className="bg-[#153462] text-white font-light">
+      {/* 1. Triple Border with Centered Logo */}
+      <div className="relative pt-12 pb-8">
+        <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+          {/* Three distinct lines */}
+          <div className="w-full border-t-[4px] border-[#f68921] mb-1"></div>
+          <div className="w-full border-t-[4px] border-[#79989f] mb-1"></div>
+          <div className="w-full border-t-[4px] border-[#18616e]"></div>
         </div>
-        <div className="relative bg-[#fcb22f] px-4">
-          <img src={LogoImg} alt="Logo" className="h-16 w-auto" />
+        
+        {/* Logo Container (overlaps lines) */}
+        <div className="relative flex justify-center">
+          <div className="bg-[#153462] px-6">
+             {/* 2. Increased Logo Size */}
+            <img src={LogoImg} alt="Logo" className="h-24 w-auto object-contain" />
+          </div>
         </div>
       </div>
 
@@ -58,41 +59,44 @@ const Footer = () => {
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-8">
             {footerSections.map((section) => (
               <div key={section.title}>
-                <h3 className="tracking-[0.3em] text-lg font-bold uppercase mb-6">{section.title}</h3>
+                <h3 className="tracking-[0.3em] text-lg font-bold uppercase mb-6 text-[#f68921]">
+                  {section.title}
+                </h3>
                 <ul className="space-y-4">
                   {section.links.map((linkObj) => {
-                    if (typeof linkObj === 'string') {
-                      return (
-                        <li key={linkObj}>
-                          <a href={`#${linkObj.toLowerCase().replace(/\s/g, '-')}`} className="text-black hover:opacity-60 transition-opacity">
-                            {linkObj}
-                          </a>
-                        </li>
-                      );
-                    } else {
-                      return (
-                        <li key={linkObj.label}>
-                          <a href={linkObj.path} className="text-black hover:opacity-60 transition-opacity">
-                            {linkObj.label}
-                          </a>
-                        </li>
-                      );
-                    }
+                    const label = typeof linkObj === 'string' ? linkObj : linkObj.label;
+                    const path = typeof linkObj === 'string' 
+                      ? `#${linkObj.toLowerCase().replace(/\s/g, '-')}` 
+                      : linkObj.path;
+
+                    return (
+                      <li key={label}>
+                        <a href={path} className="text-white hover:text-[#79989f] transition-colors">
+                          {label}
+                        </a>
+                      </li>
+                    );
                   })}
                 </ul>
-                {/* If Certifications section, show HRD.png below */}
+                
                 {section.title === 'Certifications' && (
-                  <div className="mt-6 flex justify-center">
-                    <img src={import.meta.env.BASE_URL + "/HRD.png"} alt="HRD Certification" className="h-40 w-auto object-contain" />
+                  <div className="mt-6 flex justify-start">
+                    {/* 2. Scaled down HRD image to ensure Logo is bigger */}
+                    <img 
+                      src={import.meta.env.BASE_URL + "/HRD.png"} 
+                      alt="HRD Certification" 
+                      className="h-20 w-auto object-contain brightness-0 invert opacity-80" 
+                    />
                   </div>
                 )}
               </div>
             ))}
           </div>
         </div>
+
         {/* Bottom Copyright Section */}
-        <div className="mt-16 pt-8 border-t border-black/10 flex flex-col items-center justify-center">
-          <span className="tracking-[0.3em] text-[10px] md:text-xs uppercase opacity-70 text-center">
+        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col items-center justify-center">
+          <span className="tracking-[0.3em] text-[10px] md:text-xs uppercase opacity-50 text-center">
             © 2026 by EITO Group Team Building. All rights reserved.
           </span>
         </div>

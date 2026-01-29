@@ -83,42 +83,57 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
     <section className="relative py-20 overflow-hidden bg-white">
       <div className="relative z-10 w-full">
         {/* Section Header */}
+        {/* Section Header */}
         <motion.div
-          className="text-center mb-12 px-6"
+          className="text-center mb-16 px-6"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-lg uppercase tracking-wider text-muted-foreground mb-3">
-            TAKE A LOOK AT
+          <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
+            Trusted Partnerships
           </p>
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl lg:text-6xl font-black text-[#153462] mb-6 uppercase tracking-tighter">
             Our Clients
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We have a handsome list of clients to be proud of. Book today and watch your company join the list!
+          <div className="w-20 h-1 bg-[#f68921] mx-auto mb-8 rounded-full"></div> {/* Decorative underline */}
+          <p className="text-lg md:text-xl text-[#153462]/70 max-w-2xl mx-auto font-medium">
+            We have a handsome list of clients to be proud of. <br className="hidden md:block" />
+            <span className="text-[#153462]">Book today</span> and watch your company join the list!
           </p>
         </motion.div>
 
-        {/* Horizontal Scrolling Carousel */}
-        {clients.length > 0 && (
-          <ClientMarquee
-            logos={clients}
-            autoScrollSpeed={0.5}
-            pauseOnHover={true}
-          />
-        )}
+        {/* Horizontal Scrolling Carousel Wrapper */}
+        {/* Added a subtle gradient mask on the sides to make logos fade in/out */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+          {clients.length > 0 && (
+            <div className="py-10 bg-[#153462]/[0.02]">
+              <ClientMarquee
+                logos={clients}
+                autoScrollSpeed={0.5}
+                pauseOnHover={true}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Additional content section */}
-        <section className="py-8 px-4">
+        <section className="py-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-              Start building with us today and see the difference.
-            </h2>
-            {/* <p className="text-muted-foreground">
-              Start building with us today and see the difference.
-            </p> */}
+            <motion.h2
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="text-2xl md:text-4xl font-black text-[#153462] mb-4 uppercase tracking-tight"
+            >
+              Start building with us <span className="text-[#f68921]">today</span> and see the difference.
+            </motion.h2>
+            <p className="text-[#153462]/60 font-medium tracking-wide">
+              EXPERIENCE • ENGAGEMENT • RESULTS
+            </p>
           </div>
         </section>
 
@@ -153,49 +168,72 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         </motion.div>
 
         {/* Framed banner section */}
-        <div className="w-full flex justify-center my-20">
+        {/* Framed banner section */}
+        <div className="w-full flex justify-center my-20 px-6">
           <div
-            className="w-full md:w-[80%] border-2 border-[#695da5] rounded-[3rem] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between overflow-visible"
-            style={{ minHeight: '340px', background: 'white' }}
+            className="w-full md:w-[85%] border-[1px] border-[#153462]/20 rounded-[2.5rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden relative shadow-2xl shadow-[#153462]/10"
+            style={{
+              minHeight: '400px',
+              background: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)'
+            }}
           >
-            <div className="flex-1 min-w-0 z-10">
-              <h2 className="text-4xl md:text-5xl font-black text-[#695da5] leading-tight mb-2 uppercase tracking-tight">
-                Ready to<br className="hidden md:block" /> Get Started?
-              </h2>
-              <div className="text-2xl md:text-3xl font-medium text-[#fcb22f] mb-8 italic">
-                No fee required.
-              </div>
+            {/* Decorative Background Element */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#f68921] opacity-[0.03] rounded-full -mr-20 -mt-20 blur-3xl" />
 
-              <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-[1.2] min-w-0 z-10 text-center md:text-left">
+              <h2 className="text-4xl md:text-6xl font-black text-[#153462] leading-[1.1] mb-4 uppercase tracking-tighter">
+                Let's Design<br className="hidden md:block" />
+                <span className="text-[#f68921]">Your Next</span> Team Session
+              </h2>
+
+              <p className="text-xl md:text-2xl font-medium text-[#153462]/70 mb-10 max-w-xl">
+                No obligation. No consultation fee. <br className="hidden sm:block" />
+                <span className="italic border-b-2 border-[#f68921]/30">Just ideas that work.</span>
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-5 justify-center md:justify-start">
                 <Button
                   variant="default"
                   size="lg"
-                  className="bg-white hover:bg-gray-50 text-[#695da5] font-bold px-10 py-6 rounded-2xl text-lg shadow-sm border-2 border-[#695da5] transition-all active:scale-95"
+                  className="bg-[#153462] hover:bg-[#1c447a] text-white font-bold px-10 py-7 rounded-2xl text-lg shadow-lg transition-all hover:-translate-y-1 active:scale-95"
                   onClick={() => navigate('/connection-hub')}
                 >
-                  Get in Touch
+                  Book a Free Consultation
                 </Button>
+
                 <Button
-                  variant="default"
+                  variant="outline"
                   size="lg"
-                  className="bg-[#695da5] hover:bg-[#574a8e] text-white font-bold px-10 py-6 rounded-2xl text-lg shadow-lg transition-all active:scale-95"
+                  className="bg-transparent hover:bg-[#153462]/5 text-[#153462] font-bold px-10 py-7 rounded-2xl text-lg border-2 border-[#153462] transition-all active:scale-95"
                   onClick={() => navigate('/work-showcase')}
                 >
-                  Our Services
+                  Explore Our Services
                 </Button>
               </div>
             </div>
 
-            {/* Right Side: Image with no background container */}
-            <div className="flex-1 flex justify-center items-center mt-10 md:mt-0 relative">
-              {/* Optional: Decorative EITO Element behind the person */}
-              <div className="absolute w-64 h-64 bg-[#695da5] opacity-5 rounded-full blur-3xl" />
+            {/* Right Side: Image with floating animation */}
+            <div className="flex-1 flex justify-center items-center mt-12 md:mt-0 relative">
+              <motion.div
+                animate={{
+                  y: [0, -15, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="relative z-10"
+              >
+                <img
+                  src={import.meta.env.BASE_URL + "/ready.svg"}
+                  alt="Ready to start"
+                  className="w-full max-w-[380px] h-auto object-contain md:scale-125 drop-shadow-2xl"
+                />
+              </motion.div>
 
-              <img
-                src={import.meta.env.BASE_URL + "/ready.svg"}
-                alt="Ready to start"
-                className="relative z-10 w-full max-w-[400px] h-auto object-contain transform md:scale-125 transition-transform duration-500 hover:scale-110"
-              />
+              {/* Decorative glow behind image */}
+              <div className="absolute w-48 h-48 bg-[#153462] opacity-10 rounded-full blur-[80px]" />
             </div>
           </div>
         </div>
