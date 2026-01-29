@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Questionnaire from './components/Questionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import PillNav from '../../components/ui/PillNav';
 import Footer from '../../components/ui/Footer';
@@ -38,6 +39,7 @@ const CategoryCard = ({ title, description, icon, color }: CategoryCardProps) =>
     <div className="mt-8 h-1.5 w-12 rounded-full transition-all duration-500 group-hover:w-full" style={{ backgroundColor: color }} />
   </motion.div>
 );
+
 
 const CSR = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -187,8 +189,8 @@ const CSR = () => {
                       key={tab.title}
                       onClick={() => setActiveTab(idx)}
                       className={`px-12 py-5 rounded-3xl text-xl font-bold shadow-lg transition-all duration-300 focus:outline-none ${activeTab === idx
-                          ? 'bg-white text-[#23242b] shadow-[0_8px_24px_rgba(0,0,0,0.10)]'
-                          : 'bg-gray-100 text-gray-400 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:bg-white/80'
+                        ? 'bg-white text-[#23242b] shadow-[0_8px_24px_rgba(0,0,0,0.10)]'
+                        : 'bg-gray-100 text-gray-400 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:bg-white/80'
                         }`}
                       style={{ minWidth: 180 }}
                     >
@@ -231,50 +233,7 @@ const CSR = () => {
           </div>
         </div>
 
-        <div className="bg-white p-12 rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.08)] border border-gray-50">
-          <h3 className="text-3xl font-black mb-8">Let's Connect</h3>
-          <form className="space-y-6">
-            <input type="text" placeholder="Name" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="text" placeholder="Contact" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="text" placeholder="Company Name" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="email" placeholder="Company Email" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="text" placeholder="Industry" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="number" placeholder="No of pax" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" inputMode="numeric" pattern="[0-9]*" />
-            <div>
-              <label className="block mb-2 font-bold text-gray-700">Duration:</label>
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center gap-2"><input type="radio" name="duration" value="Half day" /> Half day</label>
-                <label className="flex items-center gap-2"><input type="radio" name="duration" value="Full day" /> Full day</label>
-                <label className="flex items-center gap-2"><input type="radio" name="duration" value="2D1N" /> 2D1N</label>
-                <label className="flex items-center gap-2"><input type="radio" name="duration" value="3D2N" /> 3D2N</label>
-                <label className="flex items-center gap-2"><input type="radio" name="duration" value="Others" /> Others: <input type="text" name="duration_other" className="p-2 rounded-xl bg-gray-50 border border-gray-200 w-24" placeholder="Specify" /></label>
-              </div>
-            </div>
-            <input type="text" placeholder="Estimated Event Month" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <input type="text" placeholder="Budget" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <div>
-              <label className="block mb-2 font-bold text-gray-700">HRDC:</label>
-              <div className="flex gap-6">
-                <label className="flex items-center gap-2"><input type="radio" name="hrdc" value="Yes" /> Yes</label>
-                <label className="flex items-center gap-2"><input type="radio" name="hrdc" value="No" /> No</label>
-              </div>
-            </div>
-            <input type="text" placeholder="Preferred Location" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all" />
-            <div>
-              <label className="block mb-2 font-bold text-gray-700">Language to Conduct:</label>
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center gap-2"><input type="checkbox" name="language" value="English" /> Eng</label>
-                <label className="flex items-center gap-2"><input type="checkbox" name="language" value="Mandarin" /> Man</label>
-                <label className="flex items-center gap-2"><input type="checkbox" name="language" value="BM" /> BM</label>
-                <label className="flex items-center gap-2"><input type="checkbox" name="language" value="Others" /> Others</label>
-              </div>
-            </div>
-            <textarea rows={4} placeholder="Remarks" className="w-full p-5 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#fcb22f] transition-all"></textarea>
-            <button className="w-full py-5 bg-[#fcb22f] text-white font-black text-lg rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-[#fcb22f]/20">
-              Submit Inquiry
-            </button>
-          </form>
-        </div>
+        <Questionnaire />
       </section>
 
       <Footer />

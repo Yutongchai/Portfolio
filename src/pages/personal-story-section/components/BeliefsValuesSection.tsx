@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 
 // --- Types ---
