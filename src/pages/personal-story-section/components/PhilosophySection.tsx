@@ -192,7 +192,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
               <div className="absolute w-64 h-64 bg-[#695da5] opacity-5 rounded-full blur-3xl" />
 
               <img
-                src={"/ready.svg"}
+                src={import.meta.env.BASE_URL + "/ready.svg"}
                 alt="Ready to start"
                 className="relative z-10 w-full max-w-[400px] h-auto object-contain transform md:scale-125 transition-transform duration-500 hover:scale-110"
               />
