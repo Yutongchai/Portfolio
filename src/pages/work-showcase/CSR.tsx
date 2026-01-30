@@ -243,7 +243,7 @@ const CSR = () => {
           </div>
         </div>
 
-        <Questionnaire />
+        <Questionnaire formType="csr" />
       </section>
 
       <Footer />
