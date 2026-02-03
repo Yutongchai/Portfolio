@@ -50,7 +50,7 @@ const OurRoleSection = () => {
         <div className="flex flex-col items-center mb-16 text-center">
           <div className="h-1 w-12 bg-[#fcb22f] mb-4" />
           <h2 className="text-4xl md:text-5xl font-black text-[#23242b] tracking-tight">
-            Our Specialist Services
+            Our Services
           </h2>
         </div>
 

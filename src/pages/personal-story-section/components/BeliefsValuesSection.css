@@ -35,11 +35,11 @@
   cursor: pointer;
   background: #23242b;
   min-height: 220px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.2s;
 }
 .eito-section-col:hover .eito-section-in {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 .eito-hover-text {
   position: fixed;
@@ -57,14 +57,16 @@
   mix-blend-mode: difference;
 }
 .eito-hover-text h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Sora", "Space Grotesk", sans-serif;
   font-weight: 800;
   font-size: 8vw;
   line-height: 1;
   color: #fff;
   opacity: 0;
   transform: scale(0.8);
-  transition: transform 250ms linear, opacity 250ms ease;
+  transition:
+    transform 250ms linear,
+    opacity 250ms ease;
 }
 .eito-section-col:hover ~ .eito-hover-text h2 {
   opacity: 1;

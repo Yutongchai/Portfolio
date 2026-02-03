@@ -111,7 +111,7 @@ const ImageHoverScrollSection = () => {
                             >
                                 <h2
                                     style={{
-                                        fontFamily: 'Poppins, sans-serif',
+                                        fontFamily: 'Sora, Space Grotesk, sans-serif',
                                         fontWeight: 800,
                                         fontSize: '2.5rem',
                                         margin: 0,

@@ -164,7 +164,7 @@ const BeliefsValuesSection = () => {
         {/* Header */}
         <div className="text-center mb-24">
           <h2 className="text-5xl font-black text-[#23242b] mb-4">
-            Our Beliefs & <span className="text-[#e1620b]">Values</span>
+            Our Beliefs & <span className="text-[#fcb22f]">Values</span>
           </h2>
           <p className="text-gray-500 font-medium">Built on experience, driven by connection.</p>
         </div>
