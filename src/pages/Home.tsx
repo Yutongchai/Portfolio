@@ -6,6 +6,8 @@ import WorkShowcase from './work-showcase/index';
 import ConnectionHub from './connection-hub/index';
 import LogoImg from '../components/Logo.png';
 import { motion, useScroll, useSpring } from 'framer-motion';
+import SEOHead from '../components/SEOHead';
+import { pageSEO } from '../config/seoConfig';
 
 type PageView = 'home' | 'service' | 'connect';
 
@@ -53,8 +55,22 @@ const Home: React.FC = () => {
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch { window.scrollTo(0, 0); }
   }, [location.pathname]);
 
+  // Determine which SEO config to use based on current page
+  const getSEOConfig = () => {
+    switch (currentPage) {
+      case 'service':
+        return pageSEO.workShowcase;
+      case 'connect':
+        return pageSEO.connectionHub;
+      default:
+        return pageSEO.personalStory;
+    }
+  };
+
   return (
     <div className="min-h-screen">
+      <SEOHead config={getSEOConfig()} includeSchemas={currentPage === 'home'} />
+      
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
         style={{ scaleX }}

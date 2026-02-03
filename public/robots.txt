@@ -1,0 +1,15 @@
+# Robots.txt for EITO Group Website
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://eitogroup.com/sitemap.xml
+
+# Block specific paths (if needed in future)
+# Disallow: /admin/
+# Disallow: /api/
+
+# Crawl delay (optional, usually not needed)
+# Crawl-delay: 10
