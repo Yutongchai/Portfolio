@@ -9,6 +9,13 @@ import { Checkbox } from '../../../components/ui/CheckBox';
 import Button from '../../../components/ui/Button';
 
 const QuestionnaireTP = () => {
+  // Generate years dynamically from current year + 10 years ahead
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 10 }, (_, i) => {
+    const year = (currentYear + i).toString();
+    return { value: year, label: year };
+  });
+
   const [formData, setFormData] = useState<{
     name: string;
     contact: string;
@@ -21,6 +28,7 @@ const QuestionnaireTP = () => {
     trainingTypes: string[];
     trainingOther: string;
     eventMonth: string;
+    eventYear: string;
     budget: string;
     hrdc: string;
     location: string;
@@ -39,6 +47,7 @@ const QuestionnaireTP = () => {
     trainingTypes: [],
     trainingOther: '',
     eventMonth: '',
+    eventYear: '',
     budget: '',
     hrdc: 'Yes',
     location: '',
@@ -79,7 +88,7 @@ const QuestionnaireTP = () => {
     const requiredFields = [
       'name', 'contact', 'companyName', 'companyEmail',
       'industryOption', 'noOfPax', 'duration', 'eventMonth',
-      'budget', 'location'
+      'eventYear', 'budget', 'location'
     ];
 
     const isMissingField = requiredFields.some(field => !formData[field as keyof typeof formData]);
@@ -117,8 +126,9 @@ const QuestionnaireTP = () => {
         no_of_pax: formData.noOfPax ? parseInt(formData.noOfPax) : null,
         duration: formData.duration,
         types_of_training: trainingTypesArray,
-        estimated_training_month: formData.eventMonth,
+        estimated_training_month: `${formData.eventMonth} ${formData.eventYear}`,
         budget: formData.budget ? parseFloat(formData.budget) : null,
+        eventYear: '',
         hrdc: formData.hrdc === 'Yes',
         preferred_location: formData.location,
         language: languagesArray.join(', '),
@@ -334,14 +344,38 @@ const QuestionnaireTP = () => {
 
         {/* Month & Budget */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Input
-              type="text"
+          <div className="grid grid-cols-2 gap-2">
+            <Select
               name="eventMonth"
-              placeholder="Estimated Training Month (e.g., August 2026)"
-              required
-              onChange={handleChange}
               value={formData.eventMonth}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, eventMonth: value }))
+              }
+              options={[
+                { value: "January", label: "January" },
+                { value: "February", label: "February" },
+                { value: "March", label: "March" },
+                { value: "April", label: "April" },
+                { value: "May", label: "May" },
+                { value: "June", label: "June" },
+                { value: "July", label: "July" },
+                { value: "August", label: "August" },
+                { value: "September", label: "September" },
+                { value: "October", label: "October" },
+                { value: "November", label: "November" },
+                { value: "December", label: "December" },
+              ]}
+              placeholder="Month"
+              disabled={loading}
+            />
+            <Select
+              name="eventYear"
+              value={formData.eventYear}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, eventYear: value }))
+              }
+              options={yearOptions}
+              placeholder="Year"
               disabled={loading}
             />
           </div>

@@ -15,6 +15,13 @@ interface QuestionnaireProps {
 }
 
 const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
+  // Generate years dynamically from current year + 10 years ahead
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 10 }, (_, i) => {
+    const year = (currentYear + i).toString();
+    return { value: year, label: year };
+  });
+
   const [formData, setFormData] = useState<{
     name: string;
     contact: string;
@@ -26,6 +33,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
     duration: string;
     durationOther: string;
     eventMonth: string;
+    eventYear: string;
     budget: string;
     hrdc: string;
     location: string;
@@ -43,6 +51,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
     duration: "",
     durationOther: "",
     eventMonth: "",
+    eventYear: "",
     budget: "",
     hrdc: "Yes",
     location: "",
@@ -104,6 +113,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
       "noOfPax",
       "duration",
       "eventMonth",
+      "eventYear",
       "budget",
       "location",
     ];
@@ -165,7 +175,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             ? formData.durationOther
             : formData.duration,
 
-        estimated_event_month: formData.eventMonth,
+        estimated_event_month: `${formData.eventMonth} ${formData.eventYear}`,
         budget: formData.budget,
         hrdc: formData.hrdc === "Yes",
         preferred_location: formData.location,
@@ -196,6 +206,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         duration: "",
         durationOther: "",
         eventMonth: "",
+        eventYear: "",
         budget: "",
         hrdc: "Yes",
         location: "",
@@ -443,20 +454,38 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
 
         {/* Month & Budget */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Input
-              type="text"
+          <div className="grid grid-cols-2 gap-2">
+            <Select
               name="eventMonth"
-              placeholder="Estimated Event Month (e.g., August 2026)"
-              required
-              onChange={handleChange}
-              onInvalid={(e) =>
-                e.currentTarget.setCustomValidity(
-                  "Please enter the estimated event month",
-                )
-              }
-              onInput={(e) => e.currentTarget.setCustomValidity("")}
               value={formData.eventMonth}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, eventMonth: value }))
+              }
+              options={[
+                { value: "January", label: "January" },
+                { value: "February", label: "February" },
+                { value: "March", label: "March" },
+                { value: "April", label: "April" },
+                { value: "May", label: "May" },
+                { value: "June", label: "June" },
+                { value: "July", label: "July" },
+                { value: "August", label: "August" },
+                { value: "September", label: "September" },
+                { value: "October", label: "October" },
+                { value: "November", label: "November" },
+                { value: "December", label: "December" },
+              ]}
+              placeholder="Month"
+              disabled={loading}
+            />
+            <Select
+              name="eventYear"
+              value={formData.eventYear}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, eventYear: value }))
+              }
+              options={yearOptions}
+              placeholder="Year"
               disabled={loading}
             />
           </div>
