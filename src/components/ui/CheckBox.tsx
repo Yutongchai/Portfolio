@@ -12,7 +12,7 @@ export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputE
     size?: CheckboxSize;
 }
 
-const Checkbox = React.forwardRef < HTMLInputElement, CheckboxProps> (({
+const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(({
     className,
     id,
     checked,
@@ -52,7 +52,7 @@ const Checkbox = React.forwardRef < HTMLInputElement, CheckboxProps> (({
                 <label
                     htmlFor={checkboxId}
                     className={cn(
-                        "peer shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground cursor-pointer transition-colors",
+                        "peer shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground cursor-pointer transition-colors flex items-center justify-center",
                         sizeClasses[size],
                         checked && "bg-primary text-primary-foreground border-primary",
                         indeterminate && "bg-primary text-primary-foreground border-primary",
@@ -61,10 +61,10 @@ const Checkbox = React.forwardRef < HTMLInputElement, CheckboxProps> (({
                     )}
                 >
                     {checked && !indeterminate && (
-                        <Check className="h-3 w-3 text-current flex items-center justify-center" />
+                        <Check className="h-3 w-3 pr-0.5" />
                     )}
                     {indeterminate && (
-                        <Minus className="h-3 w-3 text-current flex items-center justify-center" />
+                        <Minus className="h-3 w-3" />
                     )}
                 </label>
             </div>
@@ -75,7 +75,7 @@ const Checkbox = React.forwardRef < HTMLInputElement, CheckboxProps> (({
                         <label
                             htmlFor={checkboxId}
                             className={cn(
-                                "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer",
+                                "text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer",
                                 error ? "text-destructive" : "text-foreground"
                             )}
                         >
@@ -112,7 +112,7 @@ export interface CheckboxGroupProps extends React.FieldsetHTMLAttributes<HTMLFie
     children: React.ReactNode;
 }
 
-const CheckboxGroup = React.forwardRef < HTMLFieldSetElement, CheckboxGroupProps> (({
+const CheckboxGroup = React.forwardRef<HTMLFieldSetElement, CheckboxGroupProps>(({
     className,
     children,
     label,
@@ -131,7 +131,7 @@ const CheckboxGroup = React.forwardRef < HTMLFieldSetElement, CheckboxGroupProps
         >
             {label && (
                 <legend className={cn(
-                    "text-sm font-medium",
+                    "text-sm",
                     error ? "text-destructive" : "text-foreground"
                 )}>
                     {label}

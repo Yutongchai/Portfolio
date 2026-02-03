@@ -133,7 +133,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(({
                 <label
                     htmlFor={selectId}
                     className={cn(
-                        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block",
+                        "text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block",
                         error ? "text-destructive" : "text-foreground"
                     )}
                 >
@@ -150,7 +150,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(({
                     className={cn(
                         "flex h-10 w-full items-center justify-between rounded-md border border-input bg-white text-black px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                         error && "border-destructive focus:ring-destructive",
-                        !hasValue && "text-muted-foreground"
+                        !hasValue && "text-gray-600",
                     )}
                     onClick={handleToggle}
                     disabled={disabled}
@@ -239,7 +239,7 @@ const Select = React.forwardRef<HTMLButtonElement, SelectProps>(({
                                             <Check className="h-4 w-4" />
                                         )}
                                         {option.description && (
-                                            <span className="text-xs text-muted-foreground ml-2">
+                                            <span className="text-sm text-muted-foreground ml-2">
                                                 {option.description}
                                             </span>
                                         )}
