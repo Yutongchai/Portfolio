@@ -1,5 +1,8 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
+// Setup type definitions for built-in Supabase Runtime APIs
+import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+
 serve(async (req) => {
   try {
     // 1. Read secrets
@@ -222,21 +225,4 @@ const emailHtml = `
   }
 });
 
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
 
-// Setup type definitions for built-in Supabase Runtime APIs
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/send-inquiry-email' \
-    --header 'Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6ImI4MTI2OWYxLTIxZDgtNGYyZS1iNzE5LWMyMjQwYTg0MGQ5MCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjIwODU0NjI2NTF9.6CtFOCPGXXwiX6NGOHiyqocQN6ulHFPIVaMV9tNNahybXjgsT3HbFbADSQtkyRi7FdBVnH5A3mp9nkC1dI2l_A' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
-
-*/
