@@ -5,6 +5,7 @@ import PillNav from '../../components/ui/PillNav';
 import Footer from '../../components/ui/Footer';
 import LogoImg from '../../components/Logo.png';
 import { Globe, Heart, GraduationCap } from 'lucide-react';
+import HRDCorSection from './components/HRDCorBanner';
 // Slider Images Data
 const sliderImages = [
   {
@@ -107,9 +108,24 @@ const CSR = () => {
           >
             CSR
           </motion.h1>
-          <p className="text-xl md:text-2xl font-medium max-w-2xl mx-auto opacity-90 leading-relaxed">
+          <p className="text-xl md:text-2xl font-medium max-w-2xl mx-auto opacity-90 leading-relaxed mb-10">
             Create positive impact through meaningful CSR initiatives that align with your company values.
           </p>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="#csr-categories"
+              className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+            >
+              Explore Activities
+            </a>
+            <a
+              href="#csr-inquiry"
+              className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+            >
+              Make Inquiry
+            </a>
+          </div>
         </div>
 
         {/* Slide Indicators */}
@@ -137,18 +153,10 @@ const CSR = () => {
       </section>
 
       {/* --- HRD CORP BANNER --- */}
-      <section className="bg-white border-y border-gray-100 py-16 px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex-1">
-            <h3 className="text-3xl font-black mb-4">Certified Excellence</h3>
-            <p className="text-gray-500 text-lg">Our CSR programs are fully claimable under <strong>HRD Corp Malaysia</strong>, helping you maximize your levy while doing good.</p>
-          </div>
-          <img src={import.meta.env.BASE_URL + "/HRD.png"} alt="HRD Logo" className="h-32 object-contain grayscale hover:grayscale-0 transition-all duration-500" />
-        </div>
-      </section>
+      <HRDCorSection />
 
       {/* --- FOCUS AREAS (3 CATEGORIES) --- */}
-      <section className="py-32 px-8 bg-white">
+      <section id="csr-categories" className="py-32 px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="flex items-end justify-between mb-20">
@@ -165,20 +173,20 @@ const CSR = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Environmental",
-                description: "Eco-focused initiatives like tree planting and coastal cleanups to drive sustainability.",
+                title: "Environmental Sustainability ",
+                description: "Initiatives to reduce waste, conserve energy, and protect natural resources.",
                 icon: <Globe size={32} />,
                 color: "#18616e", // Brand Teal
               },
               {
-                title: "Community Outreach",
-                description: "Direct support for local social welfare programs and empowering underprivileged groups.",
+                title: "Community Engagement",
+                description: "Volunteering, charity drives, and programs that support local communities.",
                 icon: <Heart size={32} />,
                 color: "#153462", // Brand Navy
               },
               {
-                title: "Education",
-                description: "Empowering the next generation through skill sharing, mentorship, and literacy programs.",
+                title: "Employee Wellbeing & Inclusion",
+                description: "Programs that promote diversity, mental health, and workplace support.",
                 icon: <GraduationCap size={32} />,
                 color: "#f68921", // Brand Orange
               },
@@ -223,7 +231,7 @@ const CSR = () => {
       </section>
 
       {/* --- WHY CHOOSE US & INQUIRY FORM --- */}
-      <section className="py-32 px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
+      <section id="csr-inquiry" className="py-32 px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24">
         <div>
           <h2 className="text-5xl font-black mb-12">Why choose us?</h2>
           <div className="space-y-12">

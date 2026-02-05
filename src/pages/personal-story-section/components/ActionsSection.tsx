@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Utensils, Zap, Users, Monitor, Star, Award, TrendingUp, Calendar, Heart, Globe, GraduationCap } from 'lucide-react';
+import { Utensils, Zap, Users, Monitor, Star, Award, TrendingUp, Calendar, Heart, Globe, GraduationCap, Trophy } from 'lucide-react';
 
 const ActionsSection = () => {
   const categories = [
@@ -15,12 +15,12 @@ const ActionsSection = () => {
     },
     {
       id: 'training',
-      label: 'Training Program',
+      label: 'Training Programme',
       color: '#79989f', // Brand Sage/Blue
       subCategories: [
-        { title: 'Personal Skill', desc: 'enhancing individual effectiveness and soft skills.' },
-        { title: 'Departmental', desc: 'custom training tailored for specific team workflows.' },
-        { title: 'Leadership', desc: 'strategic coaching for current and future leaders.' },
+        { title: 'Mental Health & Wellbeing', desc: 'fostering workplace wellness and emotional resilience.' },
+        { title: 'Leadership & Management', desc: 'strategic coaching for current and future leaders.' },
+        { title: 'Personal Development & Soft Skills', desc: 'enhancing individual effectiveness and soft skills.' },
       ]
     },
     {
@@ -30,6 +30,8 @@ const ActionsSection = () => {
       subCategories: [
         { title: 'Annual Dinner', desc: 'memorable celebrations to reward your team.' },
         { title: 'Kick-off Meeting', desc: 'aligning vision and energy for the year ahead.' },
+        { title: 'Family Day', desc: 'fun-filled gatherings bringing teams and families together.' },
+        { title: 'Sports Day', desc: 'competitive events fostering team spirit and wellness.' },
       ]
     },
     {
@@ -59,11 +61,13 @@ const ActionsSection = () => {
       case 'Workshop': return <Users {...props} />;
       case 'Adventure': return <Zap {...props} />;
       case 'Virtual': return <Monitor {...props} />;
-      case 'Personal Skill': return <Star {...props} />;
-      case 'Departmental': return <TrendingUp {...props} />;
-      case 'Leadership': return <Award {...props} />;
+      case 'Mental Health & Wellbeing': return <Heart {...props} />;
+      case 'Leadership & Management': return <Award {...props} />;
+      case 'Personal Development & Soft Skills': return <Star {...props} />;
       case 'Annual Dinner': return <Utensils {...props} />;
       case 'Kick-off Meeting': return <Calendar {...props} />;
+      case 'Family Day': return <Users {...props} />;
+      case 'Sports Day': return <Trophy {...props} />;
       case 'Environmental': return <Globe {...props} />;
       case 'Community Outreach': return <Heart {...props} />;
       case 'Education': return <GraduationCap {...props} />;
@@ -123,10 +127,24 @@ const ActionsSection = () => {
              <h2 className="text-9xl font-black text-[#153462]">EITO</h2>
           </div>
 
-          <div className="flex items-center gap-3 mb-12 pb-6 border-b border-[#153462]/10 relative z-10">
+          <div className="flex items-center justify-between mb-12 pb-6 border-b border-[#153462]/10 relative z-10">
             <h3 className="text-sm font-black uppercase tracking-[0.4em] text-[#153462]">
               {activeTab.label} <span className="text-[#f68921]">Solutions</span>
             </h3>
+            <button
+              onClick={() => {
+                const routes: Record<string, string> = {
+                  'team-building': '/work-showcase/team-building',
+                  'training': '/work-showcase/training-program',
+                  'corporate': '/work-showcase/corporate-event',
+                  'csr': '/work-showcase/csr'
+                };
+                window.location.href = routes[activeTab.id] || '/work-showcase';
+              }}
+              className="px-6 py-3 bg-[#153462] hover:bg-[#1c447a] text-white font-bold text-sm rounded-full transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-xl uppercase tracking-wider"
+            >
+              Learn More
+            </button>
           </div>
 
           <div

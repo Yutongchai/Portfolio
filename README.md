@@ -84,6 +84,22 @@ See [DATABASE_SCHEMA_GUIDE.md](DATABASE_SCHEMA_GUIDE.md) for detailed schema inf
 - **Work Showcase** - Project cards with detailed case studies
 - **Connection Hub** - Contact forms and testimonials
 
+## 🎨 Color Palette
+
+consistent branding:
+```
+#fcb22f - Gold/Yellow
+#e1620b - Orange (Accent)
+#12a28f - Teal/Turquoise
+#695da5 - Purple
+#ee424c - Red/Coral
+#0074b4 - Blue
+#153462 - Navy (Primary)
+#f68921 - Orange (Brand)
+#79989f - Sage/Blue-Gray
+#18616e - Teal/Dark
+```
+
 ## 📝 Content Management
 
 Content is managed through Supabase tables:

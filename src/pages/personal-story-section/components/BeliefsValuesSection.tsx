@@ -149,6 +149,7 @@ const BeliefsValuesSection = () => {
 
   return (
     <section
+      id="beliefs-values"
       ref={containerRef}
       className="py-24 px-4 overflow-hidden relative"
     >
