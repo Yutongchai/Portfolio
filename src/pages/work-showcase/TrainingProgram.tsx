@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield } from 'lucide-react';
 import PillNav from '../../components/ui/PillNav';
-import Footer from '../../components/ui/Footer';
 import LogoImg from '../../components/Logo.png';
 import TrainingImg from '../../assets/corporate_training/training.jpg';
 import SoftSkillsImg from '../../assets/corporate_training/soft.jpg';
@@ -15,8 +14,11 @@ import SuccessImg from '../../assets/corporate_training/success.jpg';
 import TruthImg from '../../assets/corporate_training/truth.jpg';
 import ExcellenceImg from '../../assets/corporate_training/excellence.jpg';
 import ResultImg from '../../assets/corporate_training/results.jpg';
-import QuestionnaireTP from './components/QuestionnaireTP';
-import HRDCorBanner from './components/HRDCorBanner';
+
+// Lazy load heavy components for faster initial load
+const Footer = lazy(() => import('../../components/ui/Footer'));
+const QuestionnaireTP = lazy(() => import('./components/QuestionnaireTP'));
+const HRDCorBanner = lazy(() => import('./components/HRDCorBanner'));
 
 // Animated Counter Component
 const AnimatedCounter = ({ end, duration = 2, suffix = '' }: { end: number; duration?: number; suffix?: string }) => {
@@ -159,6 +161,9 @@ const TrainingProgram = () => {
             src={TrainingImg}
             alt="Training Programme"
             className="h-full w-full object-cover"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
         </div>
@@ -219,8 +224,8 @@ const TrainingProgram = () => {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: 0, duration: 0.4 }}
               className="md:row-span-2 relative overflow-hidden rounded-3xl group cursor-pointer h-[400px] md:h-full"
             >
               {/* Background Image */}
@@ -228,6 +233,8 @@ const TrainingProgram = () => {
                 src={trainingTypes[0].image}
                 alt={trainingTypes[0].title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                decoding="async"
               />
 
               {/* Gradient Overlay */}
@@ -273,6 +280,8 @@ const TrainingProgram = () => {
                 src={trainingTypes[1].image}
                 alt={trainingTypes[1].title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                decoding="async"
               />
 
               {/* Gradient Overlay */}
@@ -318,6 +327,8 @@ const TrainingProgram = () => {
                 src={trainingTypes[2].image}
                 alt={trainingTypes[2].title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                decoding="async"
               />
 
               {/* Gradient Overlay */}
@@ -354,7 +365,9 @@ const TrainingProgram = () => {
       </section>
 
       {/* 3. HRD CERTIFICATION */}
-      <HRDCorBanner />
+      <Suspense fallback={<div className="py-20 bg-white" />}>
+        <HRDCorBanner />
+      </Suspense>
 
       {/* 4. WHY CHOOSE US - CHECKERBOARD LAYOUT */}
       <section className="py-24 px-4 bg-white">
@@ -407,8 +420,8 @@ const TrainingProgram = () => {
                 <img
                   src={ExpertiseImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Expert Facilitators"
-                />
+                  alt="Expert Facilitators"                  loading="lazy"
+                  decoding="async"                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#153462]/60 to-transparent" />
               </div>
             </motion.div>
@@ -448,8 +461,8 @@ const TrainingProgram = () => {
                 <img
                   src={DNAImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Tailored Content"
-                />
+                  alt="Tailored Content"                  loading="lazy"
+                  decoding="async"                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#f68921]/50 to-transparent" />
               </div>
             </motion.div>
@@ -489,8 +502,8 @@ const TrainingProgram = () => {
                 <img
                   src={ResultImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Real-World Impact"
-                />
+                  alt="Real-World Impact"                  loading="lazy"
+                  decoding="async"                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12a28f]/50 to-transparent" />
               </div>
             </motion.div>
@@ -825,6 +838,8 @@ const TrainingProgram = () => {
                 src={coreValues[activeValue].image}
                 alt={coreValues[activeValue].value}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#153462]/60 to-transparent" />
             </motion.div>
@@ -922,11 +937,15 @@ const TrainingProgram = () => {
       {/* 8. FORM */}
       <section id="training-form" className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <QuestionnaireTP />
+          <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="text-gray-400">Loading form...</div></div>}>
+            <QuestionnaireTP />
+          </Suspense>
         </div>
       </section>
 
-      <Footer />
+      <Suspense fallback={<div className="py-10 bg-gray-100" />}>
+        <Footer />
+      </Suspense>
     </>
   );
 };

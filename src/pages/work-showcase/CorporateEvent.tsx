@@ -125,33 +125,73 @@ const CorporateEvent = () => (
     />
 
     {/* 1. INTRO SECTION */}
-    <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-[#153462] via-[#1e4a75] to-[#2a5a8a] text-white overflow-hidden">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(246, 137, 33, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(252, 178, 47, 0.3) 0%, transparent 50%)',
-        }} />
-      </div>
+    <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
+      <style>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(80px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .hero-title {
+          animation: slideInUp 0.8s ease-out;
+        }
+      `}</style>
       
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <span className="text-[#fcb22f] font-bold uppercase tracking-[0.3em] text-sm mb-4 block">Corporate Excellence</span>
-          <h1 className="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tighter leading-tight">
-            Corporate Events<br />
-            <span className="text-[#fcb22f]">That Matter</span>
-          </h1>
-          <p className="text-xl md:text-2xl font-medium opacity-90 leading-relaxed max-w-3xl mx-auto">
-            Transform your corporate gatherings into unforgettable experiences that inspire, engage, and strengthen your team culture.
-          </p>
-        </motion.div>
+      <div className="absolute inset-0">
+        <img
+          src={AnnualDinnerImg}
+          alt="Corporate Events"
+          className="h-full w-full object-cover"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-4xl px-6 text-center">
+        <div className="hero-title flex items-center justify-center gap-6 mb-6">
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
+          <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
+            Corporate Events
+          </span>
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
+        </div>
+
+        <h1 className="hero-title text-6xl md:text-8xl font-black tracking-tight mb-8">
+          Events That<br />Matter
+        </h1>
+
+        <p className="text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
+          Transform your corporate gatherings into unforgettable experiences that inspire, 
+          engage, and strengthen your team culture.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a
+            href="#event-categories"
+            className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+          >
+            Explore Events
+          </a>
+          <a
+            href="#corporate-event-questionnaire"
+            className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+          >
+            Plan Your Event
+          </a>
+        </div>
       </div>
     </section>
 
     {/* 2. SUB-CATEGORIES */}
-    <section className="py-24 px-6 bg-white">
+    <section id="event-categories" className="py-24 px-6 bg-white">
       <style>{`
         .flip-card {
           perspective: 1000px;
@@ -378,7 +418,7 @@ const CorporateEvent = () => (
     </section>
 
     {/* 6. QUESTIONNAIRE FORM */}
-    <section className="py-24 px-6 bg-white">
+    <section id="corporate-event-questionnaire" className="py-24 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <span className="text-[#f68921] font-bold uppercase tracking-[0.3em] text-sm mb-4 block">Get Started</span>
