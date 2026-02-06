@@ -98,6 +98,8 @@ consistent branding:
 #f68921 - Orange (Brand)
 #79989f - Sage/Blue-Gray
 #18616e - Teal/Dark
+#103C61 - 
+#FFEBD2 - 
 ```
 
 ## 📝 Content Management

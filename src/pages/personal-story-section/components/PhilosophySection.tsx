@@ -9,6 +9,76 @@ import ClientMarquee from './ClientMarquee';
 import { GoogleReviewTestimonials } from './GoogleReviewTestimonials';
 import { supabase } from '../../../config/supabaseClient';
 
+// CSS for floating blob animations
+const animationStyles = `
+  @keyframes float-philosophy-1 {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    33% {
+      transform: translate(50px, -80px) rotate(120deg) scale(1.1);
+    }
+    66% {
+      transform: translate(-40px, 60px) rotate(240deg) scale(0.95);
+    }
+  }
+
+  @keyframes float-philosophy-2 {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(-60px, 100px) rotate(180deg);
+    }
+  }
+
+  @keyframes float-philosophy-3 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(-70px, -50px) scale(1.15);
+    }
+    66% {
+      transform: translate(40px, 80px) scale(0.9);
+    }
+  }
+
+  @keyframes float-philosophy-4 {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+      opacity: 0.05;
+    }
+    50% {
+      transform: translate(80px, -60px) rotate(180deg) scale(1.2);
+      opacity: 0.08;
+    }
+  }
+
+  .animate-float-philosophy-1 {
+    animation: float-philosophy-1 28s ease-in-out infinite;
+  }
+
+  .animate-float-philosophy-2 {
+    animation: float-philosophy-2 22s ease-in-out infinite;
+  }
+
+  .animate-float-philosophy-3 {
+    animation: float-philosophy-3 26s ease-in-out infinite;
+  }
+
+  .animate-float-philosophy-4 {
+    animation: float-philosophy-4 24s ease-in-out infinite;
+  }
+`;
+
+// Inject styles into document
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = animationStyles;
+  document.head.appendChild(styleSheet);
+}
+
 // Google Reviews - replace with actual Google Review data
 const googleReviews = [
   {
@@ -83,90 +153,123 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
   return (
     <section className="relative py-20 overflow-hidden bg-white">
       <div className="relative z-10 w-full">
-        {/* Section Header */}
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16 px-6"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
-            Trusted Partnerships
-          </p>
-          <h2 className="text-4xl lg:text-6xl font-black text-[#153462] mb-6 uppercase tracking-tighter">
-            Our Clients
-          </h2>
-          <div className="w-20 h-1 bg-[#f68921] mx-auto mb-8 rounded-full"></div> {/* Decorative underline */}
-          <p className="text-lg md:text-xl text-[#153462]/70 max-w-2xl mx-auto font-medium">
-            We have a handsome list of clients to be proud of. <br className="hidden md:block" />
-            <span className="text-[#153462]">Book today</span> and watch your company join the list!
-          </p>
-        </motion.div>
+        {/* Our Clients Section - Clean White Background */}
+        <div className="py-16">
+          {/* Section Header */}
+          <motion.div
+            className="text-center mb-16 px-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
+              Trusted Partnerships
+            </p>
+            <h2 className="text-4xl lg:text-6xl font-black text-[#153462] mb-6 uppercase tracking-tighter">
+              Our Clients
+            </h2>
+            <div className="w-20 h-1 bg-[#f68921] mx-auto mb-8 rounded-full"></div> {/* Decorative underline */}
+            <p className="text-lg md:text-xl text-[#153462]/70 max-w-2xl mx-auto font-medium">
+              We have a handsome list of clients to be proud of. <br className="hidden md:block" />
+              <span className="text-[#153462]">Book today</span> and watch your company join the list!
+            </p>
+          </motion.div>
 
-        {/* Horizontal Scrolling Carousel Wrapper */}
-        {/* Added a subtle gradient mask on the sides to make logos fade in/out */}
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-
-          {clients.length > 0 && (
-            <div className="py-10 bg-[#153462]/[0.02]">
-              <ClientMarquee
-                logos={clients}
-                autoScrollSpeed={0.5}
-                pauseOnHover={true}
-              />
-            </div>
-          )}
+          {/* Horizontal Scrolling Carousel Wrapper */}
+          <div className="relative">
+            {clients.length > 0 && (
+              <div className="py-10">
+                <ClientMarquee
+                  logos={clients}
+                  autoScrollSpeed={0.5}
+                  pauseOnHover={true}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Additional content section */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-2xl md:text-4xl font-black text-[#153462] mb-4 uppercase tracking-tight"
+        {/* Unified Background Section for Content + Testimonials */}
+        <div className="relative overflow-hidden">
+          {/* Single Continuous Animated Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0">
+            {/* Floating Blobs */}
+            <div 
+              className="absolute top-10 -left-32 w-[400px] h-[400px] rounded-full opacity-[0.07] blur-3xl animate-float-philosophy-1" 
+              style={{ backgroundColor: '#12a28f' }} 
+            />
+            <div 
+              className="absolute top-1/4 right-1/4 w-[350px] h-[350px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-2" 
+              style={{ backgroundColor: '#fcb22f' }} 
+            />
+            <div 
+              className="absolute top-1/2 -right-20 w-[450px] h-[450px] rounded-full opacity-[0.08] blur-3xl animate-float-philosophy-3" 
+              style={{ backgroundColor: '#f68921' }} 
+            />
+            <div 
+              className="absolute bottom-10 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-4" 
+              style={{ backgroundColor: '#153462' }} 
+            />
+            
+            {/* Subtle Dot Pattern */}
+            <div 
+              className="absolute inset-0 opacity-[0.03]" 
+              style={{ 
+                backgroundImage: `radial-gradient(circle, #153462 1px, transparent 1px)`, 
+                backgroundSize: '40px 40px' 
+              }} 
+            />
+          </div>
+          
+          {/* Content Layer */}
+          <div className="relative z-10">
+            {/* Additional content section */}
+            <section className="py-16 px-4">
+              <div className="max-w-4xl mx-auto text-center">
+                <motion.h2
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  className="text-2xl md:text-4xl font-black text-[#153462] mb-4 uppercase tracking-tight"
+                >
+                  Start building with us <span className="text-[#f68921]">today</span> and see the difference.
+                </motion.h2>
+                <p className="text-[#153462]/60 font-medium tracking-wide">
+                  EXPERIENCE • ENGAGEMENT • RESULTS
+                </p>
+              </div>
+            </section>
+
+            {/* Original 3D Dome (commented out for comparison) */}
+            {/* {clients.length > 0 && (
+              <ClientDomeGallery
+                images={clients}
+                fit={0.5}
+                minRadius={1000}
+                maxVerticalRotationDeg={0}
+                segments={34}
+                dragDampening={2}
+                grayscale={false}
+              />
+            )} */}
+            {/* Google Reviews Testimonials */}
+            {/* Original testimonials section (optional, can be moved below banner) */}
+            <motion.div
+              className="py-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Start building with us <span className="text-[#f68921]">today</span> and see the difference.
-            </motion.h2>
-            <p className="text-[#153462]/60 font-medium tracking-wide">
-              EXPERIENCE • ENGAGEMENT • RESULTS
-            </p>
+              <div className="text-center mb-8 px-6">
+                <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+                  What Our Clients Say
+                </h3>
+              </div>
+              <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
+            </motion.div>
           </div>
-        </section>
-
-        {/* Original 3D Dome (commented out for comparison) */}
-        {/* {clients.length > 0 && (
-          <ClientDomeGallery
-            images={clients}
-            fit={0.5}
-            minRadius={1000}
-            maxVerticalRotationDeg={0}
-            segments={34}
-            dragDampening={2}
-            grayscale={false}
-          />
-        )} */}
-
-        {/* Google Reviews Testimonials */}
-        {/* Original testimonials section (optional, can be moved below banner) */}
-        <motion.div
-          className="mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <div className="text-center mb-8 px-6">
-            <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              What Our Clients Say
-            </h3>
-          </div>
-          <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
-        </motion.div>
+        </div>
 
         {/* Framed banner section */}
         <div className="w-full flex justify-center my-20 px-6">

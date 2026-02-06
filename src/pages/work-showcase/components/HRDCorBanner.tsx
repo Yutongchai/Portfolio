@@ -23,7 +23,7 @@ const HRDCorSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-white border-y border-gray-100 py-20 px-8">
+    <section className="border-y border-gray-100 py-20 px-8">
       <style>{`
                 @keyframes float {
                   0%, 100% {

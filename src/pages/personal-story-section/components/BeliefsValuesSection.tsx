@@ -153,13 +153,81 @@ const BeliefsValuesSection = () => {
       ref={containerRef}
       className="py-24 px-4 overflow-hidden relative"
     >
-      {/* MAIN SECTION BACKGROUND: Using /bg.jpg as requested */}
-      <div
-        className="absolute inset-0 bg-cover bg-center z-0"
-        style={{ backgroundImage: "url('/bg.jpg')" }}
-      />
-      {/* Semi-transparent white overlay to keep content readable over main bg */}
-      <div className="absolute inset-0 bg-white/90 z-0" />
+      {/* ANIMATED GRADIENT BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0">
+        {/* Animated floating shapes */}
+        <div className="absolute top-0 left-0 w-full h-full">
+          {/* Teal Blob - Top Left */}
+          <div 
+            className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl animate-blob-1"
+            style={{ backgroundColor: '#12a28f' }}
+          />
+          {/* Gold Blob - Top Right */}
+          <div 
+            className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-blob-2"
+            style={{ backgroundColor: '#fcb22f' }}
+          />
+          {/* Blue Blob - Middle */}
+          <div 
+            className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl animate-blob-3"
+            style={{ backgroundColor: '#0074b4' }}
+          />
+          {/* Orange Blob - Bottom Left */}
+          <div 
+            className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl animate-blob-4"
+            style={{ backgroundColor: '#f68921' }}
+          />
+          {/* Navy Blob - Bottom Right */}
+          <div 
+            className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl animate-blob-5"
+            style={{ backgroundColor: '#153462' }}
+          />
+          
+          {/* Geometric pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.04]" 
+            style={{ 
+              backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`, 
+              backgroundSize: '30px 30px' 
+            }} 
+          />
+        </div>
+      </div>
+
+      {/* Light overlay for content readability */}
+      <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] z-0" />
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes blob-1 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+          33% { transform: translate(40px, -40px) rotate(120deg) scale(1.1); }
+          66% { transform: translate(-30px, 30px) rotate(240deg) scale(0.9); }
+        }
+        @keyframes blob-2 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+          50% { transform: translate(-50px, 50px) rotate(180deg) scale(1.15); }
+        }
+        @keyframes blob-3 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-40px, -50px) scale(1.2); }
+          66% { transform: translate(40px, 40px) scale(0.85); }
+        }
+        @keyframes blob-4 {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          50% { transform: translate(60px, -60px) rotate(-180deg); }
+        }
+        @keyframes blob-5 {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.05; }
+          50% { transform: translate(-40px, -40px) scale(1.1); opacity: 0.08; }
+        }
+        
+        .animate-blob-1 { animation: blob-1 25s ease-in-out infinite; }
+        .animate-blob-2 { animation: blob-2 20s ease-in-out infinite; }
+        .animate-blob-3 { animation: blob-3 22s ease-in-out infinite; }
+        .animate-blob-4 { animation: blob-4 18s ease-in-out infinite; }
+        .animate-blob-5 { animation: blob-5 30s ease-in-out infinite; }
+      `}} />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}

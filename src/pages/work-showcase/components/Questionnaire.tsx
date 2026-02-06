@@ -68,7 +68,9 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   const [fieldErrors, setFieldErrors] = useState<{
     duration?: string;
     languages?: string;
+    privacyConsent?: string;
   }>({});
+  const [privacyConsent, setPrivacyConsent] = useState(false);
 
   useEffect(() => {
     if (!submitMessage) return;
@@ -122,14 +124,17 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
       (field) => !formData[field as keyof typeof formData],
     );
 
-    const nextErrors: { duration?: string; languages?: string } = {};
+    const nextErrors: { duration?: string; languages?: string; privacyConsent?: string } = {};
 
-    if (missingFields.length > 0 || formData.languages.length === 0) {
+    if (missingFields.length > 0 || formData.languages.length === 0 || !privacyConsent) {
       if (!formData.duration)
         nextErrors.duration = "Please select the duration";
 
       if (formData.languages.length === 0)
         nextErrors.languages = "Please select at least one language";
+
+      if (!privacyConsent)
+        nextErrors.privacyConsent = "Please agree to the Privacy Policy";
 
       setFieldErrors(nextErrors);
 
@@ -214,6 +219,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         languagesOther: "",
         remarks: "",
       });
+      setPrivacyConsent(false);
     } catch (error: any) {
       console.error("Submission error:", error);
 
@@ -555,13 +561,16 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
           </label>
           <div className="flex flex-wrap gap-6">
             {["English", "Mandarin", "BM", "Others"].map((lang, index) => (
-              <Checkbox
-                key={lang}
-                checked={formData.languages.includes(lang)}
-                onChange={() => handleCheckbox(lang)}
-                disabled={loading}
-                label={lang}
-              />
+              <label key={lang} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.languages.includes(lang)}
+                  onChange={() => handleCheckbox(lang)}
+                  disabled={loading}
+                  className="h-4 w-4 rounded border-gray-300 text-[#f68921] focus:ring-[#f68921] cursor-pointer"
+                />
+                <span className="text-sm text-gray-600">{lang}</span>
+              </label>
             ))}
           </div>
           {fieldErrors.languages && (
@@ -603,6 +612,38 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             disabled={loading}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           ></textarea>
+        </div>
+
+        {/* Privacy Policy Consent */}
+        <div className="py-2">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={privacyConsent}
+              onChange={() => {
+                setPrivacyConsent(!privacyConsent);
+                setFieldErrors((prev) => ({ ...prev, privacyConsent: undefined }));
+              }}
+              disabled={loading}
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-[#f68921] focus:ring-[#f68921] cursor-pointer"
+            />
+            <span className="text-sm text-gray-600 leading-relaxed">
+              By submitting this form, I agree to the processing of my personal data as per the{' '}
+              <a 
+                href="/privacy-policy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#4a90e2] hover:text-[#f68921] underline font-medium"
+              >
+                Privacy Policy
+              </a>.
+            </span>
+          </label>
+          {fieldErrors.privacyConsent && (
+            <p className="mt-2 text-sm font-medium text-red-600">
+              {fieldErrors.privacyConsent}
+            </p>
+          )}
         </div>
 
         {/* Submit Button */}

@@ -6,6 +6,8 @@ import TeamBuilding from './pages/work-showcase/TeamBuilding';
 import CorporateEvent from './pages/work-showcase/CorporateEvent';
 import TrainingProgram from './pages/work-showcase/TrainingProgram';
 import CSR from './pages/work-showcase/CSR';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import { AdminLogin, AdminRegister, AdminDashboard, HeroImagesManager, ClientLogosManager, ProjectsManager, ProtectedRoute } from './pages/admin';
 
 const Routes: React.FC = () => {
@@ -22,6 +24,8 @@ const Routes: React.FC = () => {
           <Route path="/work-showcase/training-program" element={<TrainingProgram />} />
           <Route path="/work-showcase/csr" element={<CSR />} />
           <Route path="/connection-hub" element={<Home />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           
           {/* Admin Login/Register - Public */}
           <Route path="/admin/login" element={<AdminLogin />} />
