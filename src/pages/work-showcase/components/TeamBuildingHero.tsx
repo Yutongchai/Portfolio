@@ -79,7 +79,7 @@ const TeamBuildingHero: React.FC = () => {
                         href="#team-building-questionnaire"
                         className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
                     >
-                        Make Inquiry
+                        Get Started
                     </a>
                 </div>
             </div>

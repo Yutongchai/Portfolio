@@ -150,9 +150,8 @@ const ClientMarquee = ({
   }, []);
 
   return (
-    <section className="w-full bg-secondary/30">
+    <section className="w-full"> {/* Removed background color here */}
       <div className="max-w-full mx-auto">
-        {/* Marquee Container */}
         <div
           ref={containerRef}
           className="relative overflow-hidden select-none"
@@ -166,11 +165,8 @@ const ClientMarquee = ({
           onTouchEnd={handleTouchEnd}
           style={{ cursor: isDragging ? "grabbing" : "grab" }}
         >
-          {/* Gradient masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-secondary/30 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-secondary/30 to-transparent z-10 pointer-events-none" />
+          {/* Internal Gradient masks removed from here */}
 
-          {/* Track */}
           <div
             ref={trackRef}
             className="flex items-center will-change-transform py-8"
@@ -179,7 +175,7 @@ const ClientMarquee = ({
             {loopedLogos.map((logo, index) => (
               <div
                 key={`${logo}-${index}`}
-                className="flex-shrink-0 flex items-center justify-center rounded-xl bg-background/60 backdrop-blur-sm border border-border/50 transition-all duration-300 hover:bg-background hover:border-border hover:shadow-lg group"
+                className="flex-shrink-0 flex items-center justify-center rounded-xl transition-all duration-300 group"
                 style={{
                   width: LOGO_WIDTH,
                   height: LOGO_HEIGHT,
@@ -188,7 +184,8 @@ const ClientMarquee = ({
                 <img
                   src={logo || "/placeholder.svg"}
                   alt="Partner logo"
-                  className="max-w-[75%] max-h-[60%] object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300 "
+                  className="max-w-[85%] max-h-[70%] object-contain opacity-100 transition-transform duration-300 group-hover:scale-110"
+                  /* Changed opacity to 100 and added a subtle scale effect instead */
                   draggable={false}
                 />
               </div>

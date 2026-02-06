@@ -58,6 +58,8 @@ const QuestionnaireTP = () => {
 
   const [loading, setLoading] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [privacyConsent, setPrivacyConsent] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ privacyConsent?: string }>({});
 
   useEffect(() => {
     if (!submitMessage) return;
@@ -94,7 +96,10 @@ const QuestionnaireTP = () => {
     const isMissingField = requiredFields.some(field => !formData[field as keyof typeof formData]);
     const isMissingCheckboxes = formData.trainingTypes.length === 0 || formData.languages.length === 0;
 
-    if (isMissingField || isMissingCheckboxes) {
+    if (isMissingField || isMissingCheckboxes || !privacyConsent) {
+      if (!privacyConsent) {
+        setFieldErrors({ privacyConsent: 'Please agree to the Privacy Policy' });
+      }
       setSubmitMessage({
         type: 'error',
         text: 'Please fill in all required fields'
@@ -165,6 +170,8 @@ const QuestionnaireTP = () => {
         languagesOther: '',
         remarks: ''
       });
+      setPrivacyConsent(false);
+      setFieldErrors({});
     } catch (error: any) {
       console.error('Form submission error:', error);
       setSubmitMessage({
@@ -316,13 +323,16 @@ const QuestionnaireTP = () => {
           <label className="block mb-3 font-bold text-gray-700">Types of Training: <span className="text-red-500">*</span></label>
           <div className="flex flex-col gap-3">
             {['Mental Health & Wellbeing', 'Leadership & Management', 'Personal Development & Soft Skills', 'Others'].map((type) => (
-              <Checkbox
-                key={type}
-                checked={formData.trainingTypes.includes(type)}
-                onChange={() => handleCheckbox('trainingTypes', type)}
-                disabled={loading}
-                label={type}
-              />
+              <label key={type} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.trainingTypes.includes(type)}
+                  onChange={() => handleCheckbox('trainingTypes', type)}
+                  disabled={loading}
+                  className="h-4 w-4 rounded border-gray-300 text-[#f68921] focus:ring-[#f68921] cursor-pointer"
+                />
+                <span className="text-sm text-gray-600">{type}</span>
+              </label>
             ))}
           </div>
         </div>
@@ -432,13 +442,16 @@ const QuestionnaireTP = () => {
           <label className="block mb-3 font-bold text-gray-700">Language to Conduct: <span className="text-red-500">*</span></label>
           <div className="flex flex-wrap gap-6">
             {['English', 'Mandarin', 'BM', 'Others'].map((lang) => (
-              <Checkbox
-                key={lang}
-                checked={formData.languages.includes(lang)}
-                onChange={() => handleCheckbox('languages', lang)}
-                disabled={loading}
-                label={lang}
-              />
+              <label key={lang} className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.languages.includes(lang)}
+                  onChange={() => handleCheckbox('languages', lang)}
+                  disabled={loading}
+                  className="h-4 w-4 rounded border-gray-300 text-[#f68921] focus:ring-[#f68921] cursor-pointer"
+                />
+                <span className="text-sm text-gray-600">{lang}</span>
+              </label>
             ))}
           </div>
         </div>
@@ -469,6 +482,38 @@ const QuestionnaireTP = () => {
             disabled={loading}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           ></textarea>
+        </div>
+
+        {/* Privacy Policy Consent */}
+        <div className="py-2">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={privacyConsent}
+              onChange={() => {
+                setPrivacyConsent(!privacyConsent);
+                setFieldErrors({});
+              }}
+              disabled={loading}
+              className="mt-1 h-4 w-4 rounded border-gray-300 text-[#f68921] focus:ring-[#f68921] cursor-pointer"
+            />
+            <span className="text-sm text-gray-600 leading-relaxed">
+              By submitting this form, I agree to the processing of my personal data as per the{' '}
+              <a 
+                href="/privacy-policy" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[#4a90e2] hover:text-[#f68921] underline font-medium"
+              >
+                Privacy Policy
+              </a>.
+            </span>
+          </label>
+          {fieldErrors.privacyConsent && (
+            <p className="mt-2 text-sm font-medium text-red-600">
+              {fieldErrors.privacyConsent}
+            </p>
+          )}
         </div>
 
         {/* Submit Button */}

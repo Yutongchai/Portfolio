@@ -35,17 +35,17 @@ const PillNav = ({
 
   return (
     <nav className={`w-full bg-white border-b-4 border-[#7a4a4a] ${className}`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-3 items-center px-6 py-4 gap-4">
 
         {/* Logo */}
-        <div className="flex-shrink-0">
+        <div className="flex justify-start">
           <Link to={logoHref}>
             <img src={logo} alt={logoAlt} className="h-16 w-auto" />
           </Link>
         </div>
 
-        {/* Nav Items */}
-        <div className="flex-grow flex justify-center">
+        {/* Nav Items - Absolutely Centered */}
+        <div className="flex justify-center">
           <ul className="flex items-center gap-12">
             {items.map((item) => (
               <li key={item.href} className="relative group">
@@ -103,8 +103,15 @@ const PillNav = ({
           </ul>
         </div>
 
-        {/* Symmetry Spacer */}
-        <div className="hidden md:block w-24" />
+        {/* Book Appointment Button */}
+        <div className="flex justify-end">
+          <Link
+            to="/connection-hub#contact-methods"
+            className="bg-[#f68921] text-white px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-[#d67419] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+          >
+            Book an Appointment
+          </Link>
+        </div>
       </div>
     </nav>
   );

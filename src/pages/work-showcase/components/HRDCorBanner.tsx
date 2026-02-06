@@ -23,7 +23,7 @@ const HRDCorSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-white border-y border-gray-100 py-20 px-8">
+    <section className="border-y border-gray-100 py-20 px-8">
       <style>{`
                 @keyframes float {
                   0%, 100% {
@@ -83,23 +83,27 @@ const HRDCorSection: React.FC = () => {
           <h3 className="text-4xl md:text-5xl font-black mb-6 text-[#153462] hrdc-title">
             HRD Corp<br />Claimable Program
           </h3>
-          <p className="text-gray-600 text-lg leading-relaxed font-medium mb-6">
-            Empower your workforce through our HRD Corp–supported team building services. With proven expertise in impactful programme delivery, we provide end-to-end support for HRDC funding claims, ensuring a smooth and hassle-free process. Our HRDC-compliant programmes enable organisations to invest in talent development while contributing to national workforce advancement.
+          <p className="text-gray-600 text-lg leading-relaxed font-medium mb-8">
+            Maximize your HRD Corp levy with our approved training programmes. We handle all documentation and claims, ensuring 100% compliance and hassle-free funding for your team's development.
           </p>
-          {/* <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                            <span className="text-[#fcb22f] font-black text-lg">✓</span>
-                            <p className="text-gray-700 font-medium">Official approved training provider</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-[#fcb22f] font-black text-lg">✓</span>
-                            <p className="text-gray-700 font-medium">Maximize HR development budget allocation</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <span className="text-[#fcb22f] font-black text-lg">✓</span>
-                            <p className="text-gray-700 font-medium">Measurable organizational impact</p>
-                        </div>
-                    </div> */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
+            <div className="flex items-center gap-3">
+              <span className="text-[#12a28f] font-black text-xl">✓</span>
+              <p className="text-gray-700 font-bold">National Standards</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[#12a28f] font-black text-xl">✓</span>
+              <p className="text-gray-700 font-bold">Hassle-Free Docs</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[#12a28f] font-black text-xl">✓</span>
+              <p className="text-gray-700 font-bold">Levy Fundable</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[#12a28f] font-black text-xl">✓</span>
+              <p className="text-gray-700 font-bold">Expert Support</p>
+            </div>
+          </div>
         </div>
 
         {/* RIGHT BADGES */}
@@ -111,7 +115,7 @@ const HRDCorSection: React.FC = () => {
               width={240}
               height={240}
               loading="eager"
-              fetchpriority="high"
+              fetchPriority="high"
               decoding="sync"
               className="h-60 object-contain hrdc-logo"
             />
@@ -123,7 +127,7 @@ const HRDCorSection: React.FC = () => {
               width={240}
               height={240}
               loading="eager"
-              fetchpriority="high"
+              fetchPriority="high"
               decoding="sync"
               className="h-60 object-contain hrdc-provider-badge"
             />

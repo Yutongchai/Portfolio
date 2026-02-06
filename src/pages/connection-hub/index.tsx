@@ -185,6 +185,19 @@ const ConnectionHub = () => {
     fetchBooked();
     return () => { mounted = false; };
   }, []);
+
+  // Handle hash navigation for direct links
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, []);
   const sampleSlots = useMemo(() => {
     const slots: AvailabilitySlot[] = [];
     const today = new Date();
@@ -272,7 +285,7 @@ const ConnectionHub = () => {
             </motion.div>
 
             {/* --- CONTACT METHODS GRID --- */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+            <div id="contact-methods" className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
               {contactMethods.map((method, idx) => (
                 <motion.div
                   key={method.id}
@@ -336,15 +349,6 @@ const ConnectionHub = () => {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* --- SOCIAL SECTION --- */}
-            <div className="mb-32">
-              <div className="flex items-center gap-6 mb-12">
-                <h2 className="text-4xl font-black text-[#153462] uppercase tracking-tighter whitespace-nowrap">Direct Access</h2>
-                <div className="h-[1px] w-full bg-[#153462]/10" />
-              </div>
-              <HoverEffect items={socialLinks} />
             </div>
 
             {/* --- CALENDAR & FORM SECTION --- */}
