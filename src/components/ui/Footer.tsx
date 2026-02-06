@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import LogoImg from '/beige2.png'
 import HRDImg from '../../assets/hrd.png'
 
@@ -38,14 +39,14 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="/personal-story-section#beliefs-values" className="text-white/90 hover:text-[#f68921] transition-colors">
+                <Link to="/personal-story-section#beliefs-values" className="text-white/90 hover:text-[#f68921] transition-colors">
                   Our Value
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/connection-hub#contact-methods" className="text-white/90 hover:text-[#f68921] transition-colors">
+                <Link to="/connection-hub#contact-methods" className="text-white/90 hover:text-[#f68921] transition-colors">
                   Contact us
-                </a>
+                </Link>
               </li>
               <li className="pt-2 text-white/70 flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -87,24 +88,24 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="/work-showcase/team-building" className="text-white/90 hover:text-[#f68921] transition-colors">
+                <Link to="/work-showcase/team-building" className="text-white/90 hover:text-[#f68921] transition-colors">
                   Team Building
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/work-showcase/training-program" className="text-white/90 hover:text-[#f68921] transition-colors">
+                <Link to="/work-showcase/training-program" className="text-white/90 hover:text-[#f68921] transition-colors">
                   Training Program
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/work-showcase/csr" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  CSR
-                </a>
-              </li>
-              <li>
-                <a href="/work-showcase/corporate-event" className="text-white/90 hover:text-[#f68921] transition-colors">
+                <Link to="/work-showcase/corporate-event" className="text-white/90 hover:text-[#f68921] transition-colors">
                   Corporate Event
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/work-showcase/csr" className="text-white/90 hover:text-[#f68921] transition-colors">
+                  CSR
+                </Link>
               </li>
             </ul>
           </div>
@@ -128,19 +129,19 @@ const Footer = () => {
         <div className="mt-12 pt-6 text-center">
           <span className="tracking-[0.2em] text-[10px] uppercase opacity-50">
             © 2026 BY EITO GROUP TEAM BUILDING. ALL RIGHTS RESERVED. |{' '}
-            <a 
-              href="/terms-of-service" 
+            <Link 
+              to="/terms-of-service" 
               className="hover:text-[#f68921] transition-colors underline"
             >
               Terms of Service
-            </a>
+            </Link>
             {' '}|{' '}
-            <a 
-              href="/privacy-policy" 
+            <Link 
+              to="/privacy-policy" 
               className="hover:text-[#f68921] transition-colors underline"
             >
               Privacy Policy
-            </a>
+            </Link>
           </span>
         </div>
       </div>
