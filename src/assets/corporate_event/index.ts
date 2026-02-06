@@ -1,0 +1,9 @@
+export { default as CrewIcon } from "./crew.svg";
+export { default as VenueIcon } from "./venue.svg";
+export { default as MusicIcon } from "./music.svg";
+export { default as EventIcon } from "./event.svg";
+export { default as GiftIcon } from "./gift.svg";
+export { default as SettingsIcon } from "./settings.svg";
+export { default as EmceeIcon } from "./emcee.svg";
+export { default as DecorationIcon } from "./decoration.svg";
+export { default as TalentIcon } from "./talent.svg";

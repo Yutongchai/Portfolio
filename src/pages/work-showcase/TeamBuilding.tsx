@@ -135,7 +135,7 @@ const TeamBuilding = () => (
         <ActivityCards activities={teamBuildingActivities} />
       </div>
     </section>
-    <section id="team-building-questionnaire" className="pb-20 px-8">
+    <section id="team-building-questionnaire" className="py-20 px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="mx-auto max-w-3xl text-center mb-12">
           <span className="text-[#fcb22f] font-bold uppercase tracking-[0.35em] text-xs sm:text-sm block mb-4">

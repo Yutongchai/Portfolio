@@ -1,97 +1,95 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 export interface Offering {
-    id: string;
-    icon: string | React.ReactNode;
-    title: string;
-    description: string;
+  id: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  accentColor?: string;
 }
 
 interface OfferingsGridProps {
-    offerings: Offering[];
-    columns?: 2 | 3 | 4;
+  offerings: Offering[];
 }
 
-const OfferingsGrid: React.FC<OfferingsGridProps> = ({ offerings, columns = 3 }) => {
-    const columnClass = {
-        2: 'md:grid-cols-2',
-        3: 'md:grid-cols-3',
-        4: 'md:grid-cols-4',
-    }[columns];
-
-    return (
-        <div className={`grid grid-cols-1 ${columnClass} gap-8`}>
-            <style>{`
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .offering-card {
-          animation: slideInUp 0.6s ease-out;
-          animation-fill-mode: both;
-        }
-        .offering-card:nth-child(1) {
-          animation-delay: 0.1s;
-        }
-        .offering-card:nth-child(2) {
-          animation-delay: 0.2s;
-        }
-        .offering-card:nth-child(3) {
-          animation-delay: 0.3s;
-        }
-        .offering-card:nth-child(4) {
-          animation-delay: 0.4s;
-        }
-        .offering-card:nth-child(5) {
-          animation-delay: 0.5s;
-        }
-        .offering-card:nth-child(6) {
-          animation-delay: 0.6s;
-        }
-        .offering-icon {
-          transition: transform 0.3s ease, color 0.3s ease;
-          font-size: 3rem;
-        }
-        .offering-card:hover .offering-icon {
-          transform: scale(1.15) rotate(5deg);
-          color: #3b82f6;
-        }
-        .offering-card {
-          transition: all 0.3s ease;
-        }
-        .offering-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
-        }
-      `}</style>
-
-            {offerings.map((offering, index) => (
-                <div
-                    key={offering.id}
-                    className="offering-card bg-white rounded-12 p-8 text-center border border-gray-100 shadow-sm hover:shadow-md transition-all"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                    <div className="flex justify-center mb-6">
-                        <div className="offering-icon">
-                            {typeof offering.icon === 'string' ? offering.icon : offering.icon}
-                        </div>
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-3">
-                        {offering.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        {offering.description}
-                    </p>
-                </div>
-            ))}
-        </div>
-    );
+const OfferingsGrid: React.FC<OfferingsGridProps> = ({ offerings }) => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+      {offerings.map((offering, index) => (
+        <GlassCard key={offering.id} offering={offering} index={index} />
+      ))}
+    </div>
+  );
 };
+
+function GlassCard({ offering, index }: { offering: Offering; index: number }) {
+  // Convert hex color to gradient if provided
+  const gradientColor = offering.accentColor
+    ? `from-[${offering.accentColor}] to-[${offering.accentColor}]/80`
+    : 'from-[#fcb22f] to-[#fcb22f]/80';
+
+  return (
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 30,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.1,
+        type: 'spring',
+        stiffness: 100,
+      }}
+      whileHover={{
+        y: -12,
+        scale: 1.02,
+        transition: {
+          duration: 0.3,
+        },
+      }}
+      className="group relative flex flex-col h-full p-8 rounded-3xl overflow-hidden"
+    >
+      {/* Light Glass Background */}
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-xl border border-white/40 rounded-3xl transition-all duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.12),_0_5px_15px_rgba(0,0,0,0.08)] group-hover:bg-white/80 group-hover:border-white/60 group-hover:shadow-[0_25px_60px_rgba(0,0,0,0.18),_0_10px_25px_rgba(0,0,0,0.12)]" />
+
+      {/* Gradient Glow Effect on Hover */}
+      <div
+        className="absolute -inset-px opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500 rounded-3xl"
+        style={{
+          background: `linear-gradient(to bottom right, ${offering.accentColor ?? '#fcb22f'}, ${offering.accentColor ?? '#fcb22f'}90)`,
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Icon Container */}
+        <div
+          className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.25),_0_4px_12px_rgba(0,0,0,0.15)] group-hover:scale-110 group-hover:shadow-[0_12px_40px_rgba(0,0,0,0.35),_0_6px_18px_rgba(0,0,0,0.2)] transition-all duration-300"
+          style={{
+            background: `linear-gradient(to bottom right, ${offering.accentColor ?? '#fcb22f'}, ${offering.accentColor ?? '#fcb22f'}dd)`,
+          }}
+        >
+          <div className="text-white [&>img]:brightness-0 [&>img]:invert">
+            {offering.icon}
+          </div>
+        </div>
+
+        <h3 className="text-xl font-bold text-slate-900 mb-3 tracking-wide group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-700 transition-colors">
+          {offering.title}
+        </h3>
+
+        <p className="text-sm leading-relaxed text-slate-600 mb-8 flex-grow group-hover:text-slate-800 transition-colors">
+          {offering.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default OfferingsGrid;

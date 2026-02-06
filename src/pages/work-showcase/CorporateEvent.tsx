@@ -5,45 +5,75 @@ import Questionnaire from './components/Questionnaire';
 import PageHero from './components/PageHero';
 import HRDCorBanner from './components/HRDCorBanner';
 import OfferingsGrid, { Offering } from './components/OfferingsGrid';
+import {
+  CrewIcon,
+  VenueIcon,
+  MusicIcon,
+  EventIcon,
+  GiftIcon,
+  SettingsIcon,
+  EmceeIcon,
+  DecorationIcon,
+  TalentIcon,
+} from '../../assets/corporate_event';
 
 const corporateEventOfferings: Offering[] = [
   {
-    id: 'planning',
-    icon: '📋',
-    title: 'Event Planning',
-    description: 'End-to-end event planning from concept to execution with attention to every detail.'
+    id: 'crew-logistics',
+    icon: <img src={CrewIcon} alt="Event crew icon" className="h-7 w-7" />,
+    title: 'Event Crew & Logistics Support',
+    description: 'Operational manpower and logistical support to ensure smooth event flow and execution.',
   },
   {
     id: 'venue',
-    icon: '🏢',
-    title: 'Venue Selection',
-    description: 'Access to premium venues that match your event style, budget, and logistics requirements.'
-  },
-  {
-    id: 'catering',
-    icon: '🍽️',
-    title: 'Catering & Dining',
-    description: 'Curated menus and professional catering services tailored to your corporate standards.'
+    icon: <img src={VenueIcon} alt="Venue scouting icon" className="h-7 w-7" />,
+    title: 'Venue Scouting & Assessment',
+    description: 'Identification and evaluation of suitable venues based on event requirements and capacity.',
   },
   {
     id: 'entertainment',
-    icon: '🎭',
-    title: 'Entertainment',
-    description: 'Live entertainment, performers, DJs, and interactive experiences to elevate your event.'
+    icon: <img src={MusicIcon} alt="Music and entertainment icon" className="h-7 w-7" />,
+    title: 'Sound, Music & Entertainment',
+    description: 'Professional audio solutions and entertainment arrangements for corporate events.',
   },
   {
-    id: 'audio',
-    icon: '🎤',
-    title: 'Audio & Visual',
-    description: 'Professional AV equipment, sound systems, and technical support for seamless presentations.'
+    id: 'concept-planning',
+    icon: <img src={EventIcon} alt="Event planning icon" className="h-7 w-7" />,
+    title: 'Event Concept & Planning',
+    description: 'Structured planning and concept development aligned with corporate objectives.',
   },
   {
-    id: 'coordination',
-    icon: '👥',
-    title: 'Event Coordination',
-    description: 'Dedicated on-site coordinators ensuring smooth execution and handling of all logistics.'
+    id: 'branding-gifts',
+    icon: <img src={GiftIcon} alt="Custom gifts icon" className="h-7 w-7" />,
+    title: 'Custom Door Gifts & Branding',
+    description: 'Customised door gifts and branded items to enhance event identity and recall.',
+  },
+  {
+    id: 'event-day',
+    icon: <img src={SettingsIcon} alt="Event day management icon" className="h-7 w-7" />,
+    title: 'Event Day Management',
+    description: 'On-site coordination to manage programme flow and operational activities.',
+  },
+  {
+    id: 'emcee',
+    icon: <img src={EmceeIcon} alt="Emcee icon" className="h-7 w-7" />,
+    title: 'Emcee & Program Hosting',
+    description: 'Professional emcee and hosting services to guide the event programme effectively.',
+  },
+  {
+    id: 'setup-styling',
+    icon: <img src={DecorationIcon} alt="Event decoration icon" className="h-7 w-7" />,
+    title: 'Set-Up, Styling & Decoration',
+    description: 'Event setup, styling, and decorative arrangements based on the approved concept.',
+  },
+  {
+    id: 'talent',
+    icon: <img src={TalentIcon} alt="Talent coordination icon" className="h-7 w-7" />,
+    title: 'Talent & Host Coordination',
+    description: 'Coordination of hosts, speakers, and performers to support programme delivery.',
   },
 ];
+
 
 const CorporateEvent = () => (
   <>
@@ -63,12 +93,60 @@ const CorporateEvent = () => (
     />
     <HRDCorBanner />
     <section className="py-20 px-4 max-w-7xl mx-auto">
+      <style>{`
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .offerings-label {
+          animation: fadeInDown 0.8s ease-out;
+        }
+
+        .offerings-title {
+          animation: fadeInDown 0.8s ease-out 0.1s both;
+        }
+
+        .offerings-description {
+          animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+      `}</style>
       <div className="mb-20">
-        <h2 className="text-3xl font-bold text-center mb-4 text-slate-900">What We Offer</h2>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          Comprehensive services covering every aspect of your corporate event.
+        {/* Decorative Label */}
+        <div className="offerings-label flex items-center justify-center gap-6 mb-8">
+          <span className="uppercase tracking-[0.4em] text-xs font-black text-[#fcb22f]">
+            What We Offer
+          </span>
+        </div>
+
+        {/* Title */}
+        <h2 className="offerings-title text-4xl md:text-6xl font-black text-center mb-6 text-slate-900 tracking-tight">
+          Comprehensive Event Solutions
+        </h2>
+
+        {/* Description */}
+        <p className="offerings-description text-center text-slate-600 text-lg md:text-xl mb-16 max-w-3xl mx-auto leading-relaxed font-medium">
+          From concept to execution, we deliver seamless corporate events that leave lasting impressions.
         </p>
-        <OfferingsGrid offerings={corporateEventOfferings} columns={3} />
+
+        <OfferingsGrid offerings={corporateEventOfferings} />
       </div>
     </section>
     <section className="py-20 px-8 max-w-7xl mx-auto">

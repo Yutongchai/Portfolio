@@ -1,14 +1,26 @@
 import React from "react";
+import { motion } from "framer-motion";
 import TeamBuildingHeroImg from "../../../assets/team_building/hero.png";
 
 const TeamBuildingHero: React.FC = () => {
     return (
         <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
             <style>{`
+                @keyframes slideInDown {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
                 @keyframes slideInUp {
                     from {
                         opacity: 0;
-                        transform: translateY(80px);
+                        transform: translateY(30px);
                     }
                     to {
                         opacity: 1;
@@ -17,20 +29,29 @@ const TeamBuildingHero: React.FC = () => {
                 }
 
                 .hero-title {
-                    animation: slideInUp 0.8s ease-out;
+                    animation: slideInDown 0.8s ease-out;
+                }
+
+                .hero-description {
+                    animation: slideInUp 0.8s ease-out 0.2s both;
                 }
         `}</style>
-            <div className="absolute inset-0">
+            <motion.div
+                className="absolute inset-0"
+                initial={{ opacity: 0, scale: 1.12 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.4, ease: "easeInOut" }}
+            >
                 <img
                     src={TeamBuildingHeroImg}
                     alt="Team building"
                     className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
-            </div>
+            </motion.div>
 
             <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-                <div className="hero-title flex items-center justify-center gap-6 mb-6">
+                <div className="flex items-center justify-center gap-6 mb-6">
                     <div className="h-[2px] w-20 bg-[#fcb22f]" />
                     <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
                         Team Building
@@ -42,7 +63,7 @@ const TeamBuildingHero: React.FC = () => {
                     Ignite Team Energy
                 </h1>
 
-                <p className="text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
+                <p className="hero-description text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
                     Create immersive shared experiences that strengthen trust, boost
                     collaboration, and energize every corner of your culture.
                 </p>
