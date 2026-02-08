@@ -5,6 +5,8 @@ export { default as AdminRegister } from './pages/AdminRegister';
 export { default as HeroImagesManager } from './pages/HeroImagesManager';
 export { default as ClientLogosManager } from './pages/ClientLogosManager';
 export { default as ProjectsManager } from './pages/ProjectsManager';
+export { default as InquiriesManager } from './pages/InquiriesManager';
+export { default as BookingsManager } from './pages/BookingsManager';
 
 // Admin Components
 export { default as ProtectedRoute } from './components/ProtectedRoute';
