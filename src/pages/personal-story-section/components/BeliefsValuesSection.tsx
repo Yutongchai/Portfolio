@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+import './BeliefsValuesSection.css';
 
 // --- Types ---
 type Belief = {
@@ -135,6 +137,7 @@ const BeliefsValuesSection = () => {
   ];
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const curvedTextRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
 
   const { scrollYProgress } = useScroll({
@@ -142,10 +145,33 @@ const BeliefsValuesSection = () => {
     offset: ["start end", "center center"]
   });
 
+  const { scrollYProgress: curvedTextScroll } = useScroll({
+    target: curvedTextRef,
+    offset: ["start end", "center center"]
+  });
+
   const y = useTransform(scrollYProgress, [0, 1], [200, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
   const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
+
+  const curvedTextY = useTransform(curvedTextScroll, [0, 0.5, 1], [100, -20, 0]);
+  const curvedTextScale = useTransform(curvedTextScroll, [0, 0.5, 1], [0.8, 1.1, 1]);
+  const curvedTextOpacity = useTransform(curvedTextScroll, [0, 0.5, 1], [0, 1, 1]);
+
+  useEffect(() => {
+    const unsubscribe = curvedTextScroll.on("change", (latest) => {
+      if (latest > 0.3 && latest < 0.7) {
+        const curveAmount = 20 + Math.sin(latest * Math.PI * 4) * 30;
+        gsap.to("#curved-path", {
+          attr: { d: `M 30,100 Q 400,${100 - curveAmount} 770,100` },
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, [curvedTextScroll]);
 
   return (
     <section
@@ -197,38 +223,6 @@ const BeliefsValuesSection = () => {
       {/* Light overlay for content readability */}
       <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] z-0" />
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @keyframes blob-1 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-          33% { transform: translate(40px, -40px) rotate(120deg) scale(1.1); }
-          66% { transform: translate(-30px, 30px) rotate(240deg) scale(0.9); }
-        }
-        @keyframes blob-2 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-          50% { transform: translate(-50px, 50px) rotate(180deg) scale(1.15); }
-        }
-        @keyframes blob-3 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-40px, -50px) scale(1.2); }
-          66% { transform: translate(40px, 40px) scale(0.85); }
-        }
-        @keyframes blob-4 {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          50% { transform: translate(60px, -60px) rotate(-180deg); }
-        }
-        @keyframes blob-5 {
-          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.05; }
-          50% { transform: translate(-40px, -40px) scale(1.1); opacity: 0.08; }
-        }
-        
-        .animate-blob-1 { animation: blob-1 25s ease-in-out infinite; }
-        .animate-blob-2 { animation: blob-2 20s ease-in-out infinite; }
-        .animate-blob-3 { animation: blob-3 22s ease-in-out infinite; }
-        .animate-blob-4 { animation: blob-4 18s ease-in-out infinite; }
-        .animate-blob-5 { animation: blob-5 30s ease-in-out infinite; }
-      `}} />
-
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-24">
@@ -246,7 +240,7 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Foundation Phrase */}
-        <div className="py-20 flex flex-col items-center border-y border-gray-100/50 my-20">
+        <div className="py-20 flex flex-col items-center my-20">
           <p className="text-4xl sm:text-6xl font-black text-center text-[#23242b] leading-tight">
             That belief is the <br />
             <span className="relative inline-block mt-4">
@@ -282,14 +276,52 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Fundamentals Section */}
-        <div className="mt-20">
-          <div className="text-center mb-16 rounded-[2.5rem] px-6 py-12 shadow-2xl overflow-hidden relative" style={{ background: '#3a2c23' }}>
-            {/* Sub-section can also have a faint bg image if desired */}
-            <h3 className="relative z-10 text-sm font-black uppercase tracking-[0.4em] text-[#fcb22f] mb-4">Core Principles</h3>
-            <p className="relative z-10 text-3xl font-bold text-white">
-              The E I T O Fundamentals
-            </p>
-          </div>
+        <div className="mt-20" ref={curvedTextRef}>
+          <motion.div 
+            className="mb-16 px-6 py-12 overflow-visible relative"
+            style={{
+              y: curvedTextY,
+              scale: curvedTextScale,
+              opacity: curvedTextOpacity
+            }}
+          >
+            {/* Horizontal Layout: CORE - Curved Text - PRINCIPLES */}
+            <div className="relative z-10 flex items-center justify-between max-w-7xl mx-auto gap-4">
+              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
+              
+              {/* SVG Curved Text Effect */}
+              <div 
+                className="curved-text-container flex-1 flex justify-center"
+                onMouseEnter={() => {
+                  gsap.killTweensOf("#curved-path");
+                  gsap.to("#curved-path", {
+                    attr: { d: "M 30,100 Q 400,40 770,100" },
+                    ease: "elastic.out(1.4, 0.4)",
+                    duration: 0.8
+                  });
+                }}
+                onMouseLeave={() => {
+                  gsap.killTweensOf("#curved-path");
+                  gsap.to("#curved-path", {
+                    attr: { d: "M 30,100 Q 400,100 770,100" },
+                    ease: "elastic.out(1.8, 0.2)",
+                    duration: 1.5
+                  });
+                }}
+              >
+                <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
+                  <path id="curved-path" className="curved-path" d="M 30,100 Q 400,100 770,100" />
+                  <text className="curved-text">
+                    <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
+                      <tspan dy="-18">The E I T O Fundamentals</tspan>
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+              
+              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
+            </div>
+          </motion.div>
           <ImageHoverScrollSection />
         </div>
       </div>

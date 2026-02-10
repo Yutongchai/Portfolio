@@ -151,7 +151,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
   }, []);
 
   return (
-    <section className="relative py-20 overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-white">
       <div className="relative z-10 w-full">
         {/* Our Clients Section - Clean White Background */}
         <div className="py-16">
@@ -271,10 +271,10 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
           </div>
         </div>
 
-        {/* Framed banner section */}
-        <div className="w-full flex justify-center my-20 px-6">
+        {/* Full-width banner section */}
+        <div className="w-full">
           <div
-            className="w-full md:w-[90%] lg:w-[85%] rounded-[2.5rem] flex flex-col md:flex-row items-stretch overflow-hidden relative shadow-2xl border border-slate-100"
+            className="w-full flex flex-col md:flex-row items-stretch overflow-hidden relative"
             style={{ minHeight: '480px' }}
           >
             {/* Right Side: The Photo (Hidden on mobile or as background) */}
@@ -299,14 +299,14 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-4xl md:text-6xl font-black text-[#153462] leading-[1.1] mb-6 uppercase tracking-tight">
-                  Let's Design<br />
-                  <span className="text-[#f68921]">Your Next</span> Team Session
+                  Let's Design Your<br />
+                  <span className="text-[#f68921]">NEXT Perfect</span> Team Experience
                 </h2>
 
                 <p className="text-lg md:text-xl font-medium text-[#153462]/80 mb-10 max-w-md leading-relaxed">
-                  No obligation. No consultation fee.<br />
+                  No pressure. No fees.<br />
                   <span className="italic relative">
-                    Just ideas that work.
+                    Tailored experiences that bring teams together.
                     <span className="absolute bottom-0 left-0 w-full h-1 bg-[#f68921]/20 -z-10"></span>
                   </span>
                 </p>
@@ -316,7 +316,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                     className="bg-[#153462] hover:bg-[#1c447a] text-white font-bold px-8 py-7 rounded-xl text-lg shadow-xl transition-all hover:-translate-y-1"
                     onClick={() => navigate('/connection-hub#check-availability')}
                   >
-                    Book a Free Consultation
+                    Plan My Team Session
                   </Button>
 
                   <Button
@@ -324,7 +324,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                     className="bg-white/80 backdrop-blur-sm hover:bg-white text-[#153462] font-bold px-8 py-7 rounded-xl text-lg border-2 border-[#153462] transition-all"
                     onClick={() => navigate('/work-showcase')}
                   >
-                    Explore Services
+                    Explore Experiences
                   </Button>
                 </div>
               </motion.div>
