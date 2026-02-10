@@ -109,24 +109,24 @@ const BeliefsValuesSection = () => {
   // Added your requested image paths here
   const beliefs: Belief[] = [
     {
-      title: "Engagement Through Experience",
-      description: "Meaningful experiences create real connection.",
+      title: "PLAY",
+      description: "Where fun turns into teamwork",
       letter: "E",
       color: "#12a28f",
       accent: "🟢",
       bgImage: import.meta.env.BASE_URL + "/Engagement.jpg"
     },
     {
-      title: "Learning by Living",
-      description: "Learning is most effective when it's lived, not lectured.",
+      title: "LEARN",
+      description: "Where experiences turn into growth",
       letter: "I",
       color: "#fcb22f",
       accent: "🟡",
       bgImage: import.meta.env.BASE_URL + "/Living.jpg"
     },
     {
-      title: "Valued Teams Perform",
-      description: "Teams perform better when every member feels seen.",
+      title: "LEAD",
+      description: "Where teams turn into leaders",
       letter: "T",
       color: "#0074b4",
       accent: "🔵",
@@ -235,7 +235,7 @@ const BeliefsValuesSection = () => {
           <h2 className="text-5xl font-black text-[#23242b] mb-4">
             Our Beliefs & <span className="text-[#fcb22f]">Values</span>
           </h2>
-          <p className="text-gray-500 font-medium">Built on experience, driven by connection.</p>
+          <p className="text-gray-500 font-medium">Real experiences. Real connections. Real growth.</p>
         </div>
 
         {/* Cards Grid */}

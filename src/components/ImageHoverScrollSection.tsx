@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const images = [
-    { src: import.meta.env.BASE_URL + 'e.jpg', label: 'Equilibrium', hoverText: 'Creating balance between fun and impact' },
-    { src: import.meta.env.BASE_URL + 'i.jpg', label: 'Integrity', hoverText: 'Doing what we say, always' },
-    { src: import.meta.env.BASE_URL + 't.jpg', label: 'Teamwork', hoverText: 'Collaboration over competition' },
-    { src: import.meta.env.BASE_URL + 'o.jpg', label: 'Honour', hoverText: 'Respecting people and their potential' },
+    { src: import.meta.env.BASE_URL + 'e.jpg', label: 'Equilibrium', hoverText: 'Turning fun into meaningful impact' },
+    { src: import.meta.env.BASE_URL + 'i.jpg', label: 'Integrity', hoverText: 'Turning values into trust' },
+    { src: import.meta.env.BASE_URL + 't.jpg', label: 'Teamwork', hoverText: 'Turning collaboration into success' },
+    { src: import.meta.env.BASE_URL + 'o.jpg', label: 'Honour', hoverText: 'Turning promises into real results' },
 ];
 
 // 1. Move AutoFitText OUTSIDE the main component

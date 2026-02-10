@@ -8,9 +8,9 @@ const ActionsSection = () => {
       label: 'Team Building',
       color: '#f68921', // Brand Orange
       subCategories: [
-        { title: 'Workshop', desc: 'interactive indoor sessions focusing on problem solving.' },
-        { title: 'Adventure', desc: 'high-energy outdoor activities to push boundaries.' },
-        { title: 'Virtual', desc: 'engaging remote experiences for distributed teams.' },
+        { title: 'Workshop', prefix: 'Learn by doing', desc: 'Interactive indoor challenges that turn problem solving into teamwork and growth.' },
+        { title: 'Adventure', prefix: 'Experience', desc: 'High-energy outdoor activities to push boundaries.' },
+        { title: 'Virtual', prefix: 'Engage through', desc: 'Engaging remote experiences for distributed teams.' },
       ]
     },
     {
@@ -18,9 +18,9 @@ const ActionsSection = () => {
       label: 'Training Programme',
       color: '#79989f', // Brand Sage/Blue
       subCategories: [
-        { title: 'Mental Health & Wellbeing', desc: 'fostering workplace wellness and emotional resilience.' },
-        { title: 'Leadership & Management', desc: 'strategic coaching for current and future leaders.' },
-        { title: 'Personal Development & Soft Skills', desc: 'enhancing individual effectiveness and soft skills.' },
+        { title: 'MENTAL HEALTH & WELLBEING PROGRAMMES', prefix: 'Supporting healthier, happier teams', desc: 'Practical training that builds resilience, emotional awareness, and positive workplace culture.' },
+        { title: 'LEADERSHIP & MANAGEMENT PROGRAMMES', prefix: 'Developing confident leaders who inspire growth', desc: 'Hands on training that strengthens communication, decision-making, and team performance' },
+        { title: 'PERSONAL DEVELOPMENT & SOFT SKILLS PROGRAMMES', prefix: 'Building skills \nthat strengthen individuals and teams', desc: 'Interactive learning focused on collaboration, confidence, and workplace effectiveness' },
       ]
     },
     {
@@ -28,10 +28,10 @@ const ActionsSection = () => {
       label: 'Corporate Event',
       color: '#fcb22f', // Brand Gold
       subCategories: [
-        { title: 'Annual Dinner', desc: 'memorable celebrations to reward your team.' },
-        { title: 'Kick-off Meeting', desc: 'aligning vision and energy for the year ahead.' },
-        { title: 'Family Day', desc: 'fun-filled gatherings bringing teams and families together.' },
-        { title: 'Sports Day', desc: 'competitive events fostering team spirit and wellness.' },
+        { title: 'ANNUAL DINNER', prefix: 'Celebrate achievements and strengthen connections', desc: 'A memorable evening of appreciation, laughter, and team bonding.' },
+        { title: 'KICK-OFF MEETING', prefix: 'Start the year aligned and inspired', desc: 'Energising sessions that unite teams around goals and vision.' },
+        { title: 'FAMILY DAY', prefix: 'Bring everyone together in celebration', desc: 'Fun filled activities that connect teams and their loved ones. ' },
+        { title: 'SPORTS DAY', prefix: 'Play together. Win together. Grow together.', desc: 'Exciting team challenges that build spirit, wellness, and collaboration.' },
       ]
     },
     {
@@ -39,9 +39,9 @@ const ActionsSection = () => {
       label: 'CSR',
       color: '#18616e', // Brand Teal/Dark
       subCategories: [
-        { title: 'Environmental', desc: 'eco-focused initiatives like tree planting and cleanups.' },
-        { title: 'Community Outreach', desc: 'direct support for local social welfare programs.' },
-        { title: 'Education', desc: 'empowering the next generation through skill sharing.' },
+        { title: 'Environmental', prefix: 'Protect with', desc: 'eco-focused initiatives like tree planting and cleanups.' },
+        { title: 'Community Outreach', prefix: 'Support through', desc: 'direct support for local social welfare programs.' },
+        { title: 'Education', prefix: 'Empower through', desc: 'empowering the next generation through skill sharing.' },
       ]
     }
   ];
@@ -163,7 +163,7 @@ const ActionsSection = () => {
                   {sub.title}
                 </h4>
                 <p className="text-slate-500 leading-relaxed text-lg">
-                  Elevate your team with <span className="text-[#153462] font-semibold">{sub.desc}</span>
+                  {sub.prefix} <span className="text-[#153462] font-semibold">{sub.desc}</span>
                 </p>
               </div>
             ))}

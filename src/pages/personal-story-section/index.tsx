@@ -106,9 +106,9 @@ const PersonalStorySection = () => {
           <SectionWrapper delay={0.2}>
             <ActionsSection />
           </SectionWrapper>
-          <SectionWrapper delay={0.3}>
+          {/* <SectionWrapper delay={0.3}>
             <OurRoleSection />
-          </SectionWrapper>
+          </SectionWrapper> */}
 
 
 
