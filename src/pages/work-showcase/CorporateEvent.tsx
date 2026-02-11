@@ -128,10 +128,21 @@ const CorporateEvent = () => (
     {/* 1. INTRO SECTION */}
     <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
       <style>{`
+        @keyframes slideInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @keyframes slideInUp {
           from {
             opacity: 0;
-            transform: translateY(80px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -140,11 +151,20 @@ const CorporateEvent = () => (
         }
 
         .hero-title {
-          animation: slideInUp 0.8s ease-out;
+          animation: slideInDown 0.8s ease-out;
+        }
+
+        .hero-description {
+          animation: slideInUp 0.8s ease-out 0.2s both;
         }
       `}</style>
 
-      <div className="absolute inset-0">
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0, scale: 1.12 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.4, ease: "easeInOut" }}
+      >
         <img
           src={AnnualDinnerImg}
           alt="Corporate Events"
@@ -154,10 +174,10 @@ const CorporateEvent = () => (
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
-      </div>
+      </motion.div>
 
       <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-        <div className="hero-title flex items-center justify-center gap-6 mb-6">
+        <div className="flex items-center justify-center gap-6 mb-6">
           <div className="h-[2px] w-20 bg-[#fcb22f]" />
           <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
             Corporate Events
@@ -165,13 +185,12 @@ const CorporateEvent = () => (
           <div className="h-[2px] w-20 bg-[#fcb22f]" />
         </div>
 
-        <h1 className="hero-title text-6xl md:text-8xl font-black tracking-tight mb-8">
-          Events That<br />Matter
+        <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
+          Turning Company Moments<br />Into Meaningful Connections
         </h1>
 
-        <p className="text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
-          Transform your corporate gatherings into unforgettable experiences that inspire,
-          engage, and strengthen your team culture.
+        <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
+          From celebrations to kick-offs, we design moments that build connection, trust, and team spirit.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

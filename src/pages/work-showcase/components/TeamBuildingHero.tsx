@@ -59,13 +59,12 @@ const TeamBuildingHero: React.FC = () => {
                     <div className="h-[2px] w-20 bg-[#fcb22f]" />
                 </div>
 
-                <h1 className="hero-title text-6xl md:text-8xl font-black tracking-tight mb-8">
-                    Ignite Team Energy
+                <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
+                    Building Stronger Teams Through Meaningful Experiences
                 </h1>
 
-                <p className="hero-description text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
-                    Create immersive shared experiences that strengthen trust, boost
-                    collaboration, and energize every corner of your culture.
+                <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
+                    Tailored games and experiences that bring people together, strengthen teamwork, and fuel performance.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -79,7 +78,7 @@ const TeamBuildingHero: React.FC = () => {
                         href="#team-building-questionnaire"
                         className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
                     >
-                        Get Started
+                        Start Planning Now
                     </a>
                 </div>
             </div>

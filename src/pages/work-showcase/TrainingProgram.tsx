@@ -140,10 +140,21 @@ const TrainingProgram = () => {
       {/* 1. INTRODUCTION - HERO */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
         <style>{`
+          @keyframes slideInDown {
+            from {
+              opacity: 0;
+              transform: translateY(-30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
           @keyframes slideInUp {
             from {
               opacity: 0;
-              transform: translateY(80px);
+              transform: translateY(30px);
             }
             to {
               opacity: 1;
@@ -152,11 +163,20 @@ const TrainingProgram = () => {
           }
 
           .hero-title {
-            animation: slideInUp 0.8s ease-out;
+            animation: slideInDown 0.8s ease-out;
+          }
+
+          .hero-description {
+            animation: slideInUp 0.8s ease-out 0.2s both;
           }
         `}</style>
 
-        <div className="absolute inset-0">
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 0, scale: 1.12 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
+        >
           <img
             src={TrainingImg}
             alt="Training Programme"
@@ -166,10 +186,10 @@ const TrainingProgram = () => {
             decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
-        </div>
+        </motion.div>
 
         <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-          <div className="hero-title flex items-center justify-center gap-6 mb-6">
+          <div className="flex items-center justify-center gap-6 mb-6">
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
             <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
               Training Programme
@@ -177,13 +197,12 @@ const TrainingProgram = () => {
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
           </div>
 
-          <h1 className="hero-title text-4xl md:text-4xl font-black tracking-tight mb-8">
-            Stop Training.<br />Start Transforming.
+          <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
+            Connect to Learn.<br />Learn to Grow.
           </h1>
 
-          <p className="text-lg md:text-xl font-medium leading-relaxed text-white/85 mb-10">
-            Empower your team with skills that stick. Our training programmes deliver
-            measurable impact, real-world relevance, and lasting behavioral change.
+          <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
+            Engaging training experiences designed around your people and goals.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -197,7 +216,7 @@ const TrainingProgram = () => {
               onClick={scrollToForm}
               className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
             >
-              Get Started
+              Plan My Programme
             </button>
           </div>
         </div>
@@ -420,8 +439,8 @@ const TrainingProgram = () => {
                 <img
                   src={ExpertiseImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Expert Facilitators"                  loading="lazy"
-                  decoding="async"                />
+                  alt="Expert Facilitators" loading="lazy"
+                  decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#153462]/60 to-transparent" />
               </div>
             </motion.div>
@@ -461,8 +480,8 @@ const TrainingProgram = () => {
                 <img
                   src={DNAImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Tailored Content"                  loading="lazy"
-                  decoding="async"                />
+                  alt="Tailored Content" loading="lazy"
+                  decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#f68921]/50 to-transparent" />
               </div>
             </motion.div>
@@ -502,8 +521,8 @@ const TrainingProgram = () => {
                 <img
                   src={ResultImg}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  alt="Real-World Impact"                  loading="lazy"
-                  decoding="async"                />
+                  alt="Real-World Impact" loading="lazy"
+                  decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#12a28f]/50 to-transparent" />
               </div>
             </motion.div>
@@ -916,10 +935,10 @@ const TrainingProgram = () => {
                         aria-label={`Go to slide ${idx + 1}`}
                       >
                         <div className={`h-3 rounded-full transition-all duration-300 ${idx === activeValue
-                            ? 'w-12 bg-[#fcb22f]'
-                            : 'w-3 bg-gray-300 group-hover:bg-gray-400'
+                          ? 'w-12 bg-[#fcb22f]'
+                          : 'w-3 bg-gray-300 group-hover:bg-gray-400'
                           }`} />
-                        
+
                         {/* Tooltip */}
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-[#153462] text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                           {coreValues[idx].value}
