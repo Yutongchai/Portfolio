@@ -21,6 +21,12 @@ const Footer = () => {
             <img src={LogoImg} alt="Logo" className="h-24 w-auto object-contain" />
           </div>
         </div>
+        {/* Tagline positioned below the three lines (visible on md+) */}
+        <div className="relative flex justify-center mt-6">
+          <p className="hidden md:block text-white/90 text-center whitespace-nowrap text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight">
+            We designing experiences that bring teams together
+          </p>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-8 pb-12">
@@ -127,10 +133,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Tagline for medium screens and up */}
-        <p className="hidden md:block text-white/90 text-sm mt-12 text-center">
-          We designing experiences that bring teams together
-        </p>
+        {/* (moved) Tagline now sits under the three lines/logo for md+ screens */}
 
         {/* Bottom Copyright */}
         <div className="mt-6 md:mt-4 pt-6 text-center">

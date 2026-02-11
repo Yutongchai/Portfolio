@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+import PageHeader from '../../../components/PageHeader';
 import './BeliefsValuesSection.css';
 
 // --- Types ---
@@ -16,6 +17,18 @@ type Belief = {
 
 type TiltCardProps = {
   belief: Belief;
+};
+
+// Accent: three-line 'stripes' (like adidas) using footer stripe colors
+const LinesAccent: React.FC = () => {
+  const stripeColors = ['#f68921', '#79989f', '#18616e'];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, transform: 'rotate(-18deg)', alignItems: 'center' }}>
+      <span style={{ display: 'block', width: 16, height: 3, background: stripeColors[0], borderRadius: 2 }} />
+      <span style={{ display: 'block', width: 20, height: 3, background: stripeColors[1], borderRadius: 2 }} />
+      <span style={{ display: 'block', width: 24, height: 3, background: stripeColors[2], borderRadius: 2 }} />
+    </div>
+  );
 };
 
 // --- 3D Tilt Card with Image Background ---
@@ -73,10 +86,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
       {/* 4. Content Layer */}
       <div className="relative z-10 p-10 h-full flex flex-col" style={{ transform: "translateZ(75px)" }}>
         <div
-          className="w-12 h-12 rounded-2xl mb-8 flex items-center justify-center text-2xl shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]"
+          className="w-12 h-12 rounded-2xl mb-8 flex items-center justify-center shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]"
           style={{ backgroundColor: `${belief.color}20` }}
         >
-          {belief.accent}
+          <LinesAccent />
         </div>
 
         <h3 className="text-2xl font-extrabold text-[#23242b] mb-4 group-hover:text-[#e1620b] transition-colors">
@@ -180,33 +193,42 @@ const BeliefsValuesSection = () => {
       className="py-24 px-4 overflow-hidden relative"
     >
       {/* ANIMATED GRADIENT BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0">
-        {/* Animated floating shapes */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0"
+        style={{
+          // keep gradient visually static and on its own layer
+          backgroundAttachment: 'fixed',
+          willChange: 'transform,opacity',
+          transform: 'translateZ(0)',
+          pointerEvents: 'none'
+        }}
+      >
+        {/* Static floating shapes (animations disabled for smooth scrolling) */}
         <div className="absolute top-0 left-0 w-full h-full">
           {/* Teal Blob - Top Left */}
           <div
-            className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl animate-blob-1"
-            style={{ backgroundColor: '#12a28f' }}
+            className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl"
+            style={{ backgroundColor: '#12a28f', animation: 'none', willChange: 'transform' }}
           />
           {/* Gold Blob - Top Right */}
           <div
-            className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-blob-2"
-            style={{ backgroundColor: '#fcb22f' }}
+            className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl"
+            style={{ backgroundColor: '#fcb22f', animation: 'none', willChange: 'transform' }}
           />
           {/* Blue Blob - Middle */}
           <div
-            className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl animate-blob-3"
-            style={{ backgroundColor: '#0074b4' }}
+            className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl"
+            style={{ backgroundColor: '#0074b4', animation: 'none', willChange: 'transform' }}
           />
           {/* Orange Blob - Bottom Left */}
           <div
-            className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl animate-blob-4"
-            style={{ backgroundColor: '#f68921' }}
+            className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl"
+            style={{ backgroundColor: '#f68921', animation: 'none', willChange: 'transform' }}
           />
           {/* Navy Blob - Bottom Right */}
           <div
-            className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl animate-blob-5"
-            style={{ backgroundColor: '#153462' }}
+            className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl"
+            style={{ backgroundColor: '#153462', animation: 'none', willChange: 'transform' }}
           />
 
           {/* Geometric pattern overlay */}
@@ -214,23 +236,29 @@ const BeliefsValuesSection = () => {
             className="absolute inset-0 opacity-[0.04]"
             style={{
               backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`,
-              backgroundSize: '30px 30px'
+              backgroundSize: '30px 30px',
+              backgroundAttachment: 'fixed'
             }}
           />
         </div>
       </div>
 
-      {/* Light overlay for content readability */}
-      <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] z-0" />
+      {/* Light overlay for content readability (promoted to its own layer; avoid costly backdrop blur) */}
+      <div
+        className="absolute inset-0 bg-white/40 z-0"
+        style={{ willChange: 'opacity, transform', transform: 'translateZ(0)', pointerEvents: 'none' }}
+      />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-24">
-          <h2 className="text-5xl font-black text-[#23242b] mb-4">
-            Our Beliefs & <span className="text-[#fcb22f]">Values</span>
-          </h2>
-          <p className="text-gray-500 font-medium">Real experiences. Real connections. Real growth.</p>
-        </div>
+        <PageHeader
+          title={(
+            <>
+              Our Beliefs & <span className="text-[#fcb22f]">Values</span>
+            </>
+          )}
+          subtitle={"Real experiences. Real connections. Real growth."}
+        />
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-32" style={{ perspective: "1200px" }}>
@@ -289,6 +317,8 @@ const BeliefsValuesSection = () => {
             <div className="relative z-10 flex items-center justify-between max-w-7xl mx-auto gap-4">
               <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
 
+
+              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
               {/* SVG Curved Text Effect */}
               <div
                 className="curved-text-container flex-1 flex justify-center"
@@ -318,8 +348,6 @@ const BeliefsValuesSection = () => {
                   </text>
                 </svg>
               </div>
-
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
             </div>
           </motion.div>
           <ImageHoverScrollSection />

@@ -269,3 +269,77 @@ body {
     height: 45px;
   }
 }
+
+/* Skeleton & Min-height helpers to avoid layout shift on initial load */
+.page-skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.02) 100%);
+  border-radius: 8px;
+}
+
+/* Top hero area: reserve space and provide a soft skeleton while assets load */
+.hero {
+  min-height: 64vh; /* reserve most of the viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Generic section minimums to prevent sudden reflow when images mount */
+.section-min-height {
+  min-height: 44vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Small skeleton blocks for headings and paragraphs */
+.skeleton-line {
+  height: 14px;
+  width: 60%;
+  background: linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.03) 50%, rgba(0,0,0,0.06) 100%);
+  border-radius: 6px;
+}
+
+.skeleton-title {
+  height: 34px;
+  width: 45%;
+  border-radius: 8px;
+}
+
+/* Prefer reduced motion for skeleton shimmer */
+@media (prefers-reduced-motion: no-preference) {
+  .page-skeleton {
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.8s linear infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+/* Make sure loader overlay doesn't cause jump when hidden */
+.page-loaded {
+  transition: opacity 420ms ease, visibility 420ms;
+}
+
+/* Performance helpers (opt-in) ---------------------------------------------
+   Use `.page-overlay-neutralize` for full-area overlays you want to make
+   non-blocking and subtle. This avoids aggressive global overrides that
+   can cause visual regressions across components.
+*/
+.page-overlay-neutralize {
+  background-color: rgba(255,255,255,0.04);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: translateZ(0);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+/* Slightly reduce shimmer intensity for small utility */
+.bg-white\/20 { background-color: rgba(255,255,255,0.06); }
+
+

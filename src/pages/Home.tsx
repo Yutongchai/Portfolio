@@ -8,6 +8,7 @@ import LogoImg from '../components/Logo.png';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import SEOHead from '../components/SEOHead';
 import { pageSEO } from '../config/seoConfig';
+import PageLoader from '../components/PageLoader';
 
 type PageView = 'home' | 'service' | 'connect';
 
@@ -55,6 +56,9 @@ const Home: React.FC = () => {
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch { window.scrollTo(0, 0); }
   }, [location.pathname]);
 
+  // Smooth single reveal: wait until critical assets loaded then fade-in entire page
+  const [isReady, setIsReady] = useState(false);
+
   // Determine which SEO config to use based on current page
   const getSEOConfig = () => {
     switch (currentPage) {
@@ -68,29 +72,33 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <SEOHead config={getSEOConfig()} includeSchemas={currentPage === 'home'} />
-      
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
-        style={{ scaleX }}
-      />
+    <>
+      {!isReady && <PageLoader onLoaded={() => setIsReady(true)} />}
 
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: "Home", href: "/personal-story-section" },
-          { label: "Services", href: "/work-showcase" },
-          { label: "Connect", href: "/connection-hub" },
-        ]}
-        activeHref={activeHref}
-      />
+      <div className="min-h-screen" style={{ opacity: isReady ? 1 : 0, transition: 'opacity 420ms ease', pointerEvents: isReady ? 'auto' : 'none' }}>
+        <SEOHead config={getSEOConfig()} includeSchemas={currentPage === 'home'} />
+        
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
+          style={{ scaleX }}
+        />
 
-      {currentPage === 'home' && <PersonalStorySection />}
-      {currentPage === 'service' && <WorkShowcase />}
-      {currentPage === 'connect' && <ConnectionHub />}
-    </div>
+        <PillNav
+          logo={LogoImg}
+          logoAlt="EITO Group Logo"
+          items={[
+            { label: "Home", href: "/personal-story-section" },
+            { label: "Services", href: "/work-showcase" },
+            { label: "Connect", href: "/connection-hub" },
+          ]}
+          activeHref={activeHref}
+        />
+
+        {currentPage === 'home' && <PersonalStorySection />}
+        {currentPage === 'service' && <WorkShowcase />}
+        {currentPage === 'connect' && <ConnectionHub />}
+      </div>
+    </>
   );
 };
 
