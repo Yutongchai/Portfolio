@@ -184,38 +184,38 @@ const BeliefsValuesSection = () => {
         {/* Animated floating shapes */}
         <div className="absolute top-0 left-0 w-full h-full">
           {/* Teal Blob - Top Left */}
-          <div 
+          <div
             className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl animate-blob-1"
             style={{ backgroundColor: '#12a28f' }}
           />
           {/* Gold Blob - Top Right */}
-          <div 
+          <div
             className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-blob-2"
             style={{ backgroundColor: '#fcb22f' }}
           />
           {/* Blue Blob - Middle */}
-          <div 
+          <div
             className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl animate-blob-3"
             style={{ backgroundColor: '#0074b4' }}
           />
           {/* Orange Blob - Bottom Left */}
-          <div 
+          <div
             className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl animate-blob-4"
             style={{ backgroundColor: '#f68921' }}
           />
           {/* Navy Blob - Bottom Right */}
-          <div 
+          <div
             className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl animate-blob-5"
             style={{ backgroundColor: '#153462' }}
           />
-          
+
           {/* Geometric pattern overlay */}
-          <div 
-            className="absolute inset-0 opacity-[0.04]" 
-            style={{ 
-              backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`, 
-              backgroundSize: '30px 30px' 
-            }} 
+          <div
+            className="absolute inset-0 opacity-[0.04]"
+            style={{
+              backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`,
+              backgroundSize: '30px 30px'
+            }}
           />
         </div>
       </div>
@@ -240,7 +240,7 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Foundation Phrase */}
-        <div className="py-20 flex flex-col items-center my-20">
+        <div className="py-6 flex flex-col items-center">
           <p className="text-4xl sm:text-6xl font-black text-center text-[#23242b] leading-tight">
             That belief is the <br />
             <span className="relative inline-block mt-4">
@@ -276,9 +276,9 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Fundamentals Section */}
-        <div className="mt-20" ref={curvedTextRef}>
-          <motion.div 
-            className="mb-16 px-6 py-12 overflow-visible relative"
+        <div className="mt-12" ref={curvedTextRef}>
+          <motion.div
+            className="mb-6 px-6 py-6 overflow-visible relative"
             style={{
               y: curvedTextY,
               scale: curvedTextScale,
@@ -288,9 +288,9 @@ const BeliefsValuesSection = () => {
             {/* Horizontal Layout: CORE - Curved Text - PRINCIPLES */}
             <div className="relative z-10 flex items-center justify-between max-w-7xl mx-auto gap-4">
               <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
-              
+
               {/* SVG Curved Text Effect */}
-              <div 
+              <div
                 className="curved-text-container flex-1 flex justify-center"
                 onMouseEnter={() => {
                   gsap.killTweensOf("#curved-path");
@@ -318,7 +318,7 @@ const BeliefsValuesSection = () => {
                   </text>
                 </svg>
               </div>
-              
+
               <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
             </div>
           </motion.div>

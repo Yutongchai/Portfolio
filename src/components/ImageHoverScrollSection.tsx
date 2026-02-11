@@ -28,7 +28,7 @@ const ImageHoverScrollSection = () => {
         <div style={{
             width: '100%',
             background: 'transparent',
-            padding: '60px 20px',
+            padding: '20px 20px',
             position: 'relative',
             overflow: 'hidden'
         }}>
@@ -83,7 +83,7 @@ const ImageHoverScrollSection = () => {
             `}</style>
 
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-               
+
                 {/* Main Content Area */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '40px', marginBottom: '60px' }}>
                     {/* Left Arrow */}
