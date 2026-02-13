@@ -144,6 +144,13 @@ body {
   }
 }
 
+/* Desktop: slightly smaller base so 1rem feels closer to Apple's scale at 100% */
+@media (min-width: 769px) {
+  html {
+    font-size: 15px; /* reduces rem-scaled sizes site-wide (was effectively 16px) */
+  }
+}
+
 /* Touch-friendly interactions */
 @media (hover: none) and (pointer: coarse) {
   button,

@@ -319,6 +319,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
 
             {/* Content Layer */}
             <div className="relative z-20 flex-1 flex flex-col justify-center p-10 md:p-16 lg:p-20">
+              {/* No bounce animation: use simple fade-in from left */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}

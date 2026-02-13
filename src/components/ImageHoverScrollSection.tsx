@@ -56,22 +56,28 @@ const AutoFitText: React.FC<AutoFitTextProps> = ({ text, minFontSize = 16, maxFo
 
 const ImageHoverScrollSection = () => {
     return (
-        <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', padding: '40px 0' }}>
+        <div style={{ width: '100%', maxWidth: 900, margin: '0 auto', padding: '24px 0' }}>
             <style>{`
-                .eito-card-group:hover .eito-hover-overlay {
-                  opacity: 1 !important;
-                  pointer-events: auto !important;
+                .eito-3d-grid { perspective: 1200px; }
+                .eito-card-group { transform-style: preserve-3d; }
+                .eito-card-group:hover .eito-hover-overlay { opacity: 1 !important; pointer-events: auto !important; }
+                .eito-card-group:hover img { /* keep a subtle scale on hover; tilt handled by mouse */ transform: scale(1.03); }
+
+                /* gentle floating/bounce in 3D space */
+                @keyframes float-bounce-3d {
+                  0% { transform: translate3d(0, -6px, 0) rotateX(0deg) rotateY(0deg); }
+                  50% { transform: translate3d(0, 6px, 6px) rotateX(1deg) rotateY(-1deg); }
+                  100% { transform: translate3d(0, -6px, 0) rotateX(0deg) rotateY(0deg); }
                 }
-                .eito-card-group:hover img {
-                  transform: scale(1.05);
-                }
+
+                .eito-card-inner { will-change: transform, opacity; transform-style: preserve-3d; }
             `}</style>
-            <div style={{
+            <div className="eito-3d-grid" style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
-                gap: 40,
+                gap: 32,
             }}>
-                {images.map((img) => (
+                {images.map((img, idx) => (
                     <div
                         key={img.src}
                         className="eito-card-group"
@@ -82,26 +88,84 @@ const ImageHoverScrollSection = () => {
                             boxSizing: 'border-box',
                             border: '8px solid #6f9185',
                             backgroundClip: 'padding-box',
+                            perspective: 1200,
+                        }}
+                        onMouseMove={(e) => {
+                            const card = e.currentTarget as HTMLElement;
+                            const imgEl = card.querySelector('img') as HTMLElement | null;
+                            const shadowEl = card.querySelector('.eito-shadow') as HTMLElement | null;
+                            const inner = card.querySelector('.eito-card-inner') as HTMLElement | null;
+                            if (!imgEl) return;
+                            const rect = card.getBoundingClientRect();
+                            const x = (e.clientX - rect.left) / rect.width;
+                            const y = (e.clientY - rect.top) / rect.height;
+                            const rotateY = (x - 0.5) * 14; // horizontal tilt
+                            const rotateX = (0.5 - y) * 10; // vertical tilt
+                            imgEl.style.transform = `translateZ(18px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+                            if (shadowEl) {
+                                const sx = (x - 0.5) * 40; // shadow offset x
+                                const sy = Math.abs(y - 0.5) * 12 + 6; // shadow offset y
+                                const blur = Math.max(8, 22 - Math.abs((x - 0.5) * 12));
+                                shadowEl.style.transform = `translate3d(${sx}px, ${sy}px, 0) scale(1.02)`;
+                                shadowEl.style.opacity = '0.95';
+                                shadowEl.style.filter = `blur(${blur}px)`;
+                            }
+                            if (inner) {
+                                inner.style.boxShadow = '0 20px 50px rgba(0,0,0,0.28)';
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            const card = e.currentTarget as HTMLElement;
+                            const imgEl = card.querySelector('img') as HTMLElement | null;
+                            const shadowEl = card.querySelector('.eito-shadow') as HTMLElement | null;
+                            const inner = card.querySelector('.eito-card-inner') as HTMLElement | null;
+                            if (imgEl) imgEl.style.transform = 'translateZ(0px) rotateX(0deg) rotateY(0deg) scale(1)';
+                            if (shadowEl) {
+                                shadowEl.style.transform = 'translate3d(0px, 18px, 0) scale(1)';
+                                shadowEl.style.opacity = '0.6';
+                                shadowEl.style.filter = 'blur(18px)';
+                            }
+                            if (inner) inner.style.boxShadow = '0 6px 24px rgba(0,0,0,0.12)';
                         }}
                     >
                         <div
+                            className="eito-card-inner"
                             style={{
                                 position: 'relative',
                                 borderRadius: 12,
                                 overflow: 'hidden',
-                                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                                boxShadow: '0 6px 24px rgba(0,0,0,0.12)',
                                 width: '100%',
                                 background: '#23242b',
                                 minHeight: 220,
                                 display: 'flex',
                                 alignItems: 'flex-end',
                                 justifyContent: 'center',
+                                animation: `float-bounce-3d ${6 + (idx % 3)}s ease-in-out ${idx * 0.12}s infinite alternate`,
                             }}
                         >
+                            {/* soft projected shadow to enhance 3Dness */}
+                            <div
+                                className="eito-shadow"
+                                style={{
+                                    position: 'absolute',
+                                    left: 12,
+                                    right: 12,
+                                    top: '40%',
+                                    height: '48%',
+                                    borderRadius: 12,
+                                    background: 'radial-gradient(closest-side, rgba(0,0,0,0.42), rgba(0,0,0,0.06))',
+                                    filter: 'blur(18px)',
+                                    transform: 'translate3d(0px, 18px, 0) scale(1)',
+                                    transition: 'transform 0.18s ease, opacity 0.18s ease, filter 0.18s ease',
+                                    zIndex: 1,
+                                    pointerEvents: 'none',
+                                }}
+                            />
                             <img
                                 src={img.src}
                                 alt={img.label}
-                                style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease-out' }}
+                                style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.28s cubic-bezier(.2,.9,.2,1)', position: 'relative', zIndex: 2 }}
                             />
                             {/* Fixed label at the bottom */}
                             <div
@@ -141,13 +205,13 @@ const ImageHoverScrollSection = () => {
                                     left: 0,
                                     width: '100%',
                                     height: '100%',
-                                    background: 'rgba(0,0,0,0.7)',
+                                    background: 'rgba(0,0,0,0.64)',
                                     color: '#fff',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     opacity: 0,
-                                    transition: 'opacity 0.3s',
+                                    transition: 'opacity 0.25s ease',
                                     borderRadius: 12,
                                     zIndex: 3,
                                     pointerEvents: 'none',

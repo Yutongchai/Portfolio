@@ -31,54 +31,55 @@ const CorePrinciple: React.FC = () => {
     return () => unsubscribe();
   }, [scrollYProgress]);
 
-  // play the background video backwards in a loop (and keep it muted)
+  // Try native reverse playback (fast path). If unsupported, fall back to a
+  // reversed video file or finally regular forward playback. This avoids the
+  // RAF-driven manual seeks which cause high CPU and jank.
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
 
-    let rafId = 0;
-    let running = true;
-    const speed = 1; // 1x reverse speed (seconds per second)
+    let cancelled = false;
 
-    const startReverse = () => {
-      vid.pause();
-      if (vid.duration) {
+    const tryReverse = async () => {
+      try {
+        // wait for metadata so we can seek to the end
+        if (vid.readyState < 1) {
+          await new Promise<void>((res) => vid.addEventListener('loadedmetadata', () => res(), { once: true }));
+        }
+        // position at end and attempt negative playbackRate
         try {
-          vid.currentTime = vid.duration;
+          vid.currentTime = vid.duration || 0;
         } catch (e) {
-          // ignore seek errors
+          // ignore
+        }
+        vid.muted = true;
+        vid.playbackRate = -1;
+        await vid.play();
+        return;
+      } catch (err) {
+        // Negative playbackRate not supported in many browsers. Try a reversed
+        // file if you have one at /EITO-reversed.mp4 (best long-term fix).
+        try {
+          vid.playbackRate = 1;
+          vid.src = '/EITO.mp4';
+          await vid.play();
+          return;
+        } catch (err2) {
+          // Final fallback: play forward normally (smooth, avoids jank).
+          try {
+            vid.playbackRate = 1;
+            await vid.play();
+          } catch (e) {
+            // ignore play errors
+          }
         }
       }
-
-      let last = performance.now();
-      const step = (now: number) => {
-        if (!running) return;
-        const dt = (now - last) / 1000;
-        last = now;
-        try {
-          const cur = vid.currentTime || 0;
-          let next = cur - dt * speed;
-          if (next <= 0) {
-            // loop: jump back to end
-            next = vid.duration || 0;
-          }
-          vid.currentTime = next;
-        } catch (e) {
-          // setting currentTime can throw if not seekable yet — ignore
-        }
-        rafId = requestAnimationFrame(step);
-      };
-
-      rafId = requestAnimationFrame(step);
     };
 
-    if (vid.readyState >= 1) startReverse();
-    else vid.addEventListener('loadedmetadata', startReverse, { once: true });
+    void tryReverse();
 
     return () => {
-      running = false;
-      cancelAnimationFrame(rafId);
-      vid.removeEventListener('loadedmetadata', startReverse as any);
+      cancelled = true;
     };
   }, []);
 
@@ -88,7 +89,7 @@ const CorePrinciple: React.FC = () => {
       <video
         ref={videoRef}
         className="core-video-bg absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0.45 }}
+        style={{ opacity: 0.45, willChange: 'transform, opacity' }}
         src="/EITO.mp4"
         muted
         loop
@@ -98,41 +99,46 @@ const CorePrinciple: React.FC = () => {
       />
 
       <motion.div
-        className="mb-6 px-6 py-6 overflow-visible relative z-10"
+        className="mb-6 px-6 py-12 overflow-visible relative z-10"
         style={{ y: smoothY, scale: curvedTextScale, opacity: curvedTextOpacity }}
       >
-        <div className="relative z-10 flex items-center justify-between max-w-7xl mx-auto gap-4">
-          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* First row: big heading */}
+          <div className="w-full flex items-center justify-center gap-6 pt-8">
+            <h3 className="text-4xl md:text-6xl lg:text-5xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
+            <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
+          </div>
 
-          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
-
-          <div
-            className="curved-text-container flex-1 flex justify-center"
-            onMouseEnter={() => {
-              gsap.killTweensOf('#curved-path');
-              gsap.to('#curved-path', {
-                attr: { d: 'M 30,100 Q 400,40 770,100' },
-                ease: 'elastic.out(1.4, 0.4)',
-                duration: 0.8
-              });
-            }}
-            onMouseLeave={() => {
-              gsap.killTweensOf('#curved-path');
-              gsap.to('#curved-path', {
-                attr: { d: 'M 30,100 Q 400,100 770,100' },
-                ease: 'elastic.out(1.8, 0.2)',
-                duration: 1.5
-              });
-            }}
-          >
-            <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
-              <path id="curved-path" className="curved-path" d="M 30,100 Q 400,100 770,100" />
-              <text className="curved-text">
-                <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                  <tspan dy="-18">The E I T O Fundamentals</tspan>
-                </textPath>
-              </text>
-            </svg>
+          {/* Second row: curved swinging text centered below the heading */}
+          <div className="w-full flex justify-center mt-6">
+            <div
+              className="curved-text-container flex-1 flex justify-center max-w-3xl"
+              onMouseEnter={() => {
+                gsap.killTweensOf('#curved-path');
+                gsap.to('#curved-path', {
+                  attr: { d: 'M 30,100 Q 400,40 770,100' },
+                  ease: 'elastic.out(1.4, 0.4)',
+                  duration: 0.8
+                });
+              }}
+              onMouseLeave={() => {
+                gsap.killTweensOf('#curved-path');
+                gsap.to('#curved-path', {
+                  attr: { d: 'M 30,100 Q 400,100 770,100' },
+                  ease: 'elastic.out(1.8, 0.2)',
+                  duration: 1.5
+                });
+              }}
+            >
+              <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
+                <path id="curved-path" className="curved-path" d="M 30,100 Q 400,100 770,100" />
+                <text className="curved-text">
+                  <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
+                    <tspan dy="-18">The E I T O Fundamentals</tspan>
+                  </textPath>
+                </text>
+              </svg>
+            </div>
           </div>
         </div>
       </motion.div>

@@ -23,7 +23,7 @@ const Footer = () => {
         </div>
         {/* Tagline positioned below the three lines (visible on md+) */}
         <div className="relative flex justify-center mt-6">
-          <p className="hidden md:block text-white/90 text-center whitespace-nowrap text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight">
+          <p className="hidden md:block text-white text-center whitespace-nowrap text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight drop-shadow-lg" style={{ letterSpacing: '0.04em', padding: '0.5em 0', borderBottom: '3px solid #fcb22f', maxWidth: '700px' }}>
             We designing experiences that bring teams together
           </p>
         </div>
@@ -35,7 +35,7 @@ const Footer = () => {
           {/* Left: Large Logo & Branding */}
           <div className="flex flex-col items-center md:items-start">
             <img src={LogoImg} alt="EITO Group" className="h-48 object-contain" />
-            <p className="md:hidden text-white/90 text-xs mt-4 text-center max-w-sm">
+            <p className="md:hidden text-white text-xs mt-4 text-center max-w-sm font-bold drop-shadow-md" style={{ letterSpacing: '0.04em', padding: '0.5em 0', borderBottom: '2px solid #fcb22f' }}>
               We designing experiences that bring teams together
             </p>
           </div>
