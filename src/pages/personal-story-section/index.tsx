@@ -9,6 +9,7 @@ import OurRoleSection from "./components/OurRoleSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
 import SectionWrapper from "./components/SectionWrapper";
+import CorePrinciple from "./components/CorePrinciple";
 import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
@@ -104,6 +105,9 @@ const PersonalStorySection = () => {
           </SectionWrapper>
 
           <SectionWrapper delay={0.2}>
+            <CorePrinciple />
+          </SectionWrapper>
+          <SectionWrapper delay={0.3}>
             <ActionsSection />
           </SectionWrapper>
           {/* <SectionWrapper delay={0.3}>

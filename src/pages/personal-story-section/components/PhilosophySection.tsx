@@ -87,7 +87,7 @@ const googleReviews = [
     profileImage: "/Portfolio/customers/advelsoft.jpg",
     rating: 5,
     date: "2 weeks ago",
-    reviewUrl: "https://www.google.com/maps"
+    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     quote: "Outstanding experience! The facilitators were professional, energetic, and really knew how to bring our team together. Highly recommend for any company looking to boost morale.",
@@ -95,7 +95,7 @@ const googleReviews = [
     profileImage: "/Portfolio/customers/colgate.png",
     rating: 5,
     date: "1 month ago",
-    reviewUrl: "https://www.google.com/maps"
+    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     quote: "We've worked with several team building companies, but EITO Group stands out. The activities were fun, meaningful, and led to real improvements in how we work together.",
@@ -103,7 +103,7 @@ const googleReviews = [
     profileImage: "/Portfolio/customers/advelsoft.jpg",
     rating: 5,
     date: "3 months ago",
-    reviewUrl: "https://www.google.com/maps"
+    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
   },
   {
     quote: "Absolutely fantastic! Our team had a blast and learned so much. The impact on our workplace culture has been incredible. Worth every penny!",
@@ -111,7 +111,7 @@ const googleReviews = [
     profileImage: "/Portfolio/customers/colgate.png",
     rating: 5,
     date: "1 month ago",
-    reviewUrl: "https://www.google.com/maps"
+    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
   }
 ];
 
@@ -252,8 +252,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                 grayscale={false}
               />
             )} */}
-            {/* Google Reviews Testimonials */}
-            {/* Original testimonials section (optional, can be moved below banner) */}
+            {/* Google Reviews banner - clickable and opens Google Reviews in a new tab */}
             <motion.div
               className="py-16"
               initial={{ opacity: 0, y: 30 }}
@@ -261,12 +260,40 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="text-center mb-8 px-6">
-                <h3 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                  What Our Clients Say
-                </h3>
-              </div>
-              <GoogleReviewTestimonials reviews={googleReviews} autoplay={true} />
+              <a
+                href={googleReviews[0]?.reviewUrl || 'https://www.google.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block max-w-4xl mx-auto"
+              >
+                <div className="flex items-center justify-between bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
+                  <div className="flex items-center gap-6">
+                    <div className="flex flex-col items-center justify-center w-28 h-16 rounded-lg bg-white">
+                      <span className="text-xl font-extrabold text-gray-800">Google</span>
+                      <span className="text-sm text-gray-500">Reviews</span>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex text-yellow-400">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <svg key={i} className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.786 1.402 8.168L12 18.897l-7.336 3.867 1.402-8.168L.132 9.21l8.2-1.192z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="font-bold text-gray-800">5.0</span>
+                        <span className="text-sm text-gray-500">(Google)</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-2">See verified client reviews on Google. Click to view full reviews.</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <button className="bg-[#f68921] text-white px-4 py-2 rounded-lg font-semibold">Read Reviews</button>
+                  </div>
+                </div>
+              </a>
             </motion.div>
           </div>
         </div>

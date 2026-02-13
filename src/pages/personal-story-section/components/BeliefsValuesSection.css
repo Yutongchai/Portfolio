@@ -177,3 +177,20 @@
   font-size: 42px;
   letter-spacing: 0.08em;
 }
+
+/* Sticky background + clip-path support */
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.sticky-bg-layer {
+  /* start clipped; GSAP will animate clip-path */
+  clip-path: circle(0% at 50% 45%);
+  will-change: clip-path, transform;
+}
+
+.will-change-clip {
+  will-change: clip-path, transform;
+}

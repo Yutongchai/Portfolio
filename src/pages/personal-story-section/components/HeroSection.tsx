@@ -118,7 +118,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   }
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="hero-section" ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Slideshow Background */}
       <div className="absolute inset-0 z-0">
         {backgroundImages.map((image, index) => (

@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 import PageHeader from '../../../components/PageHeader';
 import './BeliefsValuesSection.css';
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 // --- Types ---
 type Belief = {
@@ -150,16 +151,12 @@ const BeliefsValuesSection = () => {
   ];
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const curvedTextRef = useRef<HTMLDivElement | null>(null);
+  const stickyBgRef = useRef<HTMLDivElement | null>(null);
+  const stickyInnerRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"]
-  });
-
-  const { scrollYProgress: curvedTextScroll } = useScroll({
-    target: curvedTextRef,
     offset: ["start end", "center center"]
   });
 
@@ -168,78 +165,132 @@ const BeliefsValuesSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
   const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
-  const curvedTextY = useTransform(curvedTextScroll, [0, 0.5, 1], [100, -20, 0]);
-  const curvedTextScale = useTransform(curvedTextScroll, [0, 0.5, 1], [0.8, 1.1, 1]);
-  const curvedTextOpacity = useTransform(curvedTextScroll, [0, 0.5, 1], [0, 1, 1]);
-
+  // Logo entrance animation on scroll past FOUNDATION
   useEffect(() => {
-    const unsubscribe = curvedTextScroll.on("change", (latest) => {
-      if (latest > 0.3 && latest < 0.7) {
-        const curveAmount = 20 + Math.sin(latest * Math.PI * 4) * 30;
-        gsap.to("#curved-path", {
-          attr: { d: `M 30,100 Q 400,${100 - curveAmount} 770,100` },
-          duration: 0.3,
-          ease: "power2.out"
-        });
+    gsap.registerPlugin(ScrollTrigger)
+    const logoEl = document.querySelector('.eito-traveling-logo') as HTMLElement | null
+    if (!logoEl) return
+    gsap.set(logoEl, { opacity: 0, scale: 0.7 })
+    const st = ScrollTrigger.create({
+      trigger: '#foundation-phrase',
+      start: 'bottom center',
+      end: '+=200',
+      scrub: true,
+      onUpdate: self => {
+        const p = self.progress
+        gsap.to(logoEl, { opacity: p, scale: 0.7 + 0.3 * p, duration: 0.1, overwrite: 'auto' })
       }
-    });
-    return () => unsubscribe();
-  }, [curvedTextScroll]);
+    })
+    return () => {
+      try { st.kill() } catch (e) { }
+      try { ScrollTrigger.getAll().forEach(t => t.kill()) } catch (e) { }
+    }
+  }, [])
+
+  // Sticky background clip-path reveal
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const root = stickyBgRef.current
+    if (!root || !containerRef.current) return
+
+    const stickyInner = root.querySelector('.sticky') as HTMLElement | null
+    const layer = root.querySelector('.sticky-bg-layer') as HTMLElement | null
+    if (!layer) return
+
+    // set sticky inner height to the section height so it doesn't overflow other sections
+    const setStickyHeight = () => {
+      try {
+        const h = containerRef.current!.getBoundingClientRect().height
+        if (stickyInner) {
+          stickyInner.style.height = `${h}px`
+        }
+      } catch (e) {}
+    }
+
+    setStickyHeight()
+    window.addEventListener('resize', setStickyHeight)
+
+    // ensure initial clip-path (small circle in center-top area)
+    // On small screens, disable clip animation and fully reveal background to avoid layout overlap
+    const isSmall = window.innerWidth < 768
+    if (isSmall) {
+      gsap.set(layer, { clipPath: 'circle(150% at 50% 45%)' })
+      // don't create scrollTrigger
+      return () => {
+        window.removeEventListener('resize', setStickyHeight)
+      }
+    }
+
+    gsap.set(layer, { clipPath: 'circle(0% at 50% 45%)' })
+
+    const anim = gsap.to(layer, {
+      clipPath: 'circle(150% at 50% 45%)',
+      ease: 'power1.out',
+      paused: true,
+      onUpdate: () => {},
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top center',
+        end: 'bottom top',
+        scrub: true,
+        invalidateOnRefresh: true
+      }
+    })
+
+    return () => {
+      try { anim.kill() } catch (e) {}
+      try { ScrollTrigger.getAll().forEach(t => t.kill()) } catch (e) {}
+      window.removeEventListener('resize', setStickyHeight)
+    }
+  }, [])
 
   return (
     <section
       id="beliefs-values"
       ref={containerRef}
-      className="py-24 px-4 overflow-hidden relative"
+      className="pt-0 pb-24 px-4 overflow-hidden relative"
     >
-      {/* ANIMATED GRADIENT BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0"
-        style={{
-          // keep gradient visually static and on its own layer
-          backgroundAttachment: 'fixed',
-          willChange: 'transform,opacity',
-          transform: 'translateZ(0)',
-          pointerEvents: 'none'
-        }}
-      >
-        {/* Static floating shapes (animations disabled for smooth scrolling) */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          {/* Teal Blob - Top Left */}
-          <div
-            className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl"
-            style={{ backgroundColor: '#12a28f', animation: 'none', willChange: 'transform' }}
-          />
-          {/* Gold Blob - Top Right */}
-          <div
-            className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl"
-            style={{ backgroundColor: '#fcb22f', animation: 'none', willChange: 'transform' }}
-          />
-          {/* Blue Blob - Middle */}
-          <div
-            className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl"
-            style={{ backgroundColor: '#0074b4', animation: 'none', willChange: 'transform' }}
-          />
-          {/* Orange Blob - Bottom Left */}
-          <div
-            className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl"
-            style={{ backgroundColor: '#f68921', animation: 'none', willChange: 'transform' }}
-          />
-          {/* Navy Blob - Bottom Right */}
-          <div
-            className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl"
-            style={{ backgroundColor: '#153462', animation: 'none', willChange: 'transform' }}
-          />
+      {/* STICKY SHARED BACKGROUND (clip-path reveal) */}
+      <div ref={stickyBgRef} className="absolute inset-0 z-0 pointer-events-none">
+        <div ref={stickyInnerRef} className="sticky top-0 relative overflow-hidden">
+          <div className="sticky-bg-layer absolute inset-0 will-change-[clip-path,transform]">
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white"
+              style={{ backgroundAttachment: 'scroll' }}
+            />
 
-          {/* Geometric pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`,
-              backgroundSize: '30px 30px',
-              backgroundAttachment: 'fixed'
-            }}
-          />
+            {/* Static floating shapes (will be revealed by clip-path) */}
+            <div className="absolute top-0 left-0 w-full h-full">
+              <div
+                className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl"
+                style={{ backgroundColor: '#12a28f', animation: 'none', willChange: 'transform' }}
+              />
+              <div
+                className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl"
+                style={{ backgroundColor: '#fcb22f', animation: 'none', willChange: 'transform' }}
+              />
+              <div
+                className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl"
+                style={{ backgroundColor: '#0074b4', animation: 'none', willChange: 'transform' }}
+              />
+              <div
+                className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl"
+                style={{ backgroundColor: '#f68921', animation: 'none', willChange: 'transform' }}
+              />
+              <div
+                className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl"
+                style={{ backgroundColor: '#153462', animation: 'none', willChange: 'transform' }}
+              />
+
+              <div
+                className="absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`,
+                  backgroundSize: '30px 30px'
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -250,15 +301,17 @@ const BeliefsValuesSection = () => {
       />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <PageHeader
-          title={(
-            <>
-              Our Beliefs & <span className="text-[#fcb22f]">Values</span>
-            </>
-          )}
-          subtitle={"Real experiences. Real connections. Real growth."}
-        />
+        {/* Header (pushed down slightly) */}
+        <div className="pt-6">
+          <PageHeader
+            title={(
+              <>
+                Our Beliefs & <span className="text-[#fcb22f]">Values</span>
+              </>
+            )}
+            subtitle={"Real experiences. Real connections. Real growth."}
+          />
+        </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-32" style={{ perspective: "1200px" }}>
@@ -268,7 +321,7 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Foundation Phrase */}
-        <div className="py-6 flex flex-col items-center">
+        <div id="foundation-phrase" className="py-6 flex flex-col items-center">
           <p className="text-4xl sm:text-6xl font-black text-center text-[#23242b] leading-tight">
             That belief is the <br />
             <span className="relative inline-block mt-4">
@@ -302,56 +355,7 @@ const BeliefsValuesSection = () => {
             <span className="opacity-90">of everything we do.</span>
           </p>
         </div>
-
-        {/* Fundamentals Section */}
-        <div className="mt-12" ref={curvedTextRef}>
-          <motion.div
-            className="mb-6 px-6 py-6 overflow-visible relative"
-            style={{
-              y: curvedTextY,
-              scale: curvedTextScale,
-              opacity: curvedTextOpacity
-            }}
-          >
-            {/* Horizontal Layout: CORE - Curved Text - PRINCIPLES */}
-            <div className="relative z-10 flex items-center justify-between max-w-7xl mx-auto gap-4">
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
-
-
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
-              {/* SVG Curved Text Effect */}
-              <div
-                className="curved-text-container flex-1 flex justify-center"
-                onMouseEnter={() => {
-                  gsap.killTweensOf("#curved-path");
-                  gsap.to("#curved-path", {
-                    attr: { d: "M 30,100 Q 400,40 770,100" },
-                    ease: "elastic.out(1.4, 0.4)",
-                    duration: 0.8
-                  });
-                }}
-                onMouseLeave={() => {
-                  gsap.killTweensOf("#curved-path");
-                  gsap.to("#curved-path", {
-                    attr: { d: "M 30,100 Q 400,100 770,100" },
-                    ease: "elastic.out(1.8, 0.2)",
-                    duration: 1.5
-                  });
-                }}
-              >
-                <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
-                  <path id="curved-path" className="curved-path" d="M 30,100 Q 400,100 770,100" />
-                  <text className="curved-text">
-                    <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                      <tspan dy="-18">The E I T O Fundamentals</tspan>
-                    </textPath>
-                  </text>
-                </svg>
-              </div>
-            </div>
-          </motion.div>
-          <ImageHoverScrollSection />
-        </div>
+        
       </div>
     </section>
   );
