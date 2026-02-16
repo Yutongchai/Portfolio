@@ -1,4 +1,3 @@
-import PillNav from "../../components/ui/PillNav";
 import Footer from "../../components/ui/Footer";
 import LogoImg from "../../components/Logo.png";
 import Questionnaire from "./components/Questionnaire";
@@ -228,20 +227,10 @@ const TeamBuilding = () => {
 
   return (
     <>
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: "Home", href: "/personal-story-section" },
-          { label: "Services", href: "/work-showcase" },
-          { label: "Connect", href: "/connection-hub" },
-        ]}
-        activeHref={"/work-showcase"}
-      />
+      {/* Global AltHeader handles site navigation */}
       <TeamBuildingHero />
       <HRDCorBanner />
-      <section id="team-building-activities" className="py-20 px-8">
-        <style>{`
+      <section id="team-building-questionnaire" className="pb-20 px-8 scroll-mt-32">        <style>{`
         @keyframes activitiesTitleSlide {
           from {
             opacity: 0;
@@ -350,7 +339,7 @@ const TeamBuilding = () => {
 
       <section id="team-building-questionnaire" className="pb-20 px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mx-auto max-w-3xl text-center mb-12">
+          <div className="mx-auto max-w-3xl text-center mb-12 pt-10">
             <span className="text-[#fcb22f] font-bold uppercase tracking-[0.35em] text-xs sm:text-sm block mb-4">
               Plan Your Session
             </span>

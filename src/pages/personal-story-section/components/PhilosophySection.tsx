@@ -4,9 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Collab from '../../../assets/contact.jpg';
 import { Button } from '../../../components/ui/Button';
-import ClientDomeGallery from './ClientDomeGallery';
 import ClientMarquee from './ClientMarquee';
-import { GoogleReviewTestimonials } from './GoogleReviewTestimonials';
 import { supabase } from '../../../config/supabaseClient';
 
 // CSS for floating blob animations
@@ -56,19 +54,19 @@ const animationStyles = `
   }
 
   .animate-float-philosophy-1 {
-    animation: float-philosophy-1 28s ease-in-out infinite;
+    animation: float-philosophy-1 28s ease-in-out forwards;
   }
 
   .animate-float-philosophy-2 {
-    animation: float-philosophy-2 22s ease-in-out infinite;
+    animation: float-philosophy-2 22s ease-in-out forwards;
   }
 
   .animate-float-philosophy-3 {
-    animation: float-philosophy-3 26s ease-in-out infinite;
+    animation: float-philosophy-3 26s ease-in-out forwards;
   }
 
   .animate-float-philosophy-4 {
-    animation: float-philosophy-4 24s ease-in-out infinite;
+    animation: float-philosophy-4 24s ease-in-out forwards;
   }
 `;
 
@@ -79,41 +77,7 @@ if (typeof document !== 'undefined') {
   document.head.appendChild(styleSheet);
 }
 
-// Google Reviews - replace with actual Google Review data
-const googleReviews = [
-  {
-    quote: "EITO Group transformed our team! The activities were engaging and perfectly tailored to our needs. Our communication and collaboration have improved dramatically.",
-    name: "Sarah Johnson",
-    profileImage: "/Portfolio/customers/advelsoft.jpg",
-    rating: 5,
-    date: "2 weeks ago",
-    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
-  },
-  {
-    quote: "Outstanding experience! The facilitators were professional, energetic, and really knew how to bring our team together. Highly recommend for any company looking to boost morale.",
-    name: "Michael Chen",
-    profileImage: "/Portfolio/customers/colgate.png",
-    rating: 5,
-    date: "1 month ago",
-    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
-  },
-  {
-    quote: "We've worked with several team building companies, but EITO Group stands out. The activities were fun, meaningful, and led to real improvements in how we work together.",
-    name: "Emily Rodriguez",
-    profileImage: "/Portfolio/customers/advelsoft.jpg",
-    rating: 5,
-    date: "3 months ago",
-    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
-  },
-  {
-    quote: "Absolutely fantastic! Our team had a blast and learned so much. The impact on our workplace culture has been incredible. Worth every penny!",
-    name: "David Kim",
-    profileImage: "/Portfolio/customers/colgate.png",
-    rating: 5,
-    date: "1 month ago",
-    reviewUrl: "https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D"
-  }
-];
+// Google reviews removed per request
 
 interface PhilosophySectionProps {
   philosophies?: any[];
@@ -151,7 +115,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-transparent">
       <div className="relative z-10 w-full">
         {/* Our Clients Section - Clean White Background */}
         <div className="py-16">
@@ -193,35 +157,26 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         {/* Unified Background Section for Content + Testimonials */}
         <div className="relative overflow-hidden">
           {/* Single Continuous Animated Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0">
-            {/* Floating Blobs */}
-            <div 
-              className="absolute top-10 -left-32 w-[400px] h-[400px] rounded-full opacity-[0.07] blur-3xl animate-float-philosophy-1" 
-              style={{ backgroundColor: '#12a28f' }} 
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#eef6f8] via-[#f7fbfd] to-white z-0">
+            {/* Floating Blobs (subtle) */}
+            <div
+              className="absolute top-12 -left-28 w-[360px] h-[360px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-1"
+              style={{ backgroundColor: '#12a28f' }}
             />
-            <div 
-              className="absolute top-1/4 right-1/4 w-[350px] h-[350px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-2" 
-              style={{ backgroundColor: '#fcb22f' }} 
+            <div
+              className="absolute top-1/4 right-1/4 w-[320px] h-[320px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-2"
+              style={{ backgroundColor: '#fcb22f' }}
             />
-            <div 
-              className="absolute top-1/2 -right-20 w-[450px] h-[450px] rounded-full opacity-[0.08] blur-3xl animate-float-philosophy-3" 
-              style={{ backgroundColor: '#f68921' }} 
+            <div
+              className="absolute top-1/2 -right-12 w-[380px] h-[380px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-3"
+              style={{ backgroundColor: '#f68921' }}
             />
-            <div 
-              className="absolute bottom-10 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-4" 
-              style={{ backgroundColor: '#153462' }} 
-            />
-            
-            {/* Subtle Dot Pattern */}
-            <div 
-              className="absolute inset-0 opacity-[0.03]" 
-              style={{ 
-                backgroundImage: `radial-gradient(circle, #153462 1px, transparent 1px)`, 
-                backgroundSize: '40px 40px' 
-              }} 
+            <div
+              className="absolute bottom-12 left-1/4 w-[420px] h-[420px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-4"
+              style={{ backgroundColor: '#153462' }}
             />
           </div>
-          
+
           {/* Content Layer */}
           <div className="relative z-10">
             {/* Additional content section */}
@@ -261,7 +216,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <a
-                href={googleReviews[0]?.reviewUrl || 'https://www.google.com'}
+                href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block max-w-4xl mx-auto"
@@ -320,12 +275,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             {/* Content Layer */}
             <div className="relative z-20 flex-1 flex flex-col justify-center p-10 md:p-16 lg:p-20">
               {/* No bounce animation: use simple fade-in from left */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
+              <div>
                 <h2 className="text-4xl md:text-6xl font-black text-[#153462] leading-[1.1] mb-6 uppercase tracking-tight">
                   Let's Design Your<br />
                   <span className="text-[#f68921]">NEXT Perfect</span> Team Experience
@@ -355,7 +305,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                     Explore Experiences
                   </Button>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>

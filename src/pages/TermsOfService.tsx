@@ -1,5 +1,4 @@
 import React from 'react';
-import PillNav from '../components/ui/PillNav';
 import Footer from '../components/ui/Footer';
 import LogoImg from '../components/Logo.png';
 import { motion } from 'framer-motion';
@@ -7,16 +6,7 @@ import { motion } from 'framer-motion';
 const TermsOfService = () => {
   return (
     <>
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: "Home", href: "/personal-story-section" },
-          { label: "Services", href: "/work-showcase" },
-          { label: "Connect", href: "/connection-hub" },
-        ]}
-        activeHref={"/"}
-      />
+      {/* Global AltHeader handles site navigation */}
       
       <div className="min-h-screen bg-gray-50 py-20 px-6">
         <motion.div 

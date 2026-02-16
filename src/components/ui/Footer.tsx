@@ -1,158 +1,128 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import LogoImg from '/beige2.png'
-import HRDImg from '../../assets/hrd.png'
+import LogoImg from '/beige2.png';
+import HRDImg from '../../assets/hrd.png';
+
+const COLORS = {
+  NAVY: '#153462',
+  GOLD: '#fcb22f',
+  ORANGE: '#f68921',
+  TEAL: '#79989f',
+  TEAL_DARK: '#18616e',
+};
 
 const Footer = () => {
   return (
-    <footer className="bg-[#1e4a6b] text-white font-light">
-      {/* Triple Border with Centered Logo */}
-      <div className="relative pt-12 pb-8">
-        <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
-          {/* Three distinct lines */}
-          <div className="w-full border-t-[4px] border-[#f68921] mb-1"></div>
-          <div className="w-full border-t-[4px] border-[#79989f] mb-1"></div>
-          <div className="w-full border-t-[4px] border-[#18616e]"></div>
-        </div>
-
-        {/* Logo Container (overlaps lines) */}
-        <div className="relative flex justify-center">
-          <div className="bg-[#1e4a6b] px-6">
-            <img src={LogoImg} alt="Logo" className="h-24 w-auto object-contain" />
-          </div>
-        </div>
-        {/* Tagline positioned below the three lines (visible on md+) */}
-        <div className="relative flex justify-center mt-6">
-          <p className="hidden md:block text-white text-center whitespace-nowrap text-xl md:text-2xl lg:text-3xl font-extrabold leading-tight tracking-tight drop-shadow-lg" style={{ letterSpacing: '0.04em', padding: '0.5em 0', borderBottom: '3px solid #fcb22f', maxWidth: '700px' }}>
-            We designing experiences that bring teams together
-          </p>
-        </div>
+    <footer className="relative w-full bg-white border-t-[12px] border-[#153462] pt-20 pb-10">
+      {/* Decorative Brand Strips - Positioned at the very top of footer */}
+      <div className="absolute top-0 left-0 w-full flex flex-col pointer-events-none">
+        <div className="w-full h-1.5" style={{ backgroundColor: COLORS.ORANGE }} />
+        <div className="w-full h-1.5" style={{ backgroundColor: COLORS.TEAL }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
 
-          {/* Left: Large Logo & Branding */}
-          <div className="flex flex-col items-center md:items-start">
-            <img src={LogoImg} alt="EITO Group" className="h-48 object-contain" />
-            <p className="md:hidden text-white text-xs mt-4 text-center max-w-sm font-bold drop-shadow-md" style={{ letterSpacing: '0.04em', padding: '0.5em 0', borderBottom: '2px solid #fcb22f' }}>
-              We designing experiences that bring teams together
-            </p>
+        {/* CUSTOMER REQUEST: Logo on Top */}
+        <div className="group mb-8 cursor-pointer transition-transform duration-500 hover:scale-110">
+          <Link to="/">
+            <div className="bg-[#FFEBD2] p-4 rounded-2xl border-4 border-[#153462] shadow-[6px_6px_0px_0px_#153462] group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 transition-all">
+              <img src="/black.png" alt="EITO Logo" className="h-16 w-auto object-contain group-hover:rotate-12 transition-transform" />
+            </div>
+          </Link>
+        </div>
+
+        {/* CUSTOMER REQUEST: Tagline Under Logo (Grammar Corrected) */}
+        <div className="text-center mb-16 max-w-2xl">
+          <h2 className="text-[#153462] text-2xl md:text-4xl font-black italic uppercase tracking-tighter leading-tight">
+            We <span className="text-[#f68921]">design</span> experiences that bring teams together
+          </h2>
+          {/* Signature Underline */}
+          <div className="mt-6 flex justify-center gap-1">
+            <div className="w-16 h-2 bg-[#fcb22f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
+            <div className="w-4 h-2 bg-[#12a28f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
+          </div>
+        </div>
+
+        {/* Navigation Grid */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 py-12 border-t-4 border-[#153462]">
+
+          {/* Column 1: Company */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#fcb22f] px-2 py-1">Company</h3>
+            <nav className="flex flex-col gap-3 text-center sm:text-left">
+              <Link to="/personal-story-section#beliefs-values" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Our Values</Link>
+              <Link to="/connection-hub#contact-methods" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Contact Us</Link>
+              <a href="mailto:info@eitogroup.com.my" className="text-sm font-bold text-[#153462]/60 hover:text-[#153462] flex items-center gap-2 justify-center sm:justify-start">
+                <span className="w-2 h-2 bg-[#12a28f] rounded-full" /> info@eitogroup.com.my
+              </a>
+            </nav>
           </div>
 
-          {/* Company Column */}
-          <div>
-            <h3 className="tracking-[0.3em] text-base font-bold uppercase mb-6 text-[#f68921]">
-              COMPANY
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link to="/personal-story-section#beliefs-values" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  Our Value
-                </Link>
-              </li>
-              <li>
-                <Link to="/connection-hub#contact-methods" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  Contact us
-                </Link>
-              </li>
-              <li className="pt-2 text-white/70 flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          {/* Column 2: Services */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#12a28f] px-2 py-1 text-white">Services</h3>
+            <nav className="flex flex-col gap-3 text-center sm:text-left text-[#153462] font-bold">
+              <Link to="/work-showcase/team-building" className="hover:underline decoration-[#fcb22f] decoration-4 underline-offset-4">Team Building</Link>
+              <Link to="/work-showcase/training-program" className="hover:underline decoration-[#f68921] decoration-4 underline-offset-4">Training Program</Link>
+              <Link to="/work-showcase/corporate-event" className="hover:underline decoration-[#695da5] decoration-4 underline-offset-4">Corporate Event</Link>
+              <Link to="/work-showcase/csr" className="hover:underline decoration-[#ee424c] decoration-4 underline-offset-4">CSR</Link>
+            </nav>
+          </div>
+
+          {/* Column 3: Certifications */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#695da5] px-2 py-1 text-white">Accreditation</h3>
+            <div className="bg-white p-3 rounded-xl border-2 border-[#153462] shadow-[4px_4px_0px_0px_#153462]">
+              <img src={HRDImg} alt="HRD Certification" className="h-16 w-auto grayscale hover:grayscale-0 transition-all cursor-crosshair" />
+            </div>
+          </div>
+
+          {/* Column 4: Connect */}
+          <div className="flex flex-col items-center sm:items-start">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#ee424c] px-2 py-1 text-white">Socials</h3>
+            <div className="flex gap-4">
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/eitogroup/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+                className="w-10 h-10 bg-white border-2 border-[#153462] rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_#153462] hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_#153462] transition-all"
+              >
+                <span className="sr-only">Instagram</span>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="#153462" strokeWidth="1.5" fill="#f68921" />
+                  <circle cx="12" cy="12" r="3.2" fill="#153462" />
+                  <circle cx="17.3" cy="6.7" r="0.9" fill="#153462" />
                 </svg>
-                <span>info@eitogroup.com.my</span>
-              </li>
-              <li className="text-white/70 flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </a>
+
+              {/* Google / Reviews (links to Google search for EITO Group) */}
+              <a
+                href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Google Reviews"
+                className="w-10 h-10 bg-white border-2 border-[#153462] rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_#153462] hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_#153462] transition-all"
+              >
+                <span className="sr-only">Google</span>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 11.5v2.9h3.9c-.2 1.3-1.5 3.8-3.9 3.8-2.3 0-4.3-1.9-4.3-4.3s2-4.3 4.3-4.3c1.3 0 2.1.5 2.6.9l1.8-1.7C15.9 7.2 14.2 6.4 12 6.4 7.9 6.4 4.6 9.6 4.6 13.6S7.9 20.8 12 20.8c5 0 8.2-3.5 8.2-8.4 0-.6-.1-1.1-.2-1.6H12z" fill="#153462" />
                 </svg>
-                <span>+6016-328 7947</span>
-              </li>
-              <li className="pt-2">
-                <a
-                  href="https://www.instagram.com/eitogroup/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-white/70 hover:text-[#f68921] transition-colors"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                  </svg>
-                  <span className="text-xs font-bold uppercase tracking-widest">INSTAGRAM</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Services Column */}
-          <div>
-            <h3 className="tracking-[0.3em] text-base font-bold uppercase mb-6 text-[#f68921]">
-              SERVICES
-            </h3>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link to="/work-showcase/team-building" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  Team Building
-                </Link>
-              </li>
-              <li>
-                <Link to="/work-showcase/training-program" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  Training Program
-                </Link>
-              </li>
-              <li>
-                <Link to="/work-showcase/corporate-event" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  Corporate Event
-                </Link>
-              </li>
-              <li>
-                <Link to="/work-showcase/csr" className="text-white/90 hover:text-[#f68921] transition-colors">
-                  CSR
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Certifications Column */}
-          <div>
-            <h3 className="tracking-[0.3em] text-base font-bold uppercase mb-6 text-[#f68921]">
-              CERTIFICATIONS
-            </h3>
-            <div className="flex justify-start">
-              <img
-                src={HRDImg}
-                alt="HRD Certification"
-                className="h-24 w-auto object-contain"
-              />
+              </a>
             </div>
           </div>
         </div>
 
-        {/* (moved) Tagline now sits under the three lines/logo for md+ screens */}
-
-        {/* Bottom Copyright */}
-        <div className="mt-6 md:mt-4 pt-6 text-center">
-          <span className="tracking-[0.2em] text-[10px] uppercase opacity-50">
-            © 2026 BY EITO GROUP TEAM BUILDING. ALL RIGHTS RESERVED. |{' '}
-            <Link
-              to="/terms-of-service"
-              className="hover:text-[#f68921] transition-colors underline"
-            >
-              Terms of Service
-            </Link>
-            {' '}|{' '}
-            <Link
-              to="/privacy-policy"
-              className="hover:text-[#f68921] transition-colors underline"
-            >
-              Privacy Policy
-            </Link>
-          </span>
+        {/* Footer Bottom */}
+        <div className="w-full mt-10 pt-8 border-t-2 border-[#153462]/10 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40">
+            © 2026 EITO Group • Empowering Teams through Play
+          </p>
+          <div className="flex gap-8">
+            <Link to="/privacy-policy" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40 hover:text-[#153462] transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40 hover:text-[#153462] transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </footer>

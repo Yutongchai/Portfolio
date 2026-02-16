@@ -104,21 +104,11 @@ const PersonalStorySection = () => {
             <BeliefsValuesSection />
           </SectionWrapper>
 
-          <SectionWrapper delay={0.2}>
-            <CorePrinciple />
-          </SectionWrapper>
-          <SectionWrapper delay={0.3}>
-            <ActionsSection />
-          </SectionWrapper>
+          <CorePrinciple />
+          <ActionsSection />
           {/* <SectionWrapper delay={0.3}>
             <OurRoleSection />
           </SectionWrapper> */}
-
-
-
-          {/*      <SectionWrapper delay={0.3}>
-          <JourneySection journeys={journeys} />
-        </SectionWrapper> */}
 
 
           {/*  <SectionWrapper delay={0.5}>

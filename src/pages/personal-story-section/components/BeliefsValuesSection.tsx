@@ -301,8 +301,7 @@ const BeliefsValuesSection = () => {
       />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header (pushed down slightly) */}
-        <div className="pt-6">
+        <div className="pt-10">
           <PageHeader
             title={(
               <>

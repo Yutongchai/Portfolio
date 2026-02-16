@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Questionnaire from './components/Questionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
-import PillNav from '../../components/ui/PillNav';
 import Footer from '../../components/ui/Footer';
 import LogoImg from '../../components/Logo.png';
 import { Globe, Heart, GraduationCap, TreePine, Users, Smile, Target, CheckCircle, Award, ArrowUp } from 'lucide-react';
@@ -77,36 +76,26 @@ const CSR = () => {
         <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] rounded-full bg-teal-50/40 blur-[120px]" />
       </div>
 
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Services", href: "/work-showcase" },
-          { label: "Connect", href: "/connection-hub" },
-        ]}
-        activeHref={"/work-showcase"}
-      />
+      {/* Global AltHeader handles site navigation */}
 
       {/* --- HERO SLIDER SECTION --- */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-black">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <div className="absolute inset-0 bg-black/40 z-10" />
-            <img
-              src={sliderImages[currentSlide].url}
-              className="w-full h-full object-cover"
-              alt="CSR Showcase"
-            />
-          </motion.div>
-        </AnimatePresence>
+      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">        <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute inset-0"
+        >
+          <div className="absolute inset-0 bg-black/40 z-10" />
+          <img
+            src={sliderImages[currentSlide].url}
+            className="w-full h-full object-cover"
+            alt="CSR Showcase"
+          />
+        </motion.div>
+      </AnimatePresence>
 
         {/* Floating Content Overlay */}
         <div className="relative z-20 text-center text-white px-4">

@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
+import AltHeader from './components/ui/AltHeader';
 
 // Lazy load pages for faster initial load
 const Home = lazy(() => import('./pages/Home'));
@@ -36,6 +37,7 @@ const Routes: React.FC = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ErrorBoundary>
+        <AltHeader />
         <Suspense fallback={<PageLoader />}>
           <RouterRoutes>
             <Route path="/" element={<Home />} />

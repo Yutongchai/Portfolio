@@ -64,9 +64,9 @@ const ActionsSection = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-16 bg-white">
+    <section className="max-w-7xl mx-auto px-6 py-12">
       {/* Section Header */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-12 pt-10">
         <span className="text-[#f68921] font-bold uppercase tracking-[0.25em] text-sm">Our Expertise</span>
         <h2 className="text-4xl md:text-5xl font-black text-[#153462] mt-3 mb-2 uppercase tracking-tight">
           Everyone In, <span className="text-[#f68921]">Team On!</span>

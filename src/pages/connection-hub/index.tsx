@@ -351,7 +351,6 @@ const ConnectionHub = () => {
               </div>
             </div>
 
-            {/* --- CALENDAR & FORM SECTION --- */}
             {/* --- CALENDAR SECTION --- */}
             <div className="grid grid-cols-1 gap-16 mb-32">
               <div id="availability-calendar" className="relative bg-slate-50 p-8 md:p-12 rounded-[3rem] border border-slate-100 overflow-hidden">

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PillNav from '../components/ui/PillNav';
 import PersonalStorySection from './personal-story-section/index';
 import WorkShowcase from './work-showcase/index';
 import ConnectionHub from './connection-hub/index';
-import LogoImg from '../components/Logo.png';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import SEOHead from '../components/SEOHead';
 import { pageSEO } from '../config/seoConfig';
@@ -83,16 +81,7 @@ const Home: React.FC = () => {
           style={{ scaleX }}
         />
 
-        <PillNav
-          logo={LogoImg}
-          logoAlt="EITO Group Logo"
-          items={[
-            { label: "Home", href: "/personal-story-section" },
-            { label: "Services", href: "/work-showcase" },
-            { label: "Connect", href: "/connection-hub" },
-          ]}
-          activeHref={activeHref}
-        />
+        {/* Global AltHeader is rendered site-wide; remove page-level header. */}
 
         {currentPage === 'home' && <PersonalStorySection />}
         {currentPage === 'service' && <WorkShowcase />}

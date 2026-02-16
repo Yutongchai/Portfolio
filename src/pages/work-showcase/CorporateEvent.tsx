@@ -1,6 +1,5 @@
-import PillNav from '../../components/ui/PillNav';
+import AltHeader from '../../components/ui/AltHeader';
 import Footer from '../../components/ui/Footer';
-import LogoImg from '../../components/Logo.png';
 import Questionnaire from './components/Questionnaire';
 import { motion } from 'framer-motion';
 import { Calendar, Users, Trophy, Utensils, Mic, Settings, UserCheck, Music, Camera, Clock, Award, Lightbulb, Target, Sparkles } from 'lucide-react';
@@ -114,19 +113,10 @@ const whyChooseUs = [
 
 const CorporateEvent = () => (
   <>
-    <PillNav
-      logo={LogoImg}
-      logoAlt="EITO Group Logo"
-      items={[
-        { label: "Home", href: "/personal-story-section" },
-        { label: "Services", href: "/work-showcase" },
-        { label: "Connect", href: "/connection-hub" },
-      ]}
-      activeHref={"/work-showcase"}
-    />
+    <AltHeader />
 
     {/* 1. INTRO SECTION */}
-    <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
+    <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
       <style>{`
         @keyframes slideInDown {
           from {

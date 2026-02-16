@@ -4,8 +4,7 @@ import TeamBuildingHeroImg from "../../../assets/team_building/hero.png";
 
 const TeamBuildingHero: React.FC = () => {
     return (
-        <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
-            <style>{`
+        <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">            <style>{`
                 @keyframes slideInDown {
                     from {
                         opacity: 0;

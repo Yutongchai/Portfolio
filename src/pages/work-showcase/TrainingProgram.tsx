@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield } from 'lucide-react';
-import PillNav from '../../components/ui/PillNav';
 import LogoImg from '../../components/Logo.png';
 import TrainingImg from '../../assets/corporate_training/training.jpg';
 import SoftSkillsImg from '../../assets/corporate_training/soft.jpg';
@@ -15,8 +14,8 @@ import TruthImg from '../../assets/corporate_training/truth.jpg';
 import ExcellenceImg from '../../assets/corporate_training/excellence.jpg';
 import ResultImg from '../../assets/corporate_training/results.jpg';
 
+import Footer from '../../components/ui/Footer';
 // Lazy load heavy components for faster initial load
-const Footer = lazy(() => import('../../components/ui/Footer'));
 const QuestionnaireTP = lazy(() => import('./components/QuestionnaireTP'));
 const HRDCorBanner = lazy(() => import('./components/HRDCorBanner'));
 
@@ -126,16 +125,7 @@ const TrainingProgram = () => {
 
   return (
     <>
-      <PillNav
-        logo={LogoImg}
-        logoAlt="EITO Group Logo"
-        items={[
-          { label: "Home", href: "/personal-story-section" },
-          { label: "Services", href: "/work-showcase" },
-          { label: "Connect", href: "/connection-hub" },
-        ]}
-        activeHref={"/work-showcase"}
-      />
+      {/* Global AltHeader handles site navigation */}
 
       {/* 1. INTRODUCTION - HERO */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
@@ -962,9 +952,7 @@ const TrainingProgram = () => {
         </div>
       </section>
 
-      <Suspense fallback={<div className="py-10 bg-gray-100" />}>
-        <Footer />
-      </Suspense>
+      <Footer />
     </>
   );
 };

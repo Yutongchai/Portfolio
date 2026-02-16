@@ -12,8 +12,7 @@ const PageHero: React.FC<PageHeroProps> = ({
   showGradient = true
 }) => {
   return (
-    <section className="h-[80vh] flex flex-col items-center justify-center py-16 px-4 relative overflow-hidden">
-      <style>{`
+    <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">      <style>{`
         @keyframes slideInDown {
           from {
             opacity: 0;
