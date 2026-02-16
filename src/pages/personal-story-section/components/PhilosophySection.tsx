@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Player } from '@lottiefiles/react-lottie-player';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Collab from '../../../assets/contact.jpg';
@@ -7,83 +6,7 @@ import { Button } from '../../../components/ui/Button';
 import ClientMarquee from './ClientMarquee';
 import { supabase } from '../../../config/supabaseClient';
 
-// CSS for floating blob animations
-const animationStyles = `
-  @keyframes float-philosophy-1 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    33% {
-      transform: translate(50px, -80px) rotate(120deg) scale(1.1);
-    }
-    66% {
-      transform: translate(-40px, 60px) rotate(240deg) scale(0.95);
-    }
-  }
-
-  @keyframes float-philosophy-2 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(-60px, 100px) rotate(180deg);
-    }
-  }
-
-  @keyframes float-philosophy-3 {
-    0%, 100% {
-      transform: translate(0, 0) scale(1);
-    }
-    33% {
-      transform: translate(-70px, -50px) scale(1.15);
-    }
-    66% {
-      transform: translate(40px, 80px) scale(0.9);
-    }
-  }
-
-  @keyframes float-philosophy-4 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg) scale(1);
-      opacity: 0.05;
-    }
-    50% {
-      transform: translate(80px, -60px) rotate(180deg) scale(1.2);
-      opacity: 0.08;
-    }
-  }
-
-  .animate-float-philosophy-1 {
-    animation: float-philosophy-1 28s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-2 {
-    animation: float-philosophy-2 22s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-3 {
-    animation: float-philosophy-3 26s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-4 {
-    animation: float-philosophy-4 24s ease-in-out forwards;
-  }
-`;
-
-// Inject styles into document
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement("style");
-  styleSheet.textContent = animationStyles;
-  document.head.appendChild(styleSheet);
-}
-
-// Google reviews removed per request
-
-interface PhilosophySectionProps {
-  philosophies?: any[];
-}
-
-const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
+const PhilosophySection = () => {
   const [clients, setClients] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -97,214 +20,160 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
           .order('display_order', { ascending: true });
 
         if (error) throw error;
-
-        if (data && data.length > 0) {
-          // logo_url already contains the full public URL
-          const logoUrls = data.map(logo => logo.logo_url);
-          setClients(logoUrls);
-          console.log('Fetched client logos:', logoUrls);
-        } else {
-          console.log('No active client logos found');
-        }
+        if (data) setClients(data.map(logo => logo.logo_url));
       } catch (error) {
         console.error('Error fetching client logos:', error);
       }
     };
-
     fetchClientLogos();
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-transparent">
-      <div className="relative z-10 w-full">
-        {/* Our Clients Section - Clean White Background */}
-        <div className="py-16">
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-16 px-6"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
-              Trusted Partnerships
-            </p>
-            <h2 className="text-4xl lg:text-6xl font-black text-[#153462] mb-6 uppercase tracking-tighter">
-              Our Clients
+    <section className="relative bg-[#f5f7fa] border-t-8 border-[#153462]">
+      {/* 1. OUR CLIENTS SECTION */}
+      <div className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+          <div className="max-w-2xl">
+            <div className="inline-block bg-[#f68921] border-4 border-[#153462] px-4 py-1 mb-6 shadow-[4px_4px_0px_0px_#153462] -rotate-1">
+              <span className="text-white font-black uppercase tracking-widest text-sm">Trusted Partnerships</span>
+            </div>
+            <h2 className="text-5xl md:text-7xl font-black text-[#153462] uppercase italic tracking-tighter leading-none">
+              Our <span className="text-[#f68921]">Clients_</span>
             </h2>
-            <div className="w-20 h-1 bg-[#f68921] mx-auto mb-8 rounded-full"></div> {/* Decorative underline */}
-            <p className="text-lg md:text-xl text-[#153462]/70 max-w-2xl mx-auto font-medium">
-              We have a handsome list of clients to be proud of. <br className="hidden md:block" />
-              <span className="text-[#153462]">Book today</span> and watch your company join the list!
+            <p className="mt-8 text-xl text-[#153462] font-bold leading-tight">
+              We have a handsome list of clients to be proud of. Join the ranks of industry leaders
+              who have experienced the EITO difference.
             </p>
-          </motion.div>
+          </div>
 
-          {/* Horizontal Scrolling Carousel Wrapper */}
-          <div className="relative">
-            {clients.length > 0 && (
-              <div className="py-10">
-                <ClientMarquee
-                  logos={clients}
-                  autoScrollSpeed={0.5}
-                  pauseOnHover={true}
-                />
-              </div>
-            )}
+          <div className="hidden md:block pb-2">
+            <div className="w-32 h-32 border-8 border-[#153462] rounded-full flex items-center justify-center font-black text-[#153462] text-4xl rotate-12 bg-[#fcb22f]">
+              ★
+            </div>
           </div>
         </div>
 
-        {/* Unified Background Section for Content + Testimonials */}
-        <div className="relative overflow-hidden">
-          {/* Single Continuous Animated Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#eef6f8] via-[#f7fbfd] to-white z-0">
-            {/* Floating Blobs (subtle) */}
-            <div
-              className="absolute top-12 -left-28 w-[360px] h-[360px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-1"
-              style={{ backgroundColor: '#12a28f' }}
+        {/* Marquee with Brutalist Border */}
+        <div className="relative border-y-8 border-[#153462] bg-white py-12 -mx-6 md:mx-0">
+          {clients.length > 0 && (
+            <ClientMarquee
+              logos={clients}
+              autoScrollSpeed={0.5}
+              pauseOnHover={true}
             />
-            <div
-              className="absolute top-1/4 right-1/4 w-[320px] h-[320px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-2"
-              style={{ backgroundColor: '#fcb22f' }}
-            />
-            <div
-              className="absolute top-1/2 -right-12 w-[380px] h-[380px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-3"
-              style={{ backgroundColor: '#f68921' }}
-            />
-            <div
-              className="absolute bottom-12 left-1/4 w-[420px] h-[420px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-4"
-              style={{ backgroundColor: '#153462' }}
-            />
-          </div>
-
-          {/* Content Layer */}
-          <div className="relative z-10">
-            {/* Additional content section */}
-            <section className="py-16 px-4">
-              <div className="max-w-4xl mx-auto text-center">
-                <motion.h2
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  className="text-2xl md:text-4xl font-black text-[#153462] mb-4 uppercase tracking-tight"
-                >
-                  Start building with us <span className="text-[#f68921]">today</span> and see the difference.
-                </motion.h2>
-                <p className="text-[#153462]/60 font-medium tracking-wide">
-                  EXPERIENCE • ENGAGEMENT • RESULTS
-                </p>
-              </div>
-            </section>
-
-            {/* Original 3D Dome (commented out for comparison) */}
-            {/* {clients.length > 0 && (
-              <ClientDomeGallery
-                images={clients}
-                fit={0.5}
-                minRadius={1000}
-                maxVerticalRotationDeg={0}
-                segments={34}
-                dragDampening={2}
-                grayscale={false}
-              />
-            )} */}
-            {/* Google Reviews banner - clickable and opens Google Reviews in a new tab */}
-            <motion.div
-              className="py-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <a
-                href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block max-w-4xl mx-auto"
-              >
-                <div className="flex items-center justify-between bg-white rounded-2xl shadow-lg p-6 hover:shadow-2xl transition">
-                  <div className="flex items-center gap-6">
-                    <div className="flex flex-col items-center justify-center w-28 h-16 rounded-lg bg-white">
-                      <span className="text-xl font-extrabold text-gray-800">Google</span>
-                      <span className="text-sm text-gray-500">Reviews</span>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex text-yellow-400">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <svg key={i} className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.786 1.402 8.168L12 18.897l-7.336 3.867 1.402-8.168L.132 9.21l8.2-1.192z" />
-                            </svg>
-                          ))}
-                        </div>
-                        <span className="font-bold text-gray-800">5.0</span>
-                        <span className="text-sm text-gray-500">(Google)</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-2">See verified client reviews on Google. Click to view full reviews.</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <button className="bg-[#f68921] text-white px-4 py-2 rounded-lg font-semibold">Read Reviews</button>
-                  </div>
-                </div>
-              </a>
-            </motion.div>
-          </div>
+          )}
         </div>
+      </div>
 
-        {/* Full-width banner section */}
-        <div className="w-full">
-          <div
-            className="w-full flex flex-col md:flex-row items-stretch overflow-hidden relative"
-            style={{ minHeight: '480px' }}
+      {/* 2. GOOGLE REVIEWS -> ENHANCED CLIENT IMPACT BANNER */}
+      <div className="bg-[#fcb22f] py-24 border-y-8 border-[#153462] relative overflow-hidden">
+        {/* Background Pattern for extra Brutalist texture */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(#153462 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
+
+        <div className="max-w-5xl mx-auto px-6 relative z-10">
+          <a
+            href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block relative"
           >
-            {/* Right Side: The Photo (Hidden on mobile or as background) */}
-            <div
-              className="absolute inset-0 z-0"
-              style={{
-                backgroundImage: `url(${Collab})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center right',
-              }}
-            />
+            {/* The Hard Shadow (Offset) */}
+            <div className="absolute inset-0 bg-[#153462] translate-x-4 translate-y-4 group-hover:translate-x-6 group-hover:translate-y-6 transition-all duration-300" />
 
-            {/* The Gradient Mask - Stronger on the left for text legibility, clear on the right */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-r from-white via-white/90 to-transparent md:to-transparent" />
+            {/* The Sticker Content */}
+            <div className="relative bg-white border-4 border-[#153462] p-8 md:p-14 flex flex-col lg:flex-row items-center gap-10">
 
-            {/* Content Layer */}
-            <div className="relative z-20 flex-1 flex flex-col justify-center p-10 md:p-16 lg:p-20">
-              {/* No bounce animation: use simple fade-in from left */}
-              <div>
-                <h2 className="text-4xl md:text-6xl font-black text-[#153462] leading-[1.1] mb-6 uppercase tracking-tight">
-                  Let's Design Your<br />
-                  <span className="text-[#f68921]">NEXT Perfect</span> Team Experience
-                </h2>
-
-                <p className="text-lg md:text-xl font-medium text-[#153462]/80 mb-10 max-w-md leading-relaxed">
-                  No pressure. No fees.<br />
-                  <span className="italic relative">
-                    Tailored experiences that bring teams together.
-                    <span className="absolute bottom-0 left-0 w-full h-1 bg-[#f68921]/20 -z-10"></span>
-                  </span>
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    className="bg-[#153462] hover:bg-[#1c447a] text-white font-bold px-8 py-7 rounded-xl text-lg shadow-xl transition-all hover:-translate-y-1"
-                    onClick={() => navigate('/connection-hub#check-availability')}
-                  >
-                    Plan My Team Session
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    className="bg-white/80 backdrop-blur-sm hover:bg-white text-[#153462] font-bold px-8 py-7 rounded-xl text-lg border-2 border-[#153462] transition-all"
-                    onClick={() => navigate('/work-showcase')}
-                  >
-                    Explore Experiences
-                  </Button>
+              {/* Left Side: The Google "Badge" */}
+              <div className="flex-shrink-0 relative">
+                {/* A circular "Stamp" effect */}
+                <div className="w-24 h-24 md:w-32 md:h-32 bg-white border-4 border-[#153462] rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_#153462] group-hover:rotate-12 transition-transform duration-500">
+                  <svg viewBox="0 0 24 24" className="w-12 h-12 md:w-16 md:h-16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335" />
+                  </svg>
                 </div>
+                {/* "VERIFIED" floating tag */}
+                <div className="absolute -bottom-2 -right-4 bg-[#12a28f] text-white border-2 border-[#153462] px-2 py-1 text-[10px] font-black uppercase tracking-tighter shadow-[2px_2px_0px_0px_#153462]">
+                  Verified
+                </div>
+              </div>
+
+              {/* Center: Rating & Text */}
+              <div className="flex-grow text-center lg:text-left">
+                <div className="flex items-center justify-center lg:justify-start gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 bg-[#f68921] border-2 border-[#153462] flex items-center justify-center text-white font-black text-xl shadow-[2px_2px_0px_0px_#153462]">★</div>
+                  ))}
+                  <span className="ml-4 font-black text-3xl text-[#153462]">5.0 <span className="text-sm opacity-50 uppercase tracking-widest">Rating</span></span>
+                </div>
+
+                <h3 className="text-4xl md:text-6xl font-black text-[#153462] uppercase italic tracking-tighter leading-[0.9]">
+                  See what our <br /> clients say <span className="text-[#f68921] underline decoration-4 underline-offset-4">about us_</span>
+                </h3>
+              </div>
+
+              {/* Right Side: Action Button */}
+              <div className="flex-shrink-0">
+                <div className="relative group-hover:-translate-y-1 transition-transform">
+                  <div className="absolute inset-0 bg-[#153462] translate-x-2 translate-y-2" />
+                  <div className="relative bg-[#153462] text-white px-10 py-5 font-black uppercase text-xl italic tracking-widest border-4 border-[#153462] group-hover:bg-white group-hover:text-[#153462] transition-colors">
+                    Read Reviews
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      {/* 3. FINAL CALL TO ACTION BANNER */}
+      <div className="w-full relative min-h-[600px] flex items-center overflow-hidden bg-white">
+        {/* The Image Background with Brutalist Grayscale filter */}
+        <div
+          className="absolute inset-0 z-0 grayscale opacity-40 group-hover:grayscale-0 transition-all duration-700"
+          style={{
+            backgroundImage: `url(${Collab})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto px-6 w-full relative z-10 py-20">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl md:text-6xl font-black text-[#153462] leading-[0.85] mb-10 uppercase italic tracking-tighter">
+              Let's Design Your<br />
+              <span className="bg-[#f68921] text-white px-4 inline-block transform -rotate-1">NEXT Perfect</span> <span className="whitespace-nowrap">Team Experience_</span>
+            </h2>
+
+            <p className="text-2xl font-bold text-[#153462] mb-12 max-w-xl leading-tight border-l-8 border-[#fcb22f] pl-6">
+              No pressure. No fees. <br />
+              Just tailored experiences that bring people together.
+            </p>
+
+            <div className="flex flex-wrap gap-6">
+              {/* PRIMARY BUTTON */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-[#153462] translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all" />
+                <button
+                  onClick={() => navigate('/connection-hub#check-availability')}
+                  className="relative bg-[#f68921] border-4 border-[#153462] text-white font-black px-10 py-5 text-xl uppercase italic tracking-widest"
+                >
+                  Plan My Session
+                </button>
+              </div>
+
+              {/* SECONDARY BUTTON */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-[#153462] translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all" />
+                <button
+                  onClick={() => navigate('/work-showcase')}
+                  className="relative bg-white border-4 border-[#153462] text-[#153462] font-black px-10 py-5 text-xl uppercase italic tracking-widest"
+                >
+                  Explore Work
+                </button>
               </div>
             </div>
           </div>

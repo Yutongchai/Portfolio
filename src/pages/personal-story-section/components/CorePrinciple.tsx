@@ -13,10 +13,11 @@ const CorePrinciple: React.FC = () => {
     offset: ['start end', 'center center']
   });
 
-  const curvedTextY = useTransform(scrollYProgress, [0, 0.5, 1], [100, -20, 0]);
-  const curvedTextScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.1, 1]);
-  const curvedTextOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
-  const smoothY = useSpring(curvedTextY, { stiffness: 100, damping: 20 });
+  // Animation values for the whole content block
+  const contentY = useTransform(scrollYProgress, [0, 0.5, 1], [100, -20, 0]);
+  const contentScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1.05, 1]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
+  const smoothY = useSpring(contentY, { stiffness: 100, damping: 20 });
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on('change', (latest) => {
@@ -32,88 +33,66 @@ const CorePrinciple: React.FC = () => {
     return () => unsubscribe();
   }, [scrollYProgress]);
 
-  // Try native reverse playback (fast path). If unsupported, fall back to a
-  // reversed video file or finally regular forward playback. This avoids the
-  // RAF-driven manual seeks which cause high CPU and jank.
+  // Video playback logic stays the same
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
-
-    let cancelled = false;
-
     const tryReverse = async () => {
       try {
-        // wait for metadata so we can seek to the end
         if (vid.readyState < 1) {
           await new Promise<void>((res) => vid.addEventListener('loadedmetadata', () => res(), { once: true }));
         }
-        // position at end and attempt negative playbackRate
-        try {
-          vid.currentTime = vid.duration || 0;
-        } catch (e) {
-          // ignore
-        }
+        vid.currentTime = vid.duration || 0;
         vid.muted = true;
         vid.playbackRate = -1;
         await vid.play();
-        return;
       } catch (err) {
-        // Negative playbackRate not supported in many browsers. Try a reversed
-        // file if you have one at /EITO-reversed.mp4 (best long-term fix).
-        try {
-          vid.playbackRate = 1;
-          vid.src = BGvideo;
-          await vid.play();
-          return;
-        } catch (err2) {
-          // Final fallback: play forward normally (smooth, avoids jank).
-          try {
-            vid.playbackRate = 1;
-            await vid.play();
-          } catch (e) {
-            // ignore play errors
-          }
-        }
+        vid.playbackRate = 1;
+        vid.src = BGvideo;
+        await vid.play().catch(() => { });
       }
     };
-
     void tryReverse();
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   return (
-    <div ref={rootRef} className="mt-0 relative overflow-hidden">
-      {/* Background video (public/EOTO.mp4) */}
+    <div ref={rootRef} className="relative overflow-hidden bg-[#153462]">
+      {/* Background Video - Slightly higher opacity for Brutalist contrast */}
       <video
         ref={videoRef}
-        className="core-video-bg absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0.45, willChange: 'transform, opacity' }}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.5, willChange: 'transform, opacity' }}
         src={BGvideo}
         muted
         loop
         playsInline
         preload="auto"
-        aria-hidden="true"
       />
 
       <motion.div
-        className="mb-6 px-6 py-12 overflow-visible relative z-10"
-        style={{ y: smoothY, scale: curvedTextScale, opacity: curvedTextOpacity }}
+        className="py-24 px-6 relative z-10"
+        style={{ y: smoothY, scale: contentScale, opacity: contentOpacity }}
       >
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* First row: big heading */}
-          <div className="w-full flex items-center justify-center gap-6 pt-14">
-            <h3 className="text-4xl md:text-6xl lg:text-5xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
-            <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
+        <div className="max-w-7xl mx-auto text-center">
+
+          {/* BRUTALIST HEADING ROW */}
+          <div className="flex flex-col items-center mb-12">
+            <div className="relative group">
+              {/* The Hard Shadow for the text */}
+              <div className="absolute inset-0 bg-[#f68921] translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform" />
+
+              <div className="relative bg-white border-4 border-[#153462] px-10 py-4">
+                <h3 className="text-5xl md:text-8xl font-black uppercase italic tracking-tighter text-[#153462]">
+                  CORE <span className="text-[#f68921]">PRINCIPLES</span>
+                </h3>
+              </div>
+            </div>
           </div>
 
-          {/* Second row: curved swinging text centered below the heading */}
+          {/* SWINGING TEXT CONTAINER - Now styled as a "Sticker" */}
           <div className="w-full flex justify-center mt-6">
             <div
-              className="curved-text-container flex-1 flex justify-center max-w-3xl"
+              className="relative group cursor-pointer max-w-2xl w-full"
               onMouseEnter={() => {
                 gsap.killTweensOf('#curved-path');
                 gsap.to('#curved-path', {
@@ -131,18 +110,32 @@ const CorePrinciple: React.FC = () => {
                 });
               }}
             >
-              <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
-                <path id="curved-path" className="curved-path" d="M 30,100 Q 400,100 770,100" />
-                <text className="curved-text">
-                  <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                    <tspan dy="-18">The E I T O Fundamentals</tspan>
-                  </textPath>
-                </text>
-              </svg>
+              {/* Box framing the swinging SVG */}
+              <div className="absolute inset-0 bg-[#fcb22f] translate-x-2 translate-y-2" />
+              <div className="relative bg-white border-4 border-[#153462] p-4 flex justify-center overflow-hidden">
+                <svg viewBox="0 0 800 160" width="100%" height="120px" style={{ maxWidth: '600px' }}>
+                  <path id="curved-path" fill="transparent" stroke="transparent" d="M 30,100 Q 400,100 770,100" />
+                  <text className="fill-[#153462] font-black uppercase italic text-4xl md:text-5xl">
+                    <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
+                      <tspan dy="-10">The EITO Fundamentals</tspan>
+                    </textPath>
+                  </text>
+                </svg>
+
+                {/* Decorative Brutalist "Tape" in corners */}
+                <div className="absolute top-0 right-0 w-8 h-8 bg-[#153462] translate-x-4 -translate-y-4 rotate-45" />
+                <div className="absolute bottom-0 left-0 w-8 h-8 bg-[#f68921] -translate-x-4 translate-y-4 rotate-45" />
+              </div>
             </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Grid Overlay for extra Brutalist texture over the video */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{ backgroundImage: 'radial-gradient(#153462 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+      />
 
       <ImageHoverScrollSection />
     </div>
