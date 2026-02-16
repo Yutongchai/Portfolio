@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import LogoImg from '/black.png';
 
 const COLORS = {
     NAVY: '#153462',
@@ -128,7 +129,7 @@ const AltHeader: React.FC = () => {
                         <div className={`flex justify-center items-center transition-[transform_400ms_cubic-bezier(0.34,1.2,0.64,1)] ${isShrunk ? 'absolute inset-0 scale-110' : 'flex-1 scale-100'}`}>
                             <button onClick={() => navigateTo('/')} className="flex items-center gap-3 group whitespace-nowrap">
                                 <div className={`flex items-center justify-center transition-[transform_450ms_cubic-bezier(0.34,1.56,0.64,1)] ${isShrunk ? 'scale-125' : 'scale-100'}`}>
-                                    <img src="/black.png" alt="Logo" className={`${isShrunk ? 'w-12 h-12' : 'w-10 h-10'} object-contain`} />
+                                    <img src={LogoImg} alt="Logo" className={`${isShrunk ? 'w-8 h-8' : 'w-10 h-10'} object-contain mx-auto`} />
                                 </div>
                                 <span className={`text-2xl font-black tracking-tighter text-[#153462] group-hover:text-[#f68921] overflow-hidden
                                     transition-[width_350ms_ease-out,opacity_300ms_ease-out] ${isShrunk ? 'delay-0' : 'delay-200'}

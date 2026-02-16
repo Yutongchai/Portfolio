@@ -25,13 +25,13 @@ const Footer = () => {
         {/* CUSTOMER REQUEST: Logo on Top */}
         <div className="group mb-8 cursor-pointer transition-transform duration-500 hover:scale-110">
           <Link to="/">
-            <div className="bg-[#FFEBD2] p-4 rounded-2xl border-4 border-[#153462] shadow-[6px_6px_0px_0px_#153462] group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 transition-all">
-              <img src="/black.png" alt="EITO Logo" className="h-16 w-auto object-contain group-hover:rotate-12 transition-transform" />
+            <div className="bg-[#FFFFF0] rounded-2xl border-4 border-[#153462] shadow-[6px_6px_0px_0px_#153462] group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 transition-all">
+              <img src={LogoImg} alt="EITO Logo" className="h-18 w-auto object-contain group-hover:rotate-12 transition-transform" />
             </div>
           </Link>
         </div>
 
-        {/* CUSTOMER REQUEST: Tagline Under Logo (Grammar Corrected) */}
+        {/* CUSTOMER REQUEST: Tagline Under Logo */}
         <div className="text-center mb-16 max-w-2xl">
           <h2 className="text-[#153462] text-2xl md:text-4xl font-black italic uppercase tracking-tighter leading-tight">
             We <span className="text-[#f68921]">design</span> experiences that bring teams together

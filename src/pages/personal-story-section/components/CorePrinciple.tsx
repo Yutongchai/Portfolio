@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { gsap } from 'gsap';
+import BGvideo from '/EITO.mp4';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 
 const CorePrinciple: React.FC = () => {
@@ -90,7 +91,7 @@ const CorePrinciple: React.FC = () => {
         ref={videoRef}
         className="core-video-bg absolute inset-0 w-full h-full object-cover"
         style={{ opacity: 0.45, willChange: 'transform, opacity' }}
-        src="/EITO.mp4"
+        src={BGvideo}
         muted
         loop
         playsInline
