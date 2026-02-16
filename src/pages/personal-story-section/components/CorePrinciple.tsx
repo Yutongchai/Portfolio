@@ -62,7 +62,7 @@ const CorePrinciple: React.FC = () => {
         // file if you have one at /EITO-reversed.mp4 (best long-term fix).
         try {
           vid.playbackRate = 1;
-          vid.src = '/EITO.mp4';
+          vid.src = BGvideo;
           await vid.play();
           return;
         } catch (err2) {
