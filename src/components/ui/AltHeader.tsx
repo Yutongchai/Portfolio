@@ -62,7 +62,7 @@ const AltHeader: React.FC = () => {
     }, [pathname]);
 
     return (
-        <header className="fixed top-6 left-0 right-0 z-50 px-4 animate-float pointer-events-none">
+        <header className="fixed top-6 left-0 right-0 z-50 px-4 animate-float">
             <div 
                 className="max-w-6xl mx-auto flex justify-center"
                 onMouseEnter={() => setIsHovered(true)}

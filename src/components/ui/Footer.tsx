@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LogoImg from '/beige2.png';
 import HRDImg from '../../assets/hrd.png';
@@ -9,6 +9,46 @@ const COLORS = {
   ORANGE: '#f68921',
   TEAL: '#79989f',
   TEAL_DARK: '#18616e',
+};
+
+type MobileSectionProps = {
+  title: string;
+  children: React.ReactNode;
+  accentBg?: string;
+  accentText?: string;
+};
+
+const MobileSection: React.FC<MobileSectionProps> = ({ title, children, accentBg, accentText }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="w-full">
+      {/* Desktop: show heading + content */}
+      <div className="hidden sm:block">
+        <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462]">{title}</h3>
+        {children}
+      </div>
+
+      {/* Mobile: accordion */}
+      <div className="sm:hidden w-full">
+        <button
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          className="w-full flex items-center justify-between py-3 px-4 box-border"
+          style={{ background: accentBg ?? 'transparent', color: accentText ?? undefined }}
+        >
+          <span className="text-sm font-black uppercase tracking-[0.2em] text-left break-words whitespace-normal">{title}</span>
+          <span className="text-2xl ml-4">{open ? '−' : '+'}</span>
+        </button>
+
+        <div className={`transition-all duration-300 overflow-hidden ${open ? 'max-h-[1000px] mt-3' : 'max-h-0'}`}>
+          <div className="px-4 w-full box-border break-words whitespace-normal">
+            {/* Ensure descendant links and text wrap to avoid horizontal overflow on small screens */}
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const Footer = () => {
@@ -44,40 +84,42 @@ const Footer = () => {
         </div>
 
         {/* Navigation Grid */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 py-12 border-t-4 border-[#153462]">
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 py-8 md:py-12 border-t-4 border-[#153462]">
 
-          {/* Column 1: Company */}
+          {/* Column 1: Company (accordion on mobile) */}
           <div className="flex flex-col items-center sm:items-start">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#fcb22f] px-2 py-1">Company</h3>
-            <nav className="flex flex-col gap-3 text-center sm:text-left">
-              <Link to="/personal-story-section#beliefs-values" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Our Values</Link>
-              <Link to="/connection-hub#contact-methods" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Contact Us</Link>
-              <a href="mailto:info@eitogroup.com.my" className="text-sm font-bold text-[#153462]/60 hover:text-[#153462] flex items-center gap-2 justify-center sm:justify-start">
-                <span className="w-2 h-2 bg-[#12a28f] rounded-full" /> info@eitogroup.com.my
-              </a>
-            </nav>
+            <MobileSection title="Company">
+              <nav className="flex flex-col gap-3 text-center sm:text-left">
+                <Link to="/personal-story-section#beliefs-values" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Our Values</Link>
+                <Link to="/connection-hub#contact-methods" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Contact Us</Link>
+                <a href="mailto:info@eitogroup.com.my" className="text-sm font-bold text-[#153462]/60 hover:text-[#153462] flex items-center gap-2 justify-center sm:justify-start">
+                  <span className="w-2 h-2 bg-[#12a28f] rounded-full" /> info@eitogroup.com.my
+                </a>
+              </nav>
+            </MobileSection>
           </div>
 
-          {/* Column 2: Services */}
+          {/* Column 2: Services (accordion on mobile) */}
           <div className="flex flex-col items-center sm:items-start">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#12a28f] px-2 py-1 text-white">Services</h3>
-            <nav className="flex flex-col gap-3 text-center sm:text-left text-[#153462] font-bold">
-              <Link to="/work-showcase/team-building" className="hover:underline decoration-[#fcb22f] decoration-4 underline-offset-4">Team Building</Link>
-              <Link to="/work-showcase/training-program" className="hover:underline decoration-[#f68921] decoration-4 underline-offset-4">Training Program</Link>
-              <Link to="/work-showcase/corporate-event" className="hover:underline decoration-[#695da5] decoration-4 underline-offset-4">Corporate Event</Link>
-              <Link to="/work-showcase/csr" className="hover:underline decoration-[#ee424c] decoration-4 underline-offset-4">CSR</Link>
-            </nav>
+            <MobileSection title="Services" accentBg="#12a28f" accentText="#ffffff">
+              <nav className="flex flex-col gap-3 text-center sm:text-left text-[#153462] font-bold">
+                <Link to="/work-showcase/team-building" className="hover:underline decoration-[#fcb22f] decoration-4 underline-offset-4">Team Building</Link>
+                <Link to="/work-showcase/training-program" className="hover:underline decoration-[#f68921] decoration-4 underline-offset-4">Training Program</Link>
+                <Link to="/work-showcase/corporate-event" className="hover:underline decoration-[#695da5] decoration-4 underline-offset-4">Corporate Event</Link>
+                <Link to="/work-showcase/csr" className="hover:underline decoration-[#ee424c] decoration-4 underline-offset-4">CSR</Link>
+              </nav>
+            </MobileSection>
           </div>
 
-          {/* Column 3: Certifications */}
+          {/* Column 3: Appreciations (formerly Accreditation) */}
           <div className="flex flex-col items-center sm:items-start">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#695da5] px-2 py-1 text-white">Accreditation</h3>
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#695da5] px-2 py-1 text-white">Appreciations</h3>
             <div className="bg-white p-3 rounded-xl border-2 border-[#153462] shadow-[4px_4px_0px_0px_#153462]">
               <img src={HRDImg} alt="HRD Certification" className="h-16 w-auto grayscale hover:grayscale-0 transition-all cursor-crosshair" />
             </div>
           </div>
 
-          {/* Column 4: Connect */}
+          {/* Column 4: Socials */}
           <div className="flex flex-col items-center sm:items-start">
             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462] bg-[#ee424c] px-2 py-1 text-white">Socials</h3>
             <div className="flex gap-4">
