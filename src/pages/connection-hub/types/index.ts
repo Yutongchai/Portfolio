@@ -40,6 +40,8 @@ export interface AvailabilitySlot {
   day: string;
   time: string;
   available: boolean;
+  date?: string;
+  blockedReason?: string;
 }
 
 export interface ContactFormData {

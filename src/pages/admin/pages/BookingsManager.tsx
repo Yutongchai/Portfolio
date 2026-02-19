@@ -20,10 +20,90 @@ const BookingsManager: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [unavailableDates, setUnavailableDates] = useState<any[]>([]);
+    const [newUnavailable, setNewUnavailable] = useState({ date: '', reason: '' });
+    const [removingId, setRemovingId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchBookings();
+        fetchUnavailableDates();
     }, []);
+
+    const fetchUnavailableDates = async () => {
+        try {
+            const { data, error } = await (supabase as any)
+                .from('unavailable_dates')
+                .select('*')
+                .eq('is_active', true)
+                .order('date', { ascending: true });
+            if (error) throw error;
+            setUnavailableDates(data || []);
+        } catch (err) {
+            console.error('Error fetching unavailable dates', err);
+        }
+    };
+
+    const addUnavailableDate = async () => {
+        try {
+            if (!newUnavailable.date) return alert('Pick a date');
+            const payload = { date: newUnavailable.date, reason: newUnavailable.reason || null };
+            const { error } = await (supabase as any).from('unavailable_dates').insert([payload]);
+            if (error) throw error;
+            setNewUnavailable({ date: '', reason: '' });
+            fetchUnavailableDates();
+        } catch (err) {
+            console.error('Error adding unavailable date', err);
+            alert('Failed to add');
+        }
+    };
+
+    const updateUnavailableDate = async (id: string, updates: any) => {
+        try {
+            const { error } = await (supabase as any).from('unavailable_dates').update(updates).eq('id', id);
+            if (error) throw error;
+            fetchUnavailableDates();
+        } catch (err) {
+            console.error('Error updating unavailable date', err);
+            alert('Failed to update');
+        }
+    };
+
+    const [bulkText, setBulkText] = useState('');
+    const importBulk = async () => {
+        try {
+            if (!bulkText.trim()) return alert('Paste CSV lines: YYYY-MM-DD,Reason');
+            const lines = bulkText.split('\n').map(l => l.trim()).filter(Boolean);
+            const toInsert: any[] = [];
+            for (const ln of lines) {
+                const parts = ln.split(',').map(p => p.trim());
+                const date = parts[0];
+                const reason = parts[1] || null;
+                toInsert.push({ date, reason });
+            }
+            const { error } = await (supabase as any).from('unavailable_dates').insert(toInsert);
+            if (error) throw error;
+            setBulkText('');
+            fetchUnavailableDates();
+        } catch (err) {
+            console.error('Bulk import failed', err);
+            alert('Bulk import failed');
+        }
+    };
+
+    const removeUnavailableDate = async (id: string) => {
+        if (!confirm('Remove this blocked date? This will deactivate the block.')) return;
+        try {
+            setRemovingId(id);
+            const { error } = await (supabase as any).from('unavailable_dates').update({ is_active: false }).eq('id', id);
+            if (error) throw error;
+            await fetchUnavailableDates();
+        } catch (err) {
+            console.error('Error removing unavailable date', err);
+            alert('Failed to remove');
+        } finally {
+            setRemovingId(null);
+        }
+    };
 
     const fetchBookings = async () => {
         try {
@@ -132,6 +212,42 @@ const BookingsManager: React.FC = () => {
                     </div>
                 ) : (
                     <>
+                        {/* Unavailable Dates Manager */}
+                        <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Block Dates / Holidays</h3>
+                            <div className="flex gap-2 items-center flex-wrap">
+                                <input type="date" value={newUnavailable.date} onChange={(e) => setNewUnavailable(s => ({ ...s, date: e.target.value }))} className="px-3 py-2 border rounded-lg" />
+                                <input type="text" placeholder="Reason (e.g. Public Holiday)" value={newUnavailable.reason} onChange={(e) => setNewUnavailable(s => ({ ...s, reason: e.target.value }))} className="px-3 py-2 border rounded-lg flex-1" />
+                                <Button onClick={addUnavailableDate} className="bg-[#153462] text-white">Block Date</Button>
+                            </div>
+
+                            <div className="mt-4">
+                                <h4 className="text-sm text-gray-600 mb-2">Active Blocks</h4>
+                                <div className="space-y-2">
+                                    {unavailableDates.length === 0 && <div className="text-sm text-gray-500">No blocked dates.</div>}
+                                    {unavailableDates.map((d) => (
+                                        <div key={d.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-2 rounded">
+                                            <div className="flex-1">
+                                                <div className="font-medium">{new Date(d.date).toLocaleDateString()}</div>
+                                                <div className="text-xs text-gray-500">{d.reason || 'No reason'}</div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <input className="px-2 py-1 border rounded" defaultValue={d.reason || ''} onBlur={(e) => updateUnavailableDate(d.id, { reason: e.target.value })} />
+                                                <Button onClick={() => removeUnavailableDate(d.id)} disabled={removingId === d.id} className="bg-red-600 text-white">{removingId === d.id ? 'Removing...' : 'Remove'}</Button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            {/* Bulk import
+                            <div className="mt-4">
+                                <h4 className="text-sm text-gray-600 mb-2">Bulk Import (CSV lines: YYYY-MM-DD,Reason,recurring)</h4>
+                                <textarea className="w-full p-2 border rounded mb-2" rows={4} value={bulkText} onChange={(e) => setBulkText(e.target.value)} />
+                                <div className="flex gap-2 justify-end">
+                                    <Button onClick={importBulk} className="bg-[#153462] text-white">Import</Button>
+                                </div>
+                            </div> */}
+                        </div>
                         {filteredBookings.length === 0 ? (
                             <div className="text-center py-12 text-gray-500">
                                 {searchTerm ? 'No bookings found matching your search.' : 'No bookings yet.'}

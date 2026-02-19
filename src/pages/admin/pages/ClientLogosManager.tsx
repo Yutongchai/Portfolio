@@ -4,7 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import ClientLogoModal from '../components/ClientLogoModal';
-import ClientDomeGallery from '../../personal-story-section/components/ClientDomeGallery'; // Import the 3D gallery
+import ClientMarquee from '../../personal-story-section/components/ClientMarquee';
 
 interface ClientLogo {
   id: number;
@@ -25,22 +25,12 @@ const ClientLogosManager: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; logoUrl: string } | null>(null);
   const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
-  const [previewMode, setPreviewMode] = useState<'2d' | '3d'>('3d'); // Add preview mode toggle
 
   useEffect(() => {
     fetchLogos();
   }, []);
 
-  // Auto-rotate the previewed logo in the admin preview
-  useEffect(() => {
-    if (logos.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCurrentLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 3000); // rotate every 3s
-
-    return () => clearInterval(interval);
-  }, [logos.length]);
+  // (No auto-rotate needed when using the marquee preview)
 
   const fetchLogos = async () => {
     try {
@@ -140,7 +130,7 @@ const ClientLogosManager: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Logos</h2>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {logos.length} {logos.length === 1 ? 'logo' : 'logos'}
+                <div className="text-sm text-gray-500 dark:text-gray-400">Marquee</div>
             </span>
           </div>
           {loading ? (
@@ -207,30 +197,7 @@ const ClientLogosManager: React.FC = () => {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Live Preview</h2>
 
-              {/* Preview Mode Toggle */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">View:</span>
-                <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => setPreviewMode('2d')}
-                    className={`px-3 py-1 text-sm font-medium transition-colors ${previewMode === '2d'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                  >
-                    2D Grid
-                  </button>
-                  <button
-                    onClick={() => setPreviewMode('3d')}
-                    className={`px-3 py-1 text-sm font-medium transition-colors ${previewMode === '3d'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                  >
-                    3D Sphere
-                  </button>
-                </div>
-              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Live Preview</div>
             </div>
 
             {logos.length === 0 ? (
@@ -243,81 +210,14 @@ const ClientLogosManager: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-6">
-                {/* Preview Mode Content */}
-                {previewMode === '2d' ? (
-                  <>
-                    {/* 2D Grid Preview */}
-                    <div>
-                      <h3 className="text-xl font-bold text-center text-gray-900 dark:text-white mb-6">
-                        Our Trusted Partners
-                      </h3>
-
-                      {/* Small rotating carousel preview */}
-                      <div className="mb-6">
-                        <div className="flex items-center justify-center mb-4">
-                          <div className="w-48 h-48 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center p-6 shadow-md">
-                            <img
-                              src={logos[currentLogoIndex].logo_url}
-                              alt={logos[currentLogoIndex].company_name}
-                              className="max-w-full max-h-full object-contain"
-                            />
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                          {logos.map((_, idx) => (
-                            <button
-                              key={idx}
-                              onClick={() => setCurrentLogoIndex(idx)}
-                              aria-label={`Go to logo ${idx + 1}`}
-                              className={`w-2 h-2 rounded-full ${idx === currentLogoIndex ? 'bg-blue-600' : 'bg-gray-300'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Grid of logos */}
-                      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                        {logos.map((logo) => (
-                          <div
-                            key={logo.id}
-                            className="aspect-square flex items-center justify-center bg-white dark:bg-gray-800 rounded-lg p-3 hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-700"
-                          >
-                            <img
-                              src={logo.logo_url}
-                              alt={logo.company_name}
-                              className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                              title={logo.company_name}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {/* 3D Sphere Preview */}
-                    <div className="h-full rounded-lg overflow-hidden border flex items-start justify-center pb-6">
-                      <ClientDomeGallery
-                        images={clients}
-                        fit={0.8}
-                        minRadius={600}
-                        maxVerticalRotationDeg={0}
-                        segments={34}
-                        dragDampening={2}
-                        grayscale={false}
-                      />
-                    </div>
-
-                    <div className="text-center space-y-2">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Drag to rotate the sphere • Logos automatically rotate
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Showing {logoUrls.length} logos in 3D sphere view
-                      </p>
-                    </div>
-                  </>
-                )}
+                {/* Render same marquee as home page for preview */}
+                <div>
+                  {clients.length > 0 ? (
+                    <ClientMarquee logos={clients} autoScrollSpeed={0.6} pauseOnHover={true} />
+                  ) : (
+                    <div className="h-40 flex items-center justify-center text-gray-500">No logos to preview</div>
+                  )}
+                </div>
 
                 {/* Stats */}
                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -328,7 +228,7 @@ const ClientLogosManager: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Preview Mode</p>
-                      <p className="text-xl font-bold text-gray-900 dark:text-white">{previewMode.toUpperCase()}</p>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">Marquee</p>
                     </div>
                   </div>
                 </div>
@@ -344,7 +244,6 @@ const ClientLogosManager: React.FC = () => {
               </svg>
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 <span className="font-medium">Live Preview:</span> Changes made to logos will instantly update in the preview above.
-                {previewMode === '3d' && ' Drag the 3D sphere to rotate it.'}
               </div>
             </div>
           </div>

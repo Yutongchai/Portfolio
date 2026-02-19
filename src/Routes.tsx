@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes as RouterRoutes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes as RouterRoutes, Route, Navigate, useLocation } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AltHeader from './components/ui/AltHeader';
 
@@ -37,7 +37,8 @@ const Routes: React.FC = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ErrorBoundary>
-        <AltHeader />
+        {/* Render AltHeader only on non-admin routes */}
+        <HeaderGuard />
         <Suspense fallback={<PageLoader />}>
           <RouterRoutes>
             <Route path="/" element={<Home />} />
@@ -79,6 +80,13 @@ const Routes: React.FC = () => {
       </ErrorBoundary>
     </BrowserRouter>
   );
+};
+
+// HeaderGuard: shows AltHeader except for /admin routes
+const HeaderGuard: React.FC = () => {
+  const location = useLocation();
+  if (location.pathname.startsWith('/admin')) return null;
+  return <AltHeader />;
 };
 
 export default Routes;
