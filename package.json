@@ -2,7 +2,6 @@
   "name": "Portfolio",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://Yutongchai.github.io/Portfolio",
   "rocketCritical": {
     "dependencies": [
       "@dhiwise/component-tagger",
