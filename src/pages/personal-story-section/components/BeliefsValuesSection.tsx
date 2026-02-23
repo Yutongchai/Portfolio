@@ -4,9 +4,9 @@ import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
-import Engagement from '/Engagement.jpg';
-import Living from '/Living.jpg';
-import Valued from '/Valued.jpg';
+import Engagement from '../../../assets/Engagement.jpg';
+import Living from '../../../assets/Living.jpg';
+import Valued from '../../../assets/Valued.jpg';
 
 // --- Types ---
 type Belief = {
@@ -133,7 +133,7 @@ const BeliefsValuesSection = () => {
           <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: Engagement;
+      bgImage: Engagement,
     },
     {
       title: "LEARN",
@@ -147,7 +147,7 @@ const BeliefsValuesSection = () => {
           <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: Living;
+      bgImage: Living,
     },
     {
       title: "LEAD",
@@ -161,7 +161,7 @@ const BeliefsValuesSection = () => {
             <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: Valued;
+      bgImage: Valued,
     },
   ];
 
