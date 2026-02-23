@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
 
 // --- Types ---
@@ -47,55 +48,62 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="group relative h-[450px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl"
+      className="group relative h-[360px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl bg-white"
     >
-      {/* 1. The Background Image Layer */}
+      {/* 1. Top media band for image (keeps picture visible but not overwhelming) */}
       {belief.bgImage ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url('${belief.bgImage}')` }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-full overflow-hidden">
+          <img
+            src={belief.bgImage}
+            alt={belief.title}
+            className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+          />
+        </div>
       ) : (
-        <div className="absolute inset-0 bg-white" />
+        <div className="absolute top-0 left-0 right-0 h-[55%] bg-gray-100" />
       )}
 
-      {/* 2. Glassmorphism Overlay (Ensures readability) */}
-      <div className="absolute inset-0 bg-white/80 group-hover:bg-white/70 transition-colors duration-500" />
+      {/* subtle overlay over entire card for contrast */}
+      <div className="absolute inset-0 bg-white/60 group-hover:bg-white/55 transition-colors duration-500" />
 
-      {/* 3. Watermark Letter */}
+      {/* 3. Watermark Letter — smaller so it doesn't overpower the title */}
       <div
-        className="absolute -right-4 -bottom-10 text-[12rem] font-black opacity-[0.05] group-hover:opacity-10 group-hover:-translate-y-8 transition-all duration-700 pointer-events-none"
+        className="absolute right-6 bottom-6 text-[6.5rem] font-black opacity-[0.04] group-hover:opacity-10 transition-all duration-700 pointer-events-none"
         style={{ color: belief.color, transform: "translateZ(30px)" }}
       >
         {belief.letter}
       </div>
 
-      {/* 4. Content Layer */}
-      <div className="relative z-10 p-10 h-full flex flex-col" style={{ transform: "translateZ(75px)" }}>
-        <div
-          className="w-12 h-12 rounded-2xl mb-8 flex items-center justify-center text-2xl shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]"
-          style={{ backgroundColor: `${belief.color}20` }}
-        >
-          {belief.accent}
+      {/* 4. Content Layer — positioned below the media band */}
+      <div className="relative z-10 flex flex-col justify-between h-full" style={{ transform: "translateZ(75px)" }}>
+        <div className="p-8 pt-[55%] md:pt-[52%]">{/* padding-top reserve for media */}
+          <div
+            className="w-12 h-12 rounded-2xl mb-6 flex items-center justify-center text-2xl shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]"
+            style={{ backgroundColor: `${belief.color}20` }}
+          >
+            {belief.accent}
+          </div>
+
+          <h3 className="text-3xl md:text-4xl font-extrabold text-[#23242b] mb-3 group-hover:text-[#e1620b] transition-colors">
+            {belief.title}
+          </h3>
+
+          <p className="text-base md:text-lg text-gray-600 leading-relaxed font-medium mb-6 max-w-prose">
+            {belief.description}
+          </p>
         </div>
 
-        <h3 className="text-2xl font-extrabold text-[#23242b] mb-4 group-hover:text-[#e1620b] transition-colors">
-          {belief.title}
-        </h3>
-
-        <p className="text-gray-600 leading-relaxed font-medium mb-auto">
-          {belief.description}
-        </p>
-
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          whileHover={{ y: 0, opacity: 1 }}
-          className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
-          style={{ color: belief.color }}
-        >
-          View Details
-          <span className="w-8 h-8 rounded-full flex items-center justify-center border border-current">↗</span>
-        </motion.div>
+        <div className="p-8 pt-0">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileHover={{ y: 0, opacity: 1 }}
+            className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
+            style={{ color: belief.color }}
+          >
+            View Details
+            <span className="w-8 h-8 rounded-full flex items-center justify-center border border-current">↗</span>
+          </motion.div>
+        </div>
       </div>
 
       {/* Animated accent line at bottom */}
@@ -115,7 +123,13 @@ const BeliefsValuesSection = () => {
       description: "Where fun turns into teamwork",
       letter: "E",
       color: "#12a28f",
-      accent: "🟢",
+      accent: (
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="8" width="20" height="3" rx="1.5" fill="#153462" />
+          <rect x="6" y="14.5" width="20" height="3" rx="1.5" fill="#79989f" />
+          <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
+        </svg>
+      ),
       bgImage: import.meta.env.BASE_URL + "/Engagement.jpg"
     },
     {
@@ -123,7 +137,13 @@ const BeliefsValuesSection = () => {
       description: "Where experiences turn into growth",
       letter: "I",
       color: "#fcb22f",
-      accent: "🟡",
+      accent: (
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="8" width="20" height="3" rx="1.5" fill="#153462" />
+          <rect x="6" y="14.5" width="20" height="3" rx="1.5" fill="#79989f" />
+          <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
+        </svg>
+      ),
       bgImage: import.meta.env.BASE_URL + "/Living.jpg"
     },
     {
@@ -131,12 +151,19 @@ const BeliefsValuesSection = () => {
       description: "Where teams turn into leaders",
       letter: "T",
       color: "#0074b4",
-      accent: "🔵",
+      accent: (
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="8" width="20" height="3" rx="1.5" fill="#153462" />
+            <rect x="6" y="14.5" width="20" height="3" rx="1.5" fill="#79989f" />
+            <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
+        </svg>
+      ),
       bgImage: import.meta.env.BASE_URL + "/Valued.jpg" // You can change this to /t.jpg if available
     },
   ];
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  
   const curvedTextRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
 
@@ -155,138 +182,43 @@ const BeliefsValuesSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
   const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
-  const curvedTextY = useTransform(curvedTextScroll, [0, 0.5, 1], [100, -20, 0]);
-  const curvedTextScale = useTransform(curvedTextScroll, [0, 0.5, 1], [0.8, 1.1, 1]);
-  const curvedTextOpacity = useTransform(curvedTextScroll, [0, 0.5, 1], [0, 1, 1]);
-
-  useEffect(() => {
-    const unsubscribe = curvedTextScroll.on("change", (latest) => {
-      if (latest > 0.3 && latest < 0.7) {
-        const curveAmount = 20 + Math.sin(latest * Math.PI * 4) * 30;
-        gsap.to("#curved-path", {
-          attr: { d: `M 30,100 Q 400,${100 - curveAmount} 770,100` },
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      }
-    });
-    return () => unsubscribe();
-  }, [curvedTextScroll]);
-
-  return (
+ return (
+  
     <section
       id="beliefs-values"
       ref={containerRef}
-      className="py-24 px-4 overflow-hidden relative"
+      /* We use a gradient that transitions from light beige to the dark charcoal of your images */
+      className="py-16 px-4 relative transition-colors duration-1000"
+      style={{
+        background: `linear-gradient(to bottom, #f5f7fa 0%, #FFEBD2 40%, #020202 90%)`
+      }}
     >
-      {/* ANIMATED GRADIENT BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#f5f7fa] via-[#FFEBD2] to-white z-0">
-        {/* Animated floating shapes */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          {/* Teal Blob - Top Left */}
-          <div
-            className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-8 blur-3xl animate-blob-1"
-            style={{ backgroundColor: '#12a28f' }}
-          />
-          {/* Gold Blob - Top Right */}
-          <div
-            className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-blob-2"
-            style={{ backgroundColor: '#fcb22f' }}
-          />
-          {/* Blue Blob - Middle */}
-          <div
-            className="absolute top-1/2 left-1/3 w-[450px] h-[450px] rounded-full opacity-8 blur-3xl animate-blob-3"
-            style={{ backgroundColor: '#0074b4' }}
-          />
-          {/* Orange Blob - Bottom Left */}
-          <div
-            className="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full opacity-10 blur-3xl animate-blob-4"
-            style={{ backgroundColor: '#f68921' }}
-          />
-          {/* Navy Blob - Bottom Right */}
-          <div
-            className="absolute -bottom-20 -right-10 w-[600px] h-[600px] rounded-full opacity-5 blur-3xl animate-blob-5"
-            style={{ backgroundColor: '#153462' }}
-          />
-
-          {/* Geometric pattern overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-              backgroundImage: `radial-gradient(circle, #23242b 1px, transparent 1px)`,
-              backgroundSize: '30px 30px'
-            }}
-          />
-        </div>
+      {/* 1. ANIMATED BLOBS (Kept for the top half) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl animate-blob-1" style={{ backgroundColor: '#12a28f' }} />
+          <div className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl animate-blob-2" style={{ backgroundColor: '#fcb22f' }} />
       </div>
 
-      {/* Light overlay for content readability */}
-      <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] z-0" />
-
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="text-center mb-24">
-          <h2 className="text-5xl font-black text-[#23242b] mb-4">
-            Our Beliefs & <span className="text-[#fcb22f]">Values</span>
+        {/* Header - Styled to match "THE EITO FUNDAMENTALS" look */}
+        <div className="text-center mb-20 pt-12">
+          <h2 className="text-sm font-black uppercase tracking-[0.4em] text-[#153462] mb-4 opacity-70">
+            The EITO Fundamentals
           </h2>
-          <p className="text-gray-500 font-medium">Real experiences. Real connections. Real growth.</p>
+          <h1 className="text-5xl md:text-6xl font-black text-[#23242b]">
+            Our Beliefs & <span className="text-[#f68921]">Values</span>
+          </h1>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-32" style={{ perspective: "1200px" }}>
+        {/* Cards Grid - Now sitting on the deepening background */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24" style={{ perspective: "1200px" }}>
           {beliefs.map((belief, index) => (
             <TiltCard key={index} belief={belief} />
           ))}
         </div>
 
-        {/* Foundation Phrase */}
-        <div className="py-20 flex flex-col items-center my-20">
-          <p className="text-4xl sm:text-6xl font-black text-center text-[#23242b] leading-tight">
-            That belief is the <br />
-            <span className="relative inline-block mt-4">
-              {mouse.isOver && (
-                <motion.div
-                  className="absolute inset-0 z-0 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(400px circle at ${mouse.x}px ${mouse.y}px, #fcb22f66 0%, transparent 100%)`,
-                  }}
-                />
-              )}
-              <motion.span
-                style={{
-                  y: smoothY,
-                  scale,
-                  opacity,
-                  rotate: "-15deg", // Set your desired tilt degree here
-                  backgroundColor: '#fcb22f',
-                }}
-                className="px-8 py-2 rounded-2xl text-white shadow-xl relative z-10"
-                onMouseMove={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top, isOver: true });
-                }}
-                onMouseLeave={() => setMouse(m => ({ ...m, isOver: false }))}
-              >
-                FOUNDATION
-              </motion.span>
-            </span>
-            <br />
-            <span className="opacity-90">of everything we do.</span>
-          </p>
-        </div>
-
-        {/* Fundamentals Section */}
-        <div className="mt-20" ref={curvedTextRef}>
-          <motion.div
-            className="mb-16 px-6 py-12 overflow-visible relative"
-            style={{
-              y: curvedTextY,
-              scale: curvedTextScale,
-              opacity: curvedTextOpacity
-            }}
-          >
-          </motion.div>
-        </div>
+        {/* This creates the visual "Floor" before the next section */}
+        <FoundationPhrase />
       </div>
     </section>
   );

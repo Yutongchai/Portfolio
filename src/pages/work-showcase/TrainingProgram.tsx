@@ -689,7 +689,7 @@ const TrainingProgram = () => {
       </section>
 
       {/* 6. MEASURABLE IMPACT - DATA OVERLAY WITH PARALLAX */}
-      <section
+      {/* <section
         className="py-32 px-4 relative"
         style={{
           backgroundImage: `url(${TrainingImg})`,
@@ -698,13 +698,13 @@ const TrainingProgram = () => {
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat'
         }}
-      >
+      > */}
         {/* Dark Overlay for Readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#153462]/90 via-[#18616e]/85 to-[#153462]/90" />
+        {/* <div className="absolute inset-0 bg-gradient-to-br from-[#153462]/90 via-[#18616e]/85 to-[#153462]/90" /> */}
 
         {/* Content */}
-        <div className="max-w-7xl mx-auto relative z-10">
-          <motion.div
+        {/* <div className="max-w-7xl mx-auto relative z-10"> */}
+          {/* <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -723,9 +723,9 @@ const TrainingProgram = () => {
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
               Our training programmes deliver tangible results that transform organizations
             </p>
-          </motion.div>
+          </motion.div> */}
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+         {/*  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {improvements.map((item, idx) => (
               <motion.div
                 key={idx}
@@ -735,28 +735,23 @@ const TrainingProgram = () => {
                 transition={{ delay: idx * 0.15, duration: 0.6 }}
                 className="relative group"
               >
-                {/* Glass Card */}
                 <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-white/10 border-2 border-white/20 p-6 md:p-8 hover:bg-white/20 hover:scale-105 transition-all duration-300 shadow-2xl">
-                  {/* Gradient Accent */}
+         
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#f68921] to-[#fcb22f]" />
 
-                  {/* Number */}
                   <div className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-3">
                     <AnimatedCounter end={item.metric} suffix={item.suffix} />
                   </div>
 
-                  {/* Label */}
                   <div className="text-white/90 text-base md:text-lg font-semibold leading-tight">
                     {item.label}
                   </div>
 
-                  {/* Shimmer Effect */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   </div>
                 </div>
 
-                {/* Decorative Element */}
                 <motion.div
                   animate={{
                     rotate: [0, 360],
@@ -770,10 +765,10 @@ const TrainingProgram = () => {
                 />
               </motion.div>
             ))}
-          </div>
+          </div> */}
 
           {/* Bottom CTA */}
-          <motion.div
+         {/*  <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -792,10 +787,10 @@ const TrainingProgram = () => {
               Start Achieving Results <ArrowRight size={24} />
             </motion.button>
           </motion.div>
-        </div>
+        </div> */}
 
         {/* Parallax Decorative Elements */}
-        <motion.div
+       {/*  <motion.div
           animate={{
             y: [0, -20, 0],
             opacity: [0.3, 0.5, 0.3]
@@ -818,8 +813,8 @@ const TrainingProgram = () => {
             ease: "easeInOut"
           }}
           className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-[#12a28f]/30 blur-3xl"
-        />
-      </section>
+        /> */}
+      {/* </section> */}
 
       {/* 7. CORE VALUES CAROUSEL */}
       <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">

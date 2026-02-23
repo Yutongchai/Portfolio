@@ -36,7 +36,7 @@ const CorePrinciple: React.FC = () => {
   }, [scrollYProgress]);
 
   return (
-    <div ref={rootRef} className="relative overflow-hidden bg-[#fcfaf8] pt-24 pb-12">
+    <div ref={rootRef} className="relative overflow-hidden bg-[#fcfaf8] pt-10 pb-12">
       {/* --- PREMIUM ATMOSPHERIC BACKGROUND --- */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
 
@@ -70,55 +70,62 @@ const CorePrinciple: React.FC = () => {
       </div>
 
       {/* --- MAIN CONTENT --- */}
-      <motion.div
-        className="mb-6 px-6 py-12 overflow-visible relative z-10"
-        style={{ y: smoothY, scale: curvedTextScale, opacity: curvedTextOpacity }}
-      >
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Header Row */}
-          <div className="w-full flex items-center justify-center gap-6 pt-14">
-            <h3 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-[#153462] whitespace-nowrap">CORE</h3>
-            <h3 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-[#f68921] whitespace-nowrap">PRINCIPLES</h3>
-          </div>
-
-          {/* Curved Text Section */}
-          <div className="w-full flex justify-center mt-6">
-            <div
-              className="curved-text-container flex-1 flex justify-center max-w-3xl"
-              onMouseEnter={() => {
-                gsap.killTweensOf('#curved-path');
-                gsap.to('#curved-path', {
-                  attr: { d: 'M 30,100 Q 400,40 770,100' },
-                  ease: 'elastic.out(1.4, 0.4)',
-                  duration: 0.8
-                });
-              }}
-              onMouseLeave={() => {
-                gsap.killTweensOf('#curved-path');
-                gsap.to('#curved-path', {
-                  attr: { d: 'M 30,100 Q 400,100 770,100' },
-                  ease: 'elastic.out(1.8, 0.2)',
-                  duration: 1.5
-                });
-              }}
-            >
-              <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
-                <path id="curved-path" fill="none" d="M 30,100 Q 400,100 770,100" />
-                <text className="font-bold uppercase tracking-[0.2em] fill-[#103C61]/60 text-[40px]">
-                  <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                      <tspan dy="-28">The E I T O Fundamentals</tspan>
-                  </textPath>
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Principles Grid Section */}
-      <div className="relative z-20">
-        <ImageHoverScrollSection />
+<div className="relative z-10 max-w-7xl mx-auto px-6">
+  <div className="flex flex-col md:flex-row items-start gap-12">
+    
+    {/* Left Column: Sticky Header (Reduced width to md:w-[35%]) */}
+    <motion.div
+      className="md:sticky md:top-24 w-full md:w-[35%] py-12 z-10"
+      style={{ opacity: curvedTextOpacity }}
+    >
+      <div className="space-y-2 pt-16">
+        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#153462]">
+          CORE
+        </h3>
+        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#f68921]">
+          PRINCIPLES
+        </h3>
       </div>
+
+      {/* Curved Text Section */}
+              <div className="w-full flex justify-center md:justify-start mt-6">
+                <div
+                  className="curved-text-container flex-1 flex justify-center max-w-3xl"
+                  onMouseEnter={() => {
+                    gsap.killTweensOf('#curved-path');
+                    gsap.to('#curved-path', {
+                      attr: { d: 'M 30,100 Q 400,40 770,100' },
+                      ease: 'elastic.out(1.4, 0.4)',
+                      duration: 0.8
+                    });
+                  }}
+                  onMouseLeave={() => {
+                    gsap.killTweensOf('#curved-path');
+                    gsap.to('#curved-path', {
+                      attr: { d: 'M 30,100 Q 400,100 770,100' },
+                      ease: 'elastic.out(1.8, 0.2)',
+                      duration: 1.5
+                    });
+                  }}
+                >
+                  <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
+                    <path id="curved-path" fill="none" d="M 30,100 Q 400,100 770,100" />
+                    <text className="font-bold uppercase tracking-[0.2em] fill-[#103C61]/60 text-[40px]">
+                      <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
+                          <tspan dy="-28">The E I T O Fundamentals</tspan>
+                      </textPath>
+                    </text>
+                  </svg>
+                </div>
+                </div>
+        </motion.div>
+
+            {/* Right Column: Cards (Increased width to md:w-[65%]) */}
+            <div className="w-full md:w-[65%] relative z-20">
+            <ImageHoverScrollSection />
+            </div>
+        </div>
+        </div>
     </div>
   );
 };

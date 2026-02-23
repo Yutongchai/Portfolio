@@ -18,6 +18,33 @@
 .eito-section-row .eito-section-col:hover {
   opacity: 1;
 }
+
+@keyframes blob-move {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-blob-1 {
+  animation: blob-move 10s infinite alternate;
+}
+/* Add a mask to the bottom so the blobs fade out as it gets dark */
+.beliefs-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(to top, #23242b, transparent);
+  pointer-events: none;
+}
 .eito-section {
   position: relative;
   display: block;

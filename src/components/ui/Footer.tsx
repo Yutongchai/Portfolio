@@ -53,13 +53,16 @@ const MobileSection: React.FC<MobileSectionProps> = ({ title, children, accentBg
 
 const Footer = () => {
   return (
-    <footer className="relative w-full bg-white border-t-[12px] border-[#153462] pt-20 pb-10">
+    <footer className="relative z-40 w-full bg-white pt-20 pb-10">
       {/* Decorative Brand Strips - Positioned at the very top of footer */}
-      <div className="absolute top-0 left-0 w-full flex flex-col pointer-events-none">
-        <div className="w-full h-1.5" style={{ backgroundColor: COLORS.ORANGE }} />
-        <div className="w-full h-1.5" style={{ backgroundColor: COLORS.TEAL }} />
+    <div className="absolute top-0 left-0 w-full flex flex-col pointer-events-none z-50">
+  {/* Wrap them in a flex container with a defined height to ensure equal scaling */}
+      <div className="w-full flex flex-col">
+        <div className="w-full h-[8px] block" style={{ backgroundColor: COLORS.NAVY }} />
+        <div className="w-full h-[7px] block" style={{ backgroundColor: COLORS.ORANGE }} />
+        <div className="w-full h-[7px] block" style={{ backgroundColor: COLORS.TEAL }} />
       </div>
-
+    </div>
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
 
         {/* CUSTOMER REQUEST: Logo on Top */}
@@ -76,15 +79,16 @@ const Footer = () => {
           <h2 className="text-[#153462] text-2xl md:text-4xl font-black italic uppercase tracking-tighter leading-tight">
             We <span className="text-[#f68921]">design</span> experiences that bring teams together
           </h2>
-          {/* Signature Underline */}
-          <div className="mt-6 flex justify-center gap-1">
-            <div className="w-16 h-2 bg-[#fcb22f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
-            <div className="w-4 h-2 bg-[#12a28f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
+          {/* Signature Underline - three equal strips */}
+          <div className="mt-6 flex justify-center gap-2">
+            <div className="w-12 h-2 bg-[#fcb22f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
+            <div className="w-12 h-2 bg-[#12a28f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
+            <div className="w-12 h-2 bg-[#153462] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
           </div>
         </div>
 
         {/* Navigation Grid */}
-        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 py-8 md:py-12 border-t-4 border-[#153462]">
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6 py-8 md:py-10 border-t-4 border-[#153462]">
 
           {/* Column 1: Company (accordion on mobile) */}
           <div className="flex flex-col items-center sm:items-start">

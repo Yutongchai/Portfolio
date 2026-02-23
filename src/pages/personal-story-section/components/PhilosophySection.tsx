@@ -7,75 +7,6 @@ import { Button } from '../../../components/ui/Button';
 import ClientMarquee from './ClientMarquee';
 import { supabase } from '../../../config/supabaseClient';
 
-// CSS for floating blob animations
-const animationStyles = `
-  @keyframes float-philosophy-1 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-    33% {
-      transform: translate(50px, -80px) rotate(120deg) scale(1.1);
-    }
-    66% {
-      transform: translate(-40px, 60px) rotate(240deg) scale(0.95);
-    }
-  }
-
-  @keyframes float-philosophy-2 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    50% {
-      transform: translate(-60px, 100px) rotate(180deg);
-    }
-  }
-
-  @keyframes float-philosophy-3 {
-    0%, 100% {
-      transform: translate(0, 0) scale(1);
-    }
-    33% {
-      transform: translate(-70px, -50px) scale(1.15);
-    }
-    66% {
-      transform: translate(40px, 80px) scale(0.9);
-    }
-  }
-
-  @keyframes float-philosophy-4 {
-    0%, 100% {
-      transform: translate(0, 0) rotate(0deg) scale(1);
-      opacity: 0.05;
-    }
-    50% {
-      transform: translate(80px, -60px) rotate(180deg) scale(1.2);
-      opacity: 0.08;
-    }
-  }
-
-  .animate-float-philosophy-1 {
-    animation: float-philosophy-1 28s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-2 {
-    animation: float-philosophy-2 22s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-3 {
-    animation: float-philosophy-3 26s ease-in-out forwards;
-  }
-
-  .animate-float-philosophy-4 {
-    animation: float-philosophy-4 24s ease-in-out forwards;
-  }
-`;
-
-// Inject styles into document
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement("style");
-  styleSheet.textContent = animationStyles;
-  document.head.appendChild(styleSheet);
-}
 
 // Google reviews removed per request
 
@@ -120,12 +51,8 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         {/* Our Clients Section - Clean White Background */}
         <div className="py-16">
           {/* Section Header */}
-          <motion.div
+          <div
             className="text-center mb-16 px-6"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
           >
             <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
               Trusted Partnerships
@@ -138,7 +65,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
               We have a handsome list of clients to be proud of. <br className="hidden md:block" />
               <span className="text-[#153462]">Book today</span> and watch your company join the list!
             </p>
-          </motion.div>
+          </div>
 
           {/* Horizontal Scrolling Carousel Wrapper */}
           <div className="relative">
@@ -156,31 +83,12 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
 
         {/* Unified Background Section for Content + Testimonials */}
         <div className="relative overflow-hidden">
-          {/* Single Continuous Animated Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#eef6f8] via-[#f7fbfd] to-white z-0">
-            {/* Floating Blobs (subtle) */}
-            <div
-              className="absolute top-12 -left-28 w-[360px] h-[360px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-1"
-              style={{ backgroundColor: '#12a28f' }}
-            />
-            <div
-              className="absolute top-1/4 right-1/4 w-[320px] h-[320px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-2"
-              style={{ backgroundColor: '#fcb22f' }}
-            />
-            <div
-              className="absolute top-1/2 -right-12 w-[380px] h-[380px] rounded-full opacity-[0.06] blur-3xl animate-float-philosophy-3"
-              style={{ backgroundColor: '#f68921' }}
-            />
-            <div
-              className="absolute bottom-12 left-1/4 w-[420px] h-[420px] rounded-full opacity-[0.05] blur-3xl animate-float-philosophy-4"
-              style={{ backgroundColor: '#153462' }}
-            />
-          </div>
+       
 
           {/* Content Layer */}
           <div className="relative z-10">
             {/* Additional content section */}
-            <section className="py-16 px-4">
+            <section className="py-8 px-4">
               <div className="max-w-4xl mx-auto text-center">
                 <motion.h2
                   initial={{ opacity: 0 }}
@@ -209,7 +117,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             )} */}
             {/* Google Reviews banner - clickable and opens Google Reviews in a new tab */}
             <motion.div
-              className="py-16"
+              className="py-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -257,7 +165,7 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         <div className="w-full">
           <div
             className="w-full flex flex-col md:flex-row items-stretch overflow-hidden relative"
-            style={{ minHeight: '480px' }}
+            style={{ minHeight: '400px' }}
           >
             {/* Right Side: The Photo (Hidden on mobile or as background) */}
             <div
