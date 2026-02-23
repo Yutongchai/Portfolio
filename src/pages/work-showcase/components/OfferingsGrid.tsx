@@ -25,10 +25,7 @@ const OfferingsGrid: React.FC<OfferingsGridProps> = ({ offerings }) => {
 };
 
 function GlassCard({ offering, index }: { offering: Offering; index: number }) {
-  // Convert hex color to gradient if provided
-  const gradientColor = offering.accentColor
-    ? `from-[${offering.accentColor}] to-[${offering.accentColor}]/80`
-    : 'from-[#fcb22f] to-[#fcb22f]/80';
+  // Use inline styles for dynamic colors (avoid dynamic Tailwind classes)
 
   return (
     <motion.div

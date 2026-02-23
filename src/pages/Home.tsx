@@ -75,11 +75,7 @@ const Home: React.FC = () => {
 
       <div className="min-h-screen" style={{ opacity: isReady ? 1 : 0, transition: 'opacity 420ms ease', pointerEvents: isReady ? 'auto' : 'none' }}>
         <SEOHead config={getSEOConfig()} includeSchemas={currentPage === 'home'} />
-        
-        <motion.div
-          className="fixed top-0 left-0 right-0 h-1 bg-accent origin-left z-50"
-          style={{ scaleX }}
-        />
+     
 
         {/* Global AltHeader is rendered site-wide; remove page-level header. */}
 
