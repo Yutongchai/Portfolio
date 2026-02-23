@@ -130,7 +130,7 @@ const BeliefsValuesSection = () => {
           <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: process.env.PUBLIC_URL + "/Engagement.jpg"
+      bgImage: import.meta.env.BASE_URL + "/Engagement.jpg"
     },
     {
       title: "LEARN",
@@ -144,7 +144,7 @@ const BeliefsValuesSection = () => {
           <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: process.env.PUBLIC_URL + "/Living.jpg"
+      bgImage: import.meta.env.BASE_URL + "/Living.jpg"
     },
     {
       title: "LEAD",
@@ -158,7 +158,7 @@ const BeliefsValuesSection = () => {
             <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
-      bgImage: process.env.PUBLIC_URL + "/Valued.jpg" // You can change this to /t.jpg if available
+      bgImage: import.meta.env.BASE_URL + "/Valued.jpg" // You can change this to /t.jpg if available
     },
   ];
 
