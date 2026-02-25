@@ -130,7 +130,25 @@ const TrainingProgram = () => {
     document.getElementById('training-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    // 1. Get the ID from storage
+    const formId = sessionStorage.getItem('scrollToFormId');
 
+    if (formId) {
+      // 2. We use a slightly longer timeout (600ms) because 
+      // these pages use Lazy Loading for the forms.
+      const timer = setTimeout(() => {
+        const el = document.getElementById(formId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          // 3. Clean up so it doesn't scroll again on refresh
+          sessionStorage.removeItem('scrollToFormId');
+        }
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
   return (
     <>
       {/* Global AltHeader handles site navigation */}
@@ -721,12 +739,12 @@ const TrainingProgram = () => {
           backgroundRepeat: 'no-repeat'
         }}
       > */}
-        {/* Dark Overlay for Readability */}
-        {/* <div className="absolute inset-0 bg-gradient-to-br from-[#153462]/90 via-[#18616e]/85 to-[#153462]/90" /> */}
+      {/* Dark Overlay for Readability */}
+      {/* <div className="absolute inset-0 bg-gradient-to-br from-[#153462]/90 via-[#18616e]/85 to-[#153462]/90" /> */}
 
-        {/* Content */}
-        {/* <div className="max-w-7xl mx-auto relative z-10"> */}
-          {/* <motion.div
+      {/* Content */}
+      {/* <div className="max-w-7xl mx-auto relative z-10"> */}
+      {/* <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -747,7 +765,7 @@ const TrainingProgram = () => {
             </p>
           </motion.div> */}
 
-         {/*  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      {/*  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {improvements.map((item, idx) => (
               <motion.div
                 key={idx}
@@ -789,8 +807,8 @@ const TrainingProgram = () => {
             ))}
           </div> */}
 
-          {/* Bottom CTA */}
-         {/*  <motion.div
+      {/* Bottom CTA */}
+      {/*  <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -811,8 +829,8 @@ const TrainingProgram = () => {
           </motion.div>
         </div> */}
 
-        {/* Parallax Decorative Elements */}
-       {/*  <motion.div
+      {/* Parallax Decorative Elements */}
+      {/*  <motion.div
           animate={{
             y: [0, -20, 0],
             opacity: [0.3, 0.5, 0.3]

@@ -1,4 +1,5 @@
-import SEOHead from "../../components/SEOHead"; 
+import React from "react";
+import SEOHead from "../../components/SEOHead";
 import { pageSEO } from "../../config/seoConfig";
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -221,6 +222,20 @@ const ConnectionHub = () => {
     return slots;
   }, [bookedSlotIds, unavailableDates]);
 
+  // Scroll to form after navigation if sessionStorage flag is set
+  useEffect(() => {
+    const formId = sessionStorage.getItem('scrollToFormId');
+    if (formId) {
+      setTimeout(() => {
+        const el = document.getElementById(formId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          sessionStorage.removeItem('scrollToFormId');
+        }
+      }, 400);
+    }
+  }, []);
+
   return (
     <>
       <SEOHead config={pageSEO.connectionHub} />
@@ -304,92 +319,125 @@ const ConnectionHub = () => {
               ))}
             </div>
 
-   {/* CLIENT TRUST SECTION */}
-{/* CLIENT TRUST SECTION */}
-<section className="max-w-7xl mx-auto px-6 mb-24">
-  <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-    <div className="max-w-xl">
-      <div className="flex items-center gap-2 mb-4">
-        <div className="h-[2px] w-12 bg-[#fcb22f]"></div>
-        <span className="text-[#153462] font-black uppercase tracking-[0.3em] text-[10px]">Track Record</span>
-      </div>
-      <h2 className="text-4xl font-black text-[#153462] uppercase italic leading-none">
-        Trusted By<span className="text-[#f68921]">...</span>
-      </h2>
-    </div>
-    <p className="text-slate-400 font-bold text-sm md:text-right max-w-xs leading-tight">
-      Empowering teams from Malaysia's leading brands to reach their peak potential.
-    </p>
-  </div>
+            {/* CLIENT TRUST SECTION */}
+            <section className="max-w-7xl mx-auto px-6 mb-24">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div className="max-w-xl">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-[2px] w-12 bg-[#fcb22f]"></div>
+                    <span className="text-[#153462] font-black uppercase tracking-[0.3em] text-[10px]">Track Record</span>
+                  </div>
+                  <h2 className="text-4xl font-black text-[#153462] uppercase italic leading-none">
+                    Trusted By<span className="text-[#f68921]">...</span>
+                  </h2>
+                </div>
+                <p className="text-slate-400 font-bold text-sm md:text-right max-w-xs leading-tight">
+                  Empowering teams from Malaysia's leading brands to reach their peak potential.
+                </p>
+              </div>
 
-  <div className="relative group border-y-2 border-slate-100/50 py-10">
-    {/* Gradient fades for a more premium look */}
-    <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
-    <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
-    
-    {clientLogos.length > 0 && (
-      <ClientMarquee logos={clientLogos} autoScrollSpeed={0.5} pauseOnHover={true} />
-    )}
-  </div>
-</section>
+              <div className="relative group border-y-2 border-slate-100/50 py-10">
+                {/* Gradient fades for a more premium look */}
+                <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
 
-        {/* THE EITO APPROACH / VALUE SECTION */}
-<section className="max-w-7xl mx-auto px-6 mb-24 text-center">
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="mb-16"
-  >
-    <h2 className="text-4xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter mb-4">
-      Stop guessing, <span className="text-[#f68921]">Start Growing.</span>
-    </h2>
-    <p className="text-slate-500 font-bold max-w-2xl mx-auto text-lg leading-relaxed">
-      Whether you're looking for a high-energy team building retreat or a 
-      long-term corporate culture transformation, it starts with a conversation.
-    </p>
-  </motion.div>
+                {clientLogos.length > 0 && (
+                  <ClientMarquee logos={clientLogos} autoScrollSpeed={0.5} pauseOnHover={true} />
+                )}
+              </div>
+            </section>
 
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-    {[
-      { 
-        title: "No Fluff", 
-        desc: "We skip the boring icebreakers. Every minute we spend together is designed for real ROI.", 
-        icon: <CheckCircle2 />, 
-        color: COLORS.TEAL 
-      },
-      { 
-        title: "Expert Guided", 
-        desc: "You aren't talking to a salesperson. You're talking to a certified lead coach with 10+ years experience.", 
-        icon: <Sparkles />, 
-        color: COLORS.GOLD 
-      },
-      { 
-        title: "Local Roots", 
-        desc: "Deeply familiar with Malaysian corporate culture—from KL to JB and beyond.", 
-        icon: <Briefcase />, 
-        color: COLORS.NAVY 
-      },
-      { 
-        title: "Fast Track", 
-        desc: "Time is money. Expect a fully customized proposal in your inbox within 24 hours of our call.", 
-        icon: <ArrowRight />, 
-        color: COLORS.ORANGE 
-      }
-    ].map((item, i) => (
-      <div 
-        key={i} 
-        className="p-8 border-4 border-[#153462] bg-white shadow-[8px_8px_0px_0px_#153462] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-left group"
-      >
-        <div className="mb-6 p-3 inline-block bg-slate-50 border-2 border-[#153462] group-hover:bg-[#153462] group-hover:text-white transition-colors" style={{ color: item.color }}>
-          {item.icon}
-        </div>
-        <h4 className="font-black uppercase text-lg mb-3 text-[#153462]">{item.title}</h4>
-        <p className="text-sm font-bold text-slate-500 leading-relaxed">{item.desc}</p>
-      </div>
-    ))}
-  </div>
-</section>
+            {/* THE EITO APPROACH / VALUE SECTION */}
+            <section className="max-w-7xl mx-auto px-6 mb-24 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mb-16"
+              >
+                <h2 className="text-4xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter mb-4">
+                  Stop guessing, <span className="text-[#f68921]">Start Growing.</span>
+                </h2>
+                <p className="text-slate-500 font-bold max-w-2xl mx-auto text-lg leading-relaxed">
+                  Whether you're looking for a high-energy team building retreat or a
+                  long-term corporate culture transformation, it starts with a conversation.
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                {[
+                  {
+                    title: "Team Building",
+                    icon: <Sparkles size={32} />,
+                    color: COLORS.TEAL,
+                    servicePath: "/services/team-building",
+                    formId: "team-building-questionnaire"
+                  },
+                  {
+                    title: "Corporate Training",
+                    icon: <Briefcase size={32} />,
+                    color: COLORS.GOLD,
+                    servicePath: "/services/training-program",
+                    formId: "training-form"
+                  },
+                  {
+                    title: "CSR Programs",
+                    icon: <CheckCircle2 size={32} />,
+                    color: COLORS.NAVY,
+                    servicePath: "/services/csr",
+                    formId: "csr-inquiry"
+                  },
+                  {
+                    title: "Corporate Events",
+                    icon: <ArrowRight size={32} />,
+                    color: COLORS.ORANGE,
+                    servicePath: "/services/corporate-event",
+                    formId: "corporate-event-questionnaire"
+                  }
+                ].map((service, i) => (
+                  <div
+                    key={i}
+                    className="p-6 border-4 border-[#153462] bg-white shadow-[6px_6px_0px_0px_#153462] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-left group flex flex-col"
+                  >
+                    {/* Header Section: Icon and Title side-by-side */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <div
+                        className="p-2.5 bg-slate-50 border-2 border-[#153462] group-hover:bg-[#153462] group-hover:text-white transition-colors shrink-0"
+                        style={{ color: service.color }}
+                      >
+                        {/* Reduced icon size slightly for better fit */}
+                        {React.cloneElement(service.icon as React.ReactElement, { size: 24 })}
+                      </div>
+                      <h4 className="font-black uppercase text-base leading-tight text-[#153462]">
+                        {service.title}
+                      </h4>
+                    </div>
+
+                    {/* Brief Description (Optional - adds context without taking space) */}
+                    <p className="text-slate-500 text-xs font-bold mb-6 line-clamp-2">
+                      Enquire about our professional {service.title.toLowerCase()} solutions today.
+                    </p>
+
+                    {/* Button Section: Removed mt-8 to prevent massive gaps */}
+                    <button
+                      className="mt-auto w-full bg-[#f68921] text-white border-2 border-[#153462] py-2.5 font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 shadow-[3px_3px_0px_0px_#153462] hover:shadow-none hover:bg-[#153462] hover:text-[#fcb22f] transition-all"
+                      type="button"
+                      onClick={() => {
+                        const isCurrentPage = window.location.pathname === service.servicePath;
+                        if (isCurrentPage) {
+                          document.getElementById(service.formId)?.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                          sessionStorage.setItem('scrollToFormId', service.formId);
+                          navigate(service.servicePath);
+                        }
+                      }}
+                    >
+                      Enquiry Now <ArrowRight size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {/* QUICK ACTIONS BAR */}
             {/* <div className="bg-[#153462] rounded-[3rem] p-4 mb-32 shadow-2xl">
@@ -418,7 +466,7 @@ const ConnectionHub = () => {
                     </p>
                   </div>
                   <h3 className="text-4xl md:text-5xl font-black text-[#153462] uppercase italic tracking-tighter">
-                    {selectedSlot ? "Confirm Details" : "Check Availability"} <span className="text-[#f68921]">_</span>
+                    {selectedSlot ? "Confirm Details" : "Book a Consultation"} <span className="text-[#f68921]">_</span>
                   </h3>
                 </div>
                 {selectedSlot && (

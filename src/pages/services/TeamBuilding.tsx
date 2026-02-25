@@ -233,6 +233,25 @@ const TeamBuilding = () => {
     fetchClientLogos();
   }, []);
 
+  useEffect(() => {
+    // 1. Get the ID from storage
+    const formId = sessionStorage.getItem('scrollToFormId');
+
+    if (formId) {
+      // 2. We use a slightly longer timeout (600ms) because 
+      // these pages use Lazy Loading for the forms.
+      const timer = setTimeout(() => {
+        const el = document.getElementById(formId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          // 3. Clean up so it doesn't scroll again on refresh
+          sessionStorage.removeItem('scrollToFormId');
+        }
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
   return (
     <>
       {/* Global AltHeader handles site navigation */}
