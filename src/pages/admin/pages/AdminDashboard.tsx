@@ -91,12 +91,13 @@ const AdminDashboard: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <Button
+              {/* <Button
                 onClick={() => navigate('/')}
                 className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
+                disabled
               >
                 View Site
-              </Button>
+              </Button> */}
               <Button
                 onClick={handleSignOut}
                 className="bg-red-600 hover:bg-red-700 text-white"
