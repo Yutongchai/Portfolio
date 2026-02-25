@@ -4,10 +4,10 @@ import Footer from '../../components/ui/Footer';
 import Questionnaire from './components/Questionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Users, Trophy, Utensils, Mic, Settings, UserCheck, Music, Camera, Clock, Award, Lightbulb, Target, Sparkles, ArrowUp } from 'lucide-react';
-import AnnualDinnerImg from '../../assets/corporate_events/annual_dinner.jpg';
-import KickoffImg from '../../assets/corporate_events/kick.jpg';
-import FamilyDayImg from '../../assets/corporate_events/family_day.jpg';
-import SportsDayImg from '../../assets/corporate_events/sports_day.jpg';
+import AnnualDinnerImg from '../../assets/corporate_events/annual_dinner.webp';
+import KickoffImg from '../../assets/corporate_events/kick.webp';
+import FamilyDayImg from '../../assets/corporate_events/family_day.webp';
+import SportsDayImg from '../../assets/corporate_events/sports_day.webp';
 
 const subCategories = [
   {

@@ -14,7 +14,7 @@ const defaultPersonalInfo: PersonalInfo = {
   title: "Product / Experience Designer",
   tagline: "Building experiences that bring teams together",
   bio: "With a passion for creating meaningful connections, I specialize in designing team-building experiences that foster collaboration, growth, and lasting impact.",
-  image: '/Portfolio/EITO.jpg',
+  image: '/Portfolio/EITO.webp',
   alt: 'Portrait of EITO Group'
 };
 
@@ -51,26 +51,26 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         } else {
           // Fallback to hardcoded images if no images in database
           setBackgroundImages([
-            '/Portfolio/_JIN3046.jpg',
-            '/Portfolio/different.jpg',
-            '/Portfolio/collage.jpg',
-            '/Portfolio/mainPic.jpg',
-            '/Portfolio/training.jpg',
-            '/Portfolio/discuss.jpg',
-            '/Portfolio/teamwork.jpg',
+            '/Portfolio/_JIN3046.webp',
+            '/Portfolio/different.webp',
+            '/Portfolio/collage.webp',
+            '/Portfolio/mainPic.webp',
+            '/Portfolio/training.webp',
+            '/Portfolio/discuss.webp',
+            '/Portfolio/teamwork.webp',
           ]);
         }
       } catch (error) {
         console.error('Error fetching hero images:', error);
         // Fallback to hardcoded images on error
         setBackgroundImages([
-          '/Portfolio/_JIN3046.jpg',
-          '/Portfolio/different.jpg',
-          '/Portfolio/collage.jpg',
-          '/Portfolio/mainPic.jpg',
-          '/Portfolio/training.jpg',
-          '/Portfolio/discuss.jpg',
-          '/Portfolio/teamwork.jpg',
+          '/Portfolio/_JIN3046.webp',
+          '/Portfolio/different.webp',
+          '/Portfolio/collage.webp',
+          '/Portfolio/mainPic.webp',
+          '/Portfolio/training.webp',
+          '/Portfolio/discuss.webp',
+          '/Portfolio/teamwork.webp',
         ]);
       }
     };

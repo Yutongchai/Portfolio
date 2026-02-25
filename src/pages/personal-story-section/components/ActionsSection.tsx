@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './ActionsSection.css';
 import teamBuildingHero from '../../../assets/team_building/hero.png';
-import corporateEventsKick from '../../../assets/corporate_events/kick.jpg';
-import corporateTrainingLeader from '../../../assets/corporate_training/leader.jpg';
-import csrWellbeing from '../../../assets/csr/wellbeing.jpg';
+import corporateEventsKick from '../../../assets/corporate_events/kick.webp';
+import corporateTrainingLeader from '../../../assets/corporate_training/leader.webp';
+import csrWellbeing from '../../../assets/csr/wellbeing.webp';
 
 const ActionsSection = () => {
   const categories = [

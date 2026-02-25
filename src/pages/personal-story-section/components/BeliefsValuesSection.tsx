@@ -4,9 +4,9 @@ import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
-import Engagement from '../../../assets/Engagement.jpg';
-import Living from '../../../assets/Living.jpg';
-import Valued from '../../../assets/Valued.jpg';
+import Engagement from '../../../assets/Engagement.webp';
+import Living from '../../../assets/Living.webp';
+import Valued from '../../../assets/Valued.webp';
 
 // --- Types ---
 type Belief = {

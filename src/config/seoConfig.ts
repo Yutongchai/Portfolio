@@ -44,7 +44,7 @@ export const defaultSEO: SEOConfig = {
     "outdoor team building activities Malaysia",
   ],
   url: BASE_URL,
-  image: `${BASE_URL}/EITO-bw.png`,
+  image: `${BASE_URL}/EITO bw.png`,
   locale: "en_US",
   type: "website",
 };

@@ -94,7 +94,7 @@ const PersonalStorySection = () => {
     <>
       <Helmet>
         <title>EITO Group</title>
-        <link rel="icon" type="image/png" href="/Portfolio/EITO-bw.png" />
+        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
       </Helmet>
       <div className="min-h-screen bg-background relative">
         <main className="relative z-10">

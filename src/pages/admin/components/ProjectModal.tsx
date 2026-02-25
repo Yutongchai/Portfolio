@@ -178,7 +178,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ onClose, project, onSaved }
             ctx.drawImage(imageBitmap, 0, 0, canvas.width, canvas.height);
             const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', quality));
             if (!blob) return file;
-            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.jpg'), { type: 'image/jpeg' });
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), { type: 'image/jpeg' });
             return compressedFile;
         } catch (err) {
             console.warn('Image compression failed, uploading original file', err);

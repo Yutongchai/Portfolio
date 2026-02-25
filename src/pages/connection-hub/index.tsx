@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
 import Footer from "../../components/ui/Footer";
-import ConnectImg from '/connect.jpg';
+import ConnectImg from '/connect.webp';
 import AvailabilityCalendar from "./components/AvailableCalendar";
 import { AvailabilitySlot } from "./types";
 import { X, Send, Mail, Phone, Briefcase, Download, Image, Video, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";

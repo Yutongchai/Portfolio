@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Collab from '../../../assets/contact.jpg';
+import Collab from '../../../assets/contact.webp';
 import { Button } from '../../../components/ui/Button';
 import ClientMarquee from './ClientMarquee';
 import { supabase } from '../../../config/supabaseClient';

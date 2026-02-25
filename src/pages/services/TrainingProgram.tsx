@@ -2,17 +2,17 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield, ArrowUp } from 'lucide-react';
 import LogoImg from '../../components/Logo.png';
-import TrainingImg from '../../assets/corporate_training/training.jpg';
-import SoftSkillsImg from '../../assets/corporate_training/soft.jpg';
-import LeadershipImg from '../../assets/corporate_training/leader.jpg';
-import MentalHealthImg from '../../assets/corporate_training/mental.jpg';
-import ExpertiseImg from '../../assets/corporate_training/expertise.jpg';
-import DNAImg from '../../assets/corporate_training/dna.jpg';
-import VisionImg from '../../assets/corporate_training/vision.jpg';
-import SuccessImg from '../../assets/corporate_training/success.jpg';
-import TruthImg from '../../assets/corporate_training/truth.jpg';
-import ExcellenceImg from '../../assets/corporate_training/excellence.jpg';
-import ResultImg from '../../assets/corporate_training/results.jpg';
+import TrainingImg from '../../assets/corporate_training/training.webp';
+import SoftSkillsImg from '../../assets/corporate_training/soft.webp';
+import LeadershipImg from '../../assets/corporate_training/leader.webp';
+import MentalHealthImg from '../../assets/corporate_training/mental.webp';
+import ExpertiseImg from '../../assets/corporate_training/expertise.webp';
+import DNAImg from '../../assets/corporate_training/dna.webp';
+import VisionImg from '../../assets/corporate_training/vision.webp';
+import SuccessImg from '../../assets/corporate_training/success.webp';
+import TruthImg from '../../assets/corporate_training/truth.webp';
+import ExcellenceImg from '../../assets/corporate_training/excellence.webp';
+import ResultImg from '../../assets/corporate_training/results.webp';
 
 import Footer from '../../components/ui/Footer';
 // Lazy load heavy components for faster initial load

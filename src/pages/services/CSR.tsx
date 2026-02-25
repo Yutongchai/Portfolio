@@ -5,9 +5,9 @@ import Footer from '../../components/ui/Footer';
 import LogoImg from '../../components/Logo.png';
 import { Globe, Heart, GraduationCap, TreePine, Users, Smile, Target, CheckCircle, Award, ArrowUp } from 'lucide-react';
 import HRDCorSection from './components/HRDCorBanner';
-import EnvironmentImg from '../../assets/csr/environment.jpg';
-import CommunityImg from '../../assets/csr/community.jpg';
-import WellbeingImg from '../../assets/csr/wellbeing.jpg';
+import EnvironmentImg from '../../assets/csr/environment.webp';
+import CommunityImg from '../../assets/csr/community.webp';
+import WellbeingImg from '../../assets/csr/wellbeing.webp';
 // Slider Images Data
 const sliderImages = [
   {
