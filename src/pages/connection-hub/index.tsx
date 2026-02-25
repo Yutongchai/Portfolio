@@ -1,3 +1,5 @@
+import SEOHead from "../../components/SEOHead"; 
+import { pageSEO } from "../../config/seoConfig";
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -148,40 +150,56 @@ const ConnectionHub = () => {
 
   const sampleSlots = useMemo(() => {
     const slots: AvailabilitySlot[] = [];
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(today); d.setDate(today.getDate() + i);
-      if (d.getDay() === 0 || d.getDay() === 6) continue;
-      const dateKey = d.toISOString().split('T')[0];
-      const dayLabel = d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-      // determine if this whole day is blocked
-      const unavailableForDate = unavailableDates.find((u: any) => {
-        if (!u) return false;
-        if (u.is_recurring) {
-          const ud = new Date(u.date);
-          return ud.getUTCDate() === d.getDate() && ud.getUTCMonth() === d.getMonth();
+    const now = new Date();
+
+    // Helper to generate slots for a specific month
+    const generateMonthlySlots = (year: number, month: number, startDay: number) => {
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      for (let day = startDay; day <= daysInMonth; day++) {
+        const d = new Date(year, month, day);
+        const dayOfWeek = d.getDay();
+        if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+        // FORMAT: YYYY-MM-DD (Safe for local comparison)
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayLabel = d.toLocaleDateString('en-MY', { weekday: 'short', month: 'short', day: 'numeric' });
+
+        // Match against Supabase unavailable dates
+        const unavailableForDate = unavailableDates?.find((u: any) => u.date === dateKey);
+        const dayBlocked = !!unavailableForDate;
+
+        for (let hour = 8; hour < 17; hour++) {
+          ["00", "30"].forEach((min) => {
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            const timeStr = `${displayHour}:${min} ${ampm}`;
+            const slotId = `${dateKey}-${hour}${min}`;
+            slots.push({
+              id: slotId,
+              date: dateKey,
+              day: dayLabel,
+              time: timeStr,
+              available: !bookedSlotIds.includes(slotId) && !dayBlocked,
+              blockedReason: dayBlocked ? (unavailableForDate?.reason || 'Fully Booked') : undefined
+            });
+          });
         }
-        return u.date === dateKey;
-      });
-      const dayBlocked = !!unavailableForDate;
-      for (let hour = 8; hour < 17; hour++) {
-        ["00", "30"].forEach((min) => {
-          const ampm = hour >= 12 ? 'PM' : 'AM';
-          const displayHour = hour % 12 || 12;
-          const timeStr = `${displayHour}:${min} ${ampm}`;
-          const slotId = `${dateKey}-${hour}${min}`;
-          slots.push({ id: slotId, date: dateKey, day: dayLabel, time: timeStr, available: !bookedSlotIds.includes(slotId) && !dayBlocked, blockedReason: dayBlocked ? (unavailableForDate?.reason || 'Unavailable') : undefined });
-        });
       }
-    }
+    };
+
+    // Run for Current Month
+    generateMonthlySlots(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // Run for Next Month
+    const nextMonthDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    generateMonthlySlots(nextMonthDate.getFullYear(), nextMonthDate.getMonth(), 1);
+
     return slots;
-  }, [bookedSlotIds]);
+  }, [bookedSlotIds, unavailableDates]);
 
   return (
     <>
-      <Helmet>
-        <title>Connection Hub | EITO Group</title>
-      </Helmet>
+      <SEOHead config={pageSEO.connectionHub} />
 
       <div className="min-h-screen bg-[#fcfaf8]">
         <AnimatePresence>

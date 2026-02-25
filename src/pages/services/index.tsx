@@ -234,7 +234,7 @@ const WorkShowcase = () => {
     <>
       <Helmet>
         <title>EITO Group</title>
-        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
+        <link rel="icon" type="image/png" href="/Portfolio/EITO-bw.png" />
         <meta
           name="description"
           content="Explore our portfolio of team building projects and corporate services. View detailed case studies and successful implementations."

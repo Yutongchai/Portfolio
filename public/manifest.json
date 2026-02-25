@@ -8,12 +8,12 @@
   "description": "EITO Group - Team Building and Corporate Training Services",
   "icons": [
     {
-      "src": "EITO bw.png",
+      "src": "EITO-bw.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "EITO bw.png",
+      "src": "EITO-bw.png",
       "sizes": "512x512",
       "type": "image/png"
     }

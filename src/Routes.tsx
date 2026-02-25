@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate, useLocation } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AltHeader from './components/ui/AltHeader';
+import SEOHead from './components/SEOHead';
+import { pageSEO } from './config/seoConfig';
 
 // Lazy load pages for faster initial load
 const Home = lazy(() => import('./pages/Home'));
@@ -11,7 +13,7 @@ const TrainingProgram = lazy(() => import('./pages/services/TrainingProgram'));
 const CSR = lazy(() => import('./pages/services/CSR'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-
+const NotFound = lazy(() => import('./pages/NotFound'));
 // Lazy load admin pages
 const AdminLogin = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminLogin })));
 const AdminRegister = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminRegister })));
@@ -41,7 +43,12 @@ const Routes: React.FC = () => {
         <HeaderGuard />
         <Suspense fallback={<PageLoader />}>
           <RouterRoutes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={
+              <>
+                <SEOHead config={pageSEO.home} includeSchemas={true} />
+                <Home />
+              </>
+            } />
             {/* Allow deep links into the single-page Home sections */}
             <Route path="/personal-story-section" element={<Home />} />
             <Route path="/services" element={<Home />} />
@@ -75,6 +82,8 @@ const Routes: React.FC = () => {
 
             {/* Catch any unknown admin routes and redirect to login */}
             <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+
+            <Route path="*" element={<NotFound />} />
           </RouterRoutes>
         </Suspense>
       </ErrorBoundary>

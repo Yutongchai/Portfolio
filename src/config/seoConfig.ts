@@ -11,7 +11,7 @@ export interface SEOConfig {
 }
 
 // Base URL - update this when you deploy
-export const BASE_URL = "https://eitogroup.com"; // Replace with your actual domain
+export const BASE_URL = "https://eitogroup.com.my"; // Replace with your actual domain
 
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
@@ -44,7 +44,7 @@ export const defaultSEO: SEOConfig = {
     "outdoor team building activities Malaysia",
   ],
   url: BASE_URL,
-  image: `${BASE_URL}/EITO%20bw.png`,
+  image: `${BASE_URL}/EITO-bw.png`,
   locale: "en_US",
   type: "website",
 };
