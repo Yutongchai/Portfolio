@@ -13,6 +13,7 @@ import supabase from "../../config/supabaseClient";
 
 // Import your TextGenerateEffect component
 import { TextGenerateEffect } from '../../components/ui/TextGenerateEffect';
+import ClientMarquee from '../../pages/personal-story-section/components/ClientMarquee';
 
 const COLORS = {
   NAVY: '#153462',
@@ -31,6 +32,29 @@ const ConnectionHub = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookedSlotIds, setBookedSlotIds] = useState<string[]>([]);
   const [unavailableDates, setUnavailableDates] = useState<any[]>([]);
+
+  // Client logos fetched from Supabase
+  const [clientLogos, setClientLogos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchClientLogos = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('client_logos')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+        if (error) throw error;
+        if (data && data.length > 0) {
+          const logoUrls = data.map((logo: any) => logo.logo_url);
+          setClientLogos(logoUrls);
+        }
+      } catch (error) {
+        console.error('Error fetching client logos:', error);
+      }
+    };
+    fetchClientLogos();
+  }, []);
 
   const contactMethods = [
     {
@@ -202,6 +226,7 @@ const ConnectionHub = () => {
       <SEOHead config={pageSEO.connectionHub} />
 
       <div className="min-h-screen bg-[#fcfaf8]">
+
         <AnimatePresence>
           {showSuccessMessage && (
             <motion.div
@@ -279,8 +304,95 @@ const ConnectionHub = () => {
               ))}
             </div>
 
+   {/* CLIENT TRUST SECTION */}
+{/* CLIENT TRUST SECTION */}
+<section className="max-w-7xl mx-auto px-6 mb-24">
+  <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+    <div className="max-w-xl">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="h-[2px] w-12 bg-[#fcb22f]"></div>
+        <span className="text-[#153462] font-black uppercase tracking-[0.3em] text-[10px]">Track Record</span>
+      </div>
+      <h2 className="text-4xl font-black text-[#153462] uppercase italic leading-none">
+        Trusted By<span className="text-[#f68921]">...</span>
+      </h2>
+    </div>
+    <p className="text-slate-400 font-bold text-sm md:text-right max-w-xs leading-tight">
+      Empowering teams from Malaysia's leading brands to reach their peak potential.
+    </p>
+  </div>
+
+  <div className="relative group border-y-2 border-slate-100/50 py-10">
+    {/* Gradient fades for a more premium look */}
+    <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
+    <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#fcfaf8] to-transparent z-10 pointer-events-none" />
+    
+    {clientLogos.length > 0 && (
+      <ClientMarquee logos={clientLogos} autoScrollSpeed={0.5} pauseOnHover={true} />
+    )}
+  </div>
+</section>
+
+        {/* THE EITO APPROACH / VALUE SECTION */}
+<section className="max-w-7xl mx-auto px-6 mb-24 text-center">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="mb-16"
+  >
+    <h2 className="text-4xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter mb-4">
+      Stop guessing, <span className="text-[#f68921]">Start Growing.</span>
+    </h2>
+    <p className="text-slate-500 font-bold max-w-2xl mx-auto text-lg leading-relaxed">
+      Whether you're looking for a high-energy team building retreat or a 
+      long-term corporate culture transformation, it starts with a conversation.
+    </p>
+  </motion.div>
+
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+    {[
+      { 
+        title: "No Fluff", 
+        desc: "We skip the boring icebreakers. Every minute we spend together is designed for real ROI.", 
+        icon: <CheckCircle2 />, 
+        color: COLORS.TEAL 
+      },
+      { 
+        title: "Expert Guided", 
+        desc: "You aren't talking to a salesperson. You're talking to a certified lead coach with 10+ years experience.", 
+        icon: <Sparkles />, 
+        color: COLORS.GOLD 
+      },
+      { 
+        title: "Local Roots", 
+        desc: "Deeply familiar with Malaysian corporate culture—from KL to JB and beyond.", 
+        icon: <Briefcase />, 
+        color: COLORS.NAVY 
+      },
+      { 
+        title: "Fast Track", 
+        desc: "Time is money. Expect a fully customized proposal in your inbox within 24 hours of our call.", 
+        icon: <ArrowRight />, 
+        color: COLORS.ORANGE 
+      }
+    ].map((item, i) => (
+      <div 
+        key={i} 
+        className="p-8 border-4 border-[#153462] bg-white shadow-[8px_8px_0px_0px_#153462] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-left group"
+      >
+        <div className="mb-6 p-3 inline-block bg-slate-50 border-2 border-[#153462] group-hover:bg-[#153462] group-hover:text-white transition-colors" style={{ color: item.color }}>
+          {item.icon}
+        </div>
+        <h4 className="font-black uppercase text-lg mb-3 text-[#153462]">{item.title}</h4>
+        <p className="text-sm font-bold text-slate-500 leading-relaxed">{item.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
             {/* QUICK ACTIONS BAR */}
-            <div className="bg-[#153462] rounded-[3rem] p-4 mb-32 shadow-2xl">
+            {/* <div className="bg-[#153462] rounded-[3rem] p-4 mb-32 shadow-2xl">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {quickActions.map((action, i) => (
                   <button
@@ -293,7 +405,7 @@ const ConnectionHub = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* CALENDAR DESIGN PRESERVED */}
             <div id="availability-calendar" className="relative bg-white p-8 md:p-12 border-4 border-[#153462] shadow-[12px_12px_0px_0px_#153462] mb-32">
