@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://eitogroup.com/sitemap.xml
+Sitemap: https://eitogroup.com.my/sitemap.xml
 
 # Block specific paths (if needed in future)
 # Disallow: /admin/
