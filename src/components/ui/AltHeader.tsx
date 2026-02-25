@@ -14,10 +14,10 @@ const COLORS = {
 };
 
 const services = [
-    { id: 'team-building', label: 'Team Building', path: '/work-showcase/team-building', color: COLORS.TEAL },
-    { id: 'training', label: 'Training Program', path: '/work-showcase/training-program', color: COLORS.PURPLE },
-    { id: 'corporate', label: 'Corporate Event', path: '/work-showcase/corporate-event', color: COLORS.ORANGE },
-    { id: 'csr', label: 'CSR', path: '/work-showcase/csr', color: COLORS.CORAL },
+    { id: 'team-building', label: 'Team Building', path: '/services/team-building', color: COLORS.TEAL },
+    { id: 'training', label: 'Training Program', path: '/services/training-program', color: COLORS.PURPLE },
+    { id: 'corporate', label: 'Corporate Event', path: '/services/corporate-event', color: COLORS.ORANGE },
+    { id: 'csr', label: 'CSR', path: '/services/csr', color: COLORS.CORAL },
 ];
 
 const AltHeader: React.FC = () => {
@@ -45,7 +45,11 @@ const AltHeader: React.FC = () => {
             const hash = path.slice(hashIndex + 1);
             setTimeout(() => {
                 const el = document.getElementById(hash);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Mask the URL after scroll
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
             }, 150);
         }
         setOpen(false);

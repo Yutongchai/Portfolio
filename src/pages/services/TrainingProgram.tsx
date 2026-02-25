@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield } from 'lucide-react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield, ArrowUp } from 'lucide-react';
 import LogoImg from '../../components/Logo.png';
 import TrainingImg from '../../assets/corporate_training/training.jpg';
 import SoftSkillsImg from '../../assets/corporate_training/soft.jpg';
@@ -43,6 +43,13 @@ const AnimatedCounter = ({ end, duration = 2, suffix = '' }: { end: number; dura
 
 const TrainingProgram = () => {
   const [activeValue, setActiveValue] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   const trainingTypes = [
     {
@@ -123,12 +130,13 @@ const TrainingProgram = () => {
     document.getElementById('training-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+
   return (
     <>
       {/* Global AltHeader handles site navigation */}
 
-      {/* 1. INTRODUCTION - HERO */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black text-white">
+      {/* --- HERO SECTION (Consistent with other service pages) --- */}
+      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
         <style>{`
           @keyframes slideInDown {
             from {
@@ -140,7 +148,6 @@ const TrainingProgram = () => {
               transform: translateY(0);
             }
           }
-
           @keyframes slideInUp {
             from {
               opacity: 0;
@@ -151,16 +158,13 @@ const TrainingProgram = () => {
               transform: translateY(0);
             }
           }
-
           .hero-title {
             animation: slideInDown 0.8s ease-out;
           }
-
           .hero-description {
             animation: slideInUp 0.8s ease-out 0.2s both;
           }
         `}</style>
-
         <motion.div
           className="absolute inset-0"
           initial={{ opacity: 0, scale: 1.12 }}
@@ -188,7 +192,7 @@ const TrainingProgram = () => {
           </div>
 
           <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
-            Connect to Learn.<br />Learn to Grow.
+            Empower Your Team.<br />Unlock Their Potential.
           </h1>
 
           <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
@@ -196,15 +200,33 @@ const TrainingProgram = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#training-types"
+            <button
+              type="button"
               className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+              onClick={() => {
+                const section = document.getElementById('training-types');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' });
+                  if (window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                  }
+                }
+              }}
             >
               Explore Programmes
-            </a>
+            </button>
             <button
-              onClick={scrollToForm}
+              type="button"
               className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+              onClick={() => {
+                const section = document.getElementById('training-form');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' });
+                  if (window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                  }
+                }
+              }}
             >
               Plan My Programme
             </button>
@@ -948,6 +970,24 @@ const TrainingProgram = () => {
       </section>
 
       <Footer />
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 left-8 z-50 bg-white text-[#153462] rounded-full px-6 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 flex items-center gap-2 font-bold text-sm"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowUp size={20} />
+            <span className="uppercase tracking-wider">Top of page</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 };

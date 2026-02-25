@@ -21,8 +21,9 @@ import EscapeImg from "../../assets/team_building/escape.png";
 import TriviaImg from "../../assets/team_building/trivia.png";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
+import { ArrowUp } from 'lucide-react';
 import { supabase } from '../../config/supabaseClient';
-import ClientMarquee from '../../pages/personal-story-section/components/ClientMarquee';
+import ClientMarquee from '../personal-story-section/components/ClientMarquee';
 
 const teamBuildingActivities: Activity[] = [
   {
@@ -185,6 +186,13 @@ const DetailedSection: React.FC<DetailedSectionProps> = ({ categoryData, index }
 };
 
 const TeamBuilding = () => {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const [clients, setClients] = useState<string[]>([]);
   const clientSectionRef = useRef(null);
 
@@ -230,7 +238,7 @@ const TeamBuilding = () => {
       {/* Global AltHeader handles site navigation */}
       <TeamBuildingHero />
       <HRDCorBanner />
-      <section id="team-building-questionnaire" className="pb-20 px-8 scroll-mt-32">        <style>{`
+      <section className="pb-20 px-8 scroll-mt-32">        <style>{`
         @keyframes activitiesTitleSlide {
           from {
             opacity: 0;
@@ -354,6 +362,24 @@ const TeamBuilding = () => {
         </div>
       </section>
       <Footer />
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 left-8 z-50 bg-white text-[#153462] rounded-full px-6 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 flex items-center gap-2 font-bold text-sm"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowUp size={20} />
+            <span className="uppercase tracking-wider">Top of page</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
 
   )

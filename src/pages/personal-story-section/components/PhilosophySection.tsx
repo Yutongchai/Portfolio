@@ -208,7 +208,22 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
                   <Button
                     variant="outline"
                     className="bg-white/80 backdrop-blur-sm hover:bg-white text-[#153462] font-bold px-8 py-7 rounded-xl text-lg border-2 border-[#153462] transition-all"
-                    onClick={() => navigate('/work-showcase')}
+                    onClick={() => {
+                      // Scroll to ActionSection on home page, mask URL
+                      const scrollToSection = (id: string) => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                          window.history.replaceState(null, '', window.location.pathname);
+                        }
+                      };
+                      if (window.location.pathname === "/") {
+                        scrollToSection("ActionSection");
+                      } else {
+                        navigate("/");
+                        setTimeout(() => scrollToSection("ActionSection"), 400);
+                      }
+                    }}
                   >
                     Explore Experiences
                   </Button>

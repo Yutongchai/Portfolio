@@ -52,7 +52,12 @@ const QuestionnaireTP = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    // Prevent negative values for noOfPax
+    if (name === "noOfPax") {
+      const num = Number(value);
+      if (num < 0) return;
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -160,7 +165,7 @@ const QuestionnaireTP = () => {
             options={INDUSTRIES.map((i) => ({ value: i, label: i.toUpperCase() }))}
             placeholder="SELECT INDUSTRY"
           />
-          <Input className={brutInputStyle} type="number" name="noOfPax" placeholder="NO. OF PAX" value={formData.noOfPax} onChange={handleChange} disabled={loading} />
+          <Input className={brutInputStyle} type="number" name="noOfPax" placeholder="NO. OF PAX" value={formData.noOfPax} onChange={handleChange} disabled={loading} min={0} />
         </div>
 
         {/* Training Duration Selection */}

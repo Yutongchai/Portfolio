@@ -133,18 +133,36 @@ const CSR = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#csr-categories"
+            <button
+              type="button"
               className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+              onClick={() => {
+                const section = document.getElementById('csr-categories');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' });
+                  if (window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                  }
+                }
+              }}
             >
               Explore Activities
-            </a>
-            <a
-              href="#csr-inquiry"
+            </button>
+            <button
+              type="button"
               className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+              onClick={() => {
+                const section = document.getElementById('csr-inquiry');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth' });
+                  if (window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                  }
+                }
+              }}
             >
               Make Inquiry
-            </a>
+            </button>
           </div>
         </div>
 

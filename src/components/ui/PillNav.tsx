@@ -39,10 +39,10 @@ const PillNav = ({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   const dropdownItems = [
-    { label: 'Team Building', href: '/work-showcase/team-building' },
-    { label: 'Corporate Event', href: '/work-showcase/corporate-event' },
-    { label: 'Training Program', href: '/work-showcase/training-program' },
-    { label: 'CSR', href: '/work-showcase/csr' },
+    { label: 'Team Building', href: '/services/team-building' },
+    { label: 'Corporate Event', href: '/services/corporate-event' },
+    { label: 'Training Program', href: '/services/training-program' },
+    { label: 'CSR', href: '/services/csr' },
   ];
 
   return (
@@ -77,7 +77,7 @@ const PillNav = ({
                     onMouseLeave={() => setDropdownOpen(false)}
                   >
                     <button
-                      className={`flex items-center text-sm tracking-wide text-[#5a2323] hover:text-[#a05a5a] transition-all ${activeHref.includes('work-showcase') ? 'font-semibold' : 'font-normal'
+                      className={`flex items-center text-sm tracking-wide text-[#5a2323] hover:text-[#a05a5a] transition-all ${activeHref.includes('services') ? 'font-semibold' : 'font-normal'
                         }`}
                     >
                       <span>{item.label}</span>

@@ -107,10 +107,10 @@ const Footer = () => {
           <div className="flex flex-col items-center sm:items-start">
             <MobileSection title="Services" accentBg="#12a28f" accentText="#ffffff">
               <nav className="flex flex-col gap-3 text-center sm:text-left text-[#153462] font-bold">
-                <Link to="/work-showcase/team-building" className="hover:underline decoration-[#fcb22f] decoration-4 underline-offset-4">Team Building</Link>
-                <Link to="/work-showcase/training-program" className="hover:underline decoration-[#f68921] decoration-4 underline-offset-4">Training Program</Link>
-                <Link to="/work-showcase/corporate-event" className="hover:underline decoration-[#695da5] decoration-4 underline-offset-4">Corporate Event</Link>
-                <Link to="/work-showcase/csr" className="hover:underline decoration-[#ee424c] decoration-4 underline-offset-4">CSR</Link>
+                <Link to="/services/team-building" className="hover:underline decoration-[#fcb22f] decoration-4 underline-offset-4">Team Building</Link>
+                <Link to="/services/training-program" className="hover:underline decoration-[#f68921] decoration-4 underline-offset-4">Training Program</Link>
+                <Link to="/services/corporate-event" className="hover:underline decoration-[#695da5] decoration-4 underline-offset-4">Corporate Event</Link>
+                <Link to="/services/csr" className="hover:underline decoration-[#ee424c] decoration-4 underline-offset-4">CSR</Link>
               </nav>
             </MobileSection>
           </div>

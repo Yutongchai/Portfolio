@@ -67,18 +67,38 @@ const TeamBuildingHero: React.FC = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a
-                        href="#team-building-activities"
+                    <button
+                        type="button"
                         className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+                        onClick={() => {
+                            // Scroll to Elevate Your Team section (activities-title)
+                            const section = document.querySelector('.activities-title');
+                            if (section && section instanceof HTMLElement) {
+                                section.scrollIntoView({ behavior: 'smooth' });
+                                if (window.history.replaceState) {
+                                    window.history.replaceState(null, '', window.location.pathname);
+                                }
+                            }
+                        }}
                     >
                         Explore Activities
-                    </a>
-                    <a
-                        href="#team-building-questionnaire"
+                    </button>
+                    <button
+                        type="button"
                         className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+                        onClick={() => {
+                            // Scroll to questionnaire section (team-building-questionnaire)
+                            const section = document.getElementById('team-building-questionnaire');
+                            if (section) {
+                                section.scrollIntoView({ behavior: 'smooth' });
+                                if (window.history.replaceState) {
+                                    window.history.replaceState(null, '', window.location.pathname);
+                                }
+                            }
+                        }}
                     >
                         Start Planning Now
-                    </a>
+                    </button>
                 </div>
             </div>
         </section>

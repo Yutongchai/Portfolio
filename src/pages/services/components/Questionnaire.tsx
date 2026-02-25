@@ -61,7 +61,12 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    // Prevent negative values for noOfPax
+    if (name === "noOfPax") {
+      const num = Number(value);
+      if (num < 0) return;
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -136,7 +141,8 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   };
 
   // Neo-Brutalist Shared Styles
-  const brutInputStyle = "border-4 border-[#153462] p-4 font-bold placeholder:text-slate-400 focus:ring-0 focus:border-[#f68921] shadow-[4px_4px_0px_0px_#153462] transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none";
+  // Remove yellow focus border from dropdowns, keep for Input fields only
+  const brutInputStyle = "border-4 border-[#153462] p-4 font-bold placeholder:text-slate-400 focus:ring-0 shadow-[4px_4px_0px_0px_#153462] transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none";
 
   return (
     <div className="bg-white p-6 md:p-12 border-8 border-[#153462] rounded-[2rem] md:rounded-[3rem] shadow-[12px_12px_0px_0px_#fcb22f]">
@@ -162,7 +168,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         {/* Row 1: Name & Contact */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             name="name"
             placeholder="YOUR NAME"
             value={formData.name}
@@ -170,7 +176,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             disabled={loading}
           />
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             name="contact"
             placeholder="CONTACT NUMBER"
             value={formData.contact}
@@ -182,7 +188,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         {/* Row 2: Company Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             name="companyName"
             placeholder="COMPANY NAME"
             value={formData.companyName}
@@ -190,7 +196,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             disabled={loading}
           />
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             type="email"
             name="companyEmail"
             placeholder="WORK EMAIL"
@@ -211,13 +217,14 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             placeholder="SELECT INDUSTRY"
           />
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             type="number"
             name="noOfPax"
             placeholder="NO. OF PAX"
             value={formData.noOfPax}
             onChange={handleChange}
             disabled={loading}
+            min={0}
           />
         </div>
 
@@ -260,7 +267,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             placeholder="YEAR"
           />
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             name="budget"
             placeholder="BUDGET (RM)"
             value={formData.budget}
@@ -287,7 +294,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             </div>
           </div>
           <Input
-            className={brutInputStyle}
+            className={brutInputStyle + " focus:border-[#f68921]"}
             name="location"
             placeholder="PREFERRED LOCATION"
             value={formData.location}
@@ -321,7 +328,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
           name="remarks"
           rows={3}
           placeholder="ADDITIONAL REMARKS (OPTIONAL)"
-          className={`${brutInputStyle} w-full py-2 uppercase text-xs`}
+          className={`${brutInputStyle} focus:border-[#f68921] w-full py-2 uppercase text-xs`}
           onChange={handleChange}
           value={formData.remarks}
         />

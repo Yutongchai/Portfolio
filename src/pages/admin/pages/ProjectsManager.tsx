@@ -4,7 +4,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import ProjectModal from '../components/ProjectModal';
-import { Carousel, Card } from '../../work-showcase/components/ProjectCarousel';
+import { Carousel, Card } from '../../services/components/ProjectCarousel';
 
 interface Project {
     id: string;

@@ -64,7 +64,7 @@ const ActionsSection = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12">
+    <section id="ActionSection" className="max-w-7xl mx-auto px-6 py-12">
       {/* Section Header */}
       <div className="text-center mb-12 pt-10">
         <span className="text-[#f68921] font-bold uppercase tracking-[0.25em] text-sm">Our Expertise</span>
@@ -114,12 +114,12 @@ const ActionsSection = () => {
               <button
                 onClick={() => {
                   const routes: Record<string, string> = {
-                    'team-building': '/work-showcase/TeamBuilding',
-                    'training': '/work-showcase/TrainingProgram',
-                    'corporate': '/work-showcase/CorporateEvent',
-                    'csr': '/work-showcase/CSR'
+                    'team-building': '/services/team-building',
+                    'training': '/services/training-program',
+                    'corporate': '/services/corporate-event',
+                    'csr': '/services/csr'
                   };
-                  window.location.href = routes[cat.id] || '/work-showcase';
+                  window.location.href = routes[cat.id] || '/services';
                 }}
                 className="actions-learn-more-btn"
               >

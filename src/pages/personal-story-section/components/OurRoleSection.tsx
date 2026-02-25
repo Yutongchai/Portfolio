@@ -16,7 +16,7 @@ const OurRoleSection = () => {
       color: '#38bdf8',
       image: import.meta.env.BASE_URL + "TB.jpg",
       description: 'Transform your workplace culture through high-energy activities that break silos and build lasting trust.',
-      link: '/work-showcase/team-building',
+      link: '/services/team-building',
     },
     {
       label: 'Corporate Event',
@@ -24,7 +24,7 @@ const OurRoleSection = () => {
       color: '#fcb22f',
       image: import.meta.env.BASE_URL + "CE.jpg",
       description: 'From gala dinners to product launches, we provide end-to-end execution that ensures your message resonates.',
-      link: '/work-showcase/corporate-event',
+      link: '/services/corporate-event',
     },
     {
       label: 'Training Program',
@@ -32,7 +32,7 @@ const OurRoleSection = () => {
       color: '#00ccbc',
       image: import.meta.env.BASE_URL + "GT.jpg",
       description: 'Upskill your workforce with modules focusing on leadership, emotional intelligence, and excellence.',
-      link: '/work-showcase/training-program',
+      link: '/services/training-program',
     },
     {
       label: 'CSR',
@@ -40,7 +40,7 @@ const OurRoleSection = () => {
       color: '#ee424c',
       image: import.meta.env.BASE_URL + "csr.jpg",
       description: 'Bridge the gap between corporate goals and social needs with initiatives that leave a measurable impact.',
-      link: '/work-showcase/csr',
+      link: '/services/csr',
     },
   ];
 

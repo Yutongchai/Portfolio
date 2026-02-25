@@ -1,8 +1,9 @@
+import React from 'react';
 import AltHeader from '../../components/ui/AltHeader';
 import Footer from '../../components/ui/Footer';
 import Questionnaire from './components/Questionnaire';
-import { motion } from 'framer-motion';
-import { Calendar, Users, Trophy, Utensils, Mic, Settings, UserCheck, Music, Camera, Clock, Award, Lightbulb, Target, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Users, Trophy, Utensils, Mic, Settings, UserCheck, Music, Camera, Clock, Award, Lightbulb, Target, Sparkles, ArrowUp } from 'lucide-react';
 import AnnualDinnerImg from '../../assets/corporate_events/annual_dinner.jpg';
 import KickoffImg from '../../assets/corporate_events/kick.jpg';
 import FamilyDayImg from '../../assets/corporate_events/family_day.jpg';
@@ -111,12 +112,20 @@ const whyChooseUs = [
 ];
 
 
-const CorporateEvent = () => (
-  <>
-    <AltHeader />
+const CorporateEvent = () => {
+  const [showScrollTop, setShowScrollTop] = React.useState(false);
+  React.useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  return (
+    <>
+      <AltHeader />
 
-    {/* 1. INTRO SECTION */}
-    <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
+      {/* 1. INTRO SECTION */}
+      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
       <style>{`
         @keyframes slideInDown {
           from {
@@ -184,18 +193,36 @@ const CorporateEvent = () => (
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#event-categories"
+          <button
+            type="button"
             className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+            onClick={() => {
+              const section = document.getElementById('event-categories');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                if (window.history.replaceState) {
+                  window.history.replaceState(null, '', window.location.pathname);
+                }
+              }
+            }}
           >
             Explore Events
-          </a>
-          <a
-            href="#corporate-event-questionnaire"
+          </button>
+          <button
+            type="button"
             className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+            onClick={() => {
+              const section = document.getElementById('corporate-event-questionnaire');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                if (window.history.replaceState) {
+                  window.history.replaceState(null, '', window.location.pathname);
+                }
+              }
+            }}
           >
             Plan Your Event
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -444,7 +471,26 @@ const CorporateEvent = () => (
     </section>
 
     <Footer />
-  </>
-);
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 left-8 z-50 bg-white text-[#153462] rounded-full px-6 py-3 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-200 flex items-center gap-2 font-bold text-sm"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowUp size={20} />
+            <span className="uppercase tracking-wider">Top of page</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 
 export default CorporateEvent;

@@ -5,10 +5,10 @@ import AltHeader from './components/ui/AltHeader';
 
 // Lazy load pages for faster initial load
 const Home = lazy(() => import('./pages/Home'));
-const TeamBuilding = lazy(() => import('./pages/work-showcase/TeamBuilding'));
-const CorporateEvent = lazy(() => import('./pages/work-showcase/CorporateEvent'));
-const TrainingProgram = lazy(() => import('./pages/work-showcase/TrainingProgram'));
-const CSR = lazy(() => import('./pages/work-showcase/CSR'));
+const TeamBuilding = lazy(() => import('./pages/services/TeamBuilding'));
+const CorporateEvent = lazy(() => import('./pages/services/CorporateEvent'));
+const TrainingProgram = lazy(() => import('./pages/services/TrainingProgram'));
+const CSR = lazy(() => import('./pages/services/CSR'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
@@ -44,11 +44,11 @@ const Routes: React.FC = () => {
             <Route path="/" element={<Home />} />
             {/* Allow deep links into the single-page Home sections */}
             <Route path="/personal-story-section" element={<Home />} />
-            <Route path="/work-showcase" element={<Home />} />
-            <Route path="/work-showcase/team-building" element={<TeamBuilding />} />
-            <Route path="/work-showcase/corporate-event" element={<CorporateEvent />} />
-            <Route path="/work-showcase/training-program" element={<TrainingProgram />} />
-            <Route path="/work-showcase/csr" element={<CSR />} />
+            <Route path="/services" element={<Home />} />
+            <Route path="/services/team-building" element={<TeamBuilding />} />
+            <Route path="/services/corporate-event" element={<CorporateEvent />} />
+            <Route path="/services/training-program" element={<TrainingProgram />} />
+            <Route path="/services/csr" element={<CSR />} />
             <Route path="/connection-hub" element={<Home />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

@@ -35,11 +35,14 @@ const ConnectionHub = () => {
       id: "2",
       type: "email",
       label: "Custom Event",
-      value: "yutongchai2@gmail.com",
+      value: "info@eitogroup.com.my",
       icon: <Mail size={28} />,
       color: COLORS.ORANGE,
       description: "Need a tailored team experience? We've got you covered.",
-      actionLabel: "Drop a Mail"
+      actionLabel: "Drop a Mail",
+      action: () => {
+        window.location.href = "mailto:info@eitogroup.com.my";
+      }
     },
     {
       id: "3",
@@ -49,7 +52,10 @@ const ConnectionHub = () => {
       icon: <Phone size={28} />,
       color: COLORS.TEAL,
       description: "Instant access to a certified team building coach.",
-      actionLabel: "WhatsApp Us"
+      actionLabel: "WhatsApp Us",
+      action: () => {
+        window.open("https://wa.me/60163287947?text=I%20have%20a%20query", "_blank");
+      }
     },
     {
       id: "4",
@@ -59,12 +65,37 @@ const ConnectionHub = () => {
       icon: <Briefcase size={28} />,
       color: COLORS.NAVY,
       description: "HR or Partnerships? Let's discuss your business goals.",
-      actionLabel: "Pick a Time"
+      actionLabel: "Pick a Time",
+      action: () => {
+        document.getElementById("availability-calendar")?.scrollIntoView({ behavior: "smooth" });
+      }
     },
   ];
 
+  // Utility: Smooth scroll and mask URL
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  };
+
   const quickActions = [
-    { label: "Services", icon: <Image size={20} />, action: () => navigate("/work-showcase/team-building") },
+    {
+      label: "Services",
+      icon: <Image size={20} />,
+      action: () => {
+        // If already on home, scroll. If not, go home and scroll after navigation.
+        if (window.location.pathname === "/") {
+          scrollToSection("ActionSection");
+        } else {
+          navigate("/", { replace: false });
+          // Wait for navigation, then scroll (simple setTimeout, or use a more robust event in a real app)
+          setTimeout(() => scrollToSection("ActionSection"), 400);
+        }
+      }
+    },
     { label: "Book Video", icon: <Video size={20} />, action: () => document.getElementById("availability-calendar")?.scrollIntoView({ behavior: "smooth" }) },
     { label: "Our Story", icon: <Sparkles size={20} />, action: () => navigate("/") },
   ];
@@ -191,7 +222,7 @@ const ConnectionHub = () => {
 
               <div className="flex flex-wrap justify-center gap-4">
                 <button
-                  onClick={() => document.getElementById("availability-calendar")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() => scrollToSection("availability-calendar")}
                   className="bg-[#f68921] hover:bg-[#e07810] text-white px-10 py-5 rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-[#f68921]/20 flex items-center gap-2"
                 >
                   Book a Consultation <ArrowRight size={20} />
@@ -212,6 +243,11 @@ const ConnectionHub = () => {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
                   className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all border border-slate-100 group cursor-pointer"
+                  onClick={method.action}
+                  tabIndex={0}
+                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') method.action && method.action(); }}
+                  role="button"
+                  aria-label={method.actionLabel}
                 >
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-white shadow-lg" style={{ backgroundColor: method.color }}>
                     {method.icon}

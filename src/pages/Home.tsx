@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import PersonalStorySection from './personal-story-section/index';
-import WorkShowcase from './work-showcase/index';
+import WorkShowcase from './services/index';
 import ConnectionHub from './connection-hub/index';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import SEOHead from '../components/SEOHead';
@@ -25,7 +25,7 @@ const Home: React.FC = () => {
       '#home': 'home',
       '/personal-story-section': 'home',
       '#service': 'service',
-      '/work-showcase': 'service',
+      '/services': 'service',
       '#connect': 'connect',
       '/connection-hub': 'connect'
     };
@@ -36,7 +36,7 @@ const Home: React.FC = () => {
   };
 
   const activeHref = currentPage === 'home' ? '/personal-story-section' :
-    currentPage === 'service' ? '/work-showcase' :
+    currentPage === 'service' ? '/services' :
       '/connection-hub';
 
   // Sync current page with URL on mount / when pathname changes
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
     const path = location.pathname;
     const pageMap: { [key: string]: PageView } = {
       '/personal-story-section': 'home',
-      '/work-showcase': 'service',
+      '/services': 'service',
       '/connection-hub': 'connect',
       '/': 'home'
     };
