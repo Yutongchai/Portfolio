@@ -5,7 +5,7 @@ import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
 import Engagement from '../../../assets/Engagement.webp';
-import Living from '../../../assets/Living.webp';
+import Living from '../../../assets/Learn.webp';
 import Valued from '../../../assets/Valued.webp';
 
 // --- Types ---
@@ -160,11 +160,11 @@ const BeliefsValuesSection = () => {
       description: "Where teams turn into leaders",
       letter: "T",
       color: "#abc9d9",
-        accent: (
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <rect x="6" y="8" width="20" height="3" rx="1.5" fill="#153462" />
-            <rect x="6" y="14.5" width="20" height="3" rx="1.5" fill="#79989f" />
-            <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
+      accent: (
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="8" width="20" height="3" rx="1.5" fill="#153462" />
+          <rect x="6" y="14.5" width="20" height="3" rx="1.5" fill="#79989f" />
+          <rect x="6" y="21" width="20" height="3" rx="1.5" fill="#f68921" />
         </svg>
       ),
       bgImage: Valued,
@@ -172,7 +172,7 @@ const BeliefsValuesSection = () => {
   ];
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  
+
   const curvedTextRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
 
@@ -191,8 +191,8 @@ const BeliefsValuesSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
   const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
- return (
-  
+  return (
+
     <section
       id="beliefs-values"
       ref={containerRef}
@@ -204,8 +204,8 @@ const BeliefsValuesSection = () => {
     >
       {/* 1. ANIMATED BLOBS (Kept for the top half) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#12a28f' }} />
-          <div className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#fcb22f' }} />
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#12a28f' }} />
+        <div className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#fcb22f' }} />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
