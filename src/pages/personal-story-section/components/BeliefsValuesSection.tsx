@@ -5,7 +5,7 @@ import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
 import Engagement from '../../../assets/Engagement.webp';
-import Living from '../../../assets/Learn.webp';
+import Living from '../../../assets/learn.webp';
 import Valued from '../../../assets/Valued.webp';
 
 // --- Types ---
