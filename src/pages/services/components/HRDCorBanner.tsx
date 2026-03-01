@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import HRDLogo from '../../../assets/hrd.png';
-import HRDProviderBadge from '../../../assets/hrd_training_provider.png';
+import HRDProviderBadge from '../../../assets/hrd_training_provider.webp';
 
 const HRDCorSection: React.FC = () => {
   useEffect(() => {

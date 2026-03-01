@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollableCards from "../../../components/ui/ScrollableCards";
 
 export interface Activity {
   id: string;
@@ -15,7 +16,7 @@ interface ActivityCardsProps {
 
 const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <>
       <style>{`
         @keyframes slideInUp {
           from {
@@ -98,33 +99,35 @@ const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
         }
       `}</style>
 
-      {activities.map((activity, index) => (
-        <div
-          key={activity.id}
-          className="activity-card h-[420px]"
-          style={{ animationDelay: `${index * 0.12}s` }}
-        >
-          <div className="activity-card-inner">
-            {activity.backgroundImage && (
-              <div
-                className="bg-image"
-                style={{ backgroundImage: `url(${activity.backgroundImage})` }}
-              />
-            )}
+      <ScrollableCards desktopColumns={3} gap={8}>
+        {activities.map((activity, index) => (
+          <div
+            key={activity.id}
+            className="activity-card h-[420px]"
+            style={{ animationDelay: `${index * 0.12}s` }}
+          >
+            <div className="activity-card-inner">
+              {activity.backgroundImage && (
+                <div
+                  className="bg-image"
+                  style={{ backgroundImage: `url(${activity.backgroundImage})` }}
+                />
+              )}
 
-            <div className="card-content max-w-[90%]">
-              <h3 className="text-2xl font-extrabold text-white leading-tight mb-2">
-                {activity.title}
-              </h3>
-              <p className="text-sm text-white/90 leading-relaxed">
-                {activity.shortDescription}
-              </p>
-              <div className="accent-line" />
+              <div className="card-content max-w-[90%]">
+                <h3 className="text-2xl font-extrabold text-white leading-tight mb-2">
+                  {activity.title}
+                </h3>
+                <p className="text-sm text-white/90 leading-relaxed">
+                  {activity.shortDescription}
+                </p>
+                <div className="accent-line" />
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </ScrollableCards>
+    </>
   );
 };
 

@@ -1,24 +1,24 @@
 import Footer from "../../components/ui/Footer";
-import LogoImg from "../../components/Logo.png";
 import Questionnaire from "./components/Questionnaire";
 import HRDCorBanner from "./components/HRDCorBanner";
 import ActivityCards, { Activity } from "./components/ActivityCards";
-import TeamBuildingHero from "./components/TeamBuildingHero";
-import TeamWorkshopImg from "../../assets/team_building/team_workshop.png";
-import VirtualTeamEventsImg from "../../assets/team_building/virtual_team_events.png";
-import AdventureActivitiesImg from "../../assets/team_building/adventures_activities.png";
+import ScrollableCards from "../../components/ui/ScrollableCards";
+import Hero from '../../components/ui/Hero';
+import TeamWorkshopImg from "../../assets/team_building/team_workshop.webp";
+import VirtualTeamEventsImg from "../../assets/team_building/virtual_team_events.webp";
+import AdventureActivitiesImg from "../../assets/team_building/adventures_activities.webp";
 import HikingImg from "../../assets/team_building/hiking.webp";
 import Obstacles from "../../assets/team_building/obstacles.webp";
 import SurvivalChallengeImg from "../../assets/team_building/survival.webp";
 import TreasureHuntImg from "../../assets/team_building/treasure_hunt.webp";
-import CommunicationImg from "../../assets/team_building/communication.png";
-import WorkshopImg from "../../assets/team_building/workshop.png";
-import LeadershipImg from "../../assets/team_building/leadership.png";
-import LabsImg from "../../assets/team_building/solving.png";
+import CommunicationImg from "../../assets/team_building/communication.webp";
+import WorkshopImg from "../../assets/team_building/workshop.webp";
+import LeadershipImg from "../../assets/team_building/leadership.webp";
+import LabsImg from "../../assets/team_building/solving.webp";
 import RemoteImg from "../../assets/team_building/remote.webp";
 import ScavengerImg from "../../assets/team_building/scavenger.webp";
-import EscapeImg from "../../assets/team_building/escape.png";
-import TriviaImg from "../../assets/team_building/trivia.png";
+import EscapeImg from "../../assets/team_building/escape.webp";
+import TriviaImg from "../../assets/team_building/trivia.webp";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
@@ -126,6 +126,8 @@ const DetailCard: React.FC<DetailCardProps> = ({ item, index }) => {
         <img
           src={item.img}
           alt={item.name}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -174,12 +176,12 @@ const DetailedSection: React.FC<DetailedSectionProps> = ({ categoryData, index }
           </motion.h2>
         </div>
 
-        {/* Horizontal Grid of Cards - 4 columns on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Horizontal Grid of Cards - Mobile: Scrollable, Desktop: 4 columns */}
+        <ScrollableCards desktopColumns={4} gap={6}>
           {categoryData.subItems.map((item, idx) => (
             <DetailCard key={idx} item={item} index={idx} />
           ))}
-        </div>
+        </ScrollableCards>
       </div>
     </div>
   );
@@ -194,6 +196,7 @@ const TeamBuilding = () => {
   }, []);
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const [clients, setClients] = useState<string[]>([]);
+  const [hasLoadedClients, setHasLoadedClients] = useState(false);
   const clientSectionRef = useRef(null);
 
   // Parallax Scroll Logic for floating background elements
@@ -208,30 +211,53 @@ const TeamBuilding = () => {
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 45]);
 
   useEffect(() => {
-    const fetchClientLogos = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('client_logos')
-          .select('*')
-          .eq('is_active', true)
-          .order('display_order', { ascending: true });
+    // Defer client logo loading until section is near viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasLoadedClients) {
+            setHasLoadedClients(true);
+            
+            const fetchClientLogos = async () => {
+              try {
+                const { data, error } = await supabase
+                  .from('client_logos')
+                  .select('*')
+                  .eq('is_active', true)
+                  .order('display_order', { ascending: true });
 
-        if (error) throw error;
+                if (error) throw error;
 
-        if (data && data.length > 0) {
-          const logoUrls = data.map(logo => logo.logo_url);
-          setClients(logoUrls);
-          console.log('Fetched client logos:', logoUrls);
-        } else {
-          console.log('No active client logos found');
-        }
-      } catch (error) {
-        console.error('Error fetching client logos:', error);
+                if (data && data.length > 0) {
+                  const logoUrls = data.map(logo => logo.logo_url);
+                  setClients(logoUrls);
+                  console.log('Fetched client logos:', logoUrls);
+                } else {
+                  console.log('No active client logos found');
+                }
+              } catch (error) {
+                console.error('Error fetching client logos:', error);
+              }
+            };
+
+            fetchClientLogos();
+          }
+        });
+      },
+      { rootMargin: '200px' } // Start loading 200px before section enters viewport
+    );
+
+    const currentRef = clientSectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-
-    fetchClientLogos();
-  }, []);
+  }, [hasLoadedClients]);
 
   useEffect(() => {
     // 1. Get the ID from storage
@@ -254,10 +280,34 @@ const TeamBuilding = () => {
   }, []);
   return (
     <>
-      {/* Global AltHeader handles site navigation */}
-      <TeamBuildingHero />
+
+      <Hero background={TeamWorkshopImg}>
+        <div className="relative z-20 text-center text-white px-4">
+          <div className="flex items-center justify-center gap-6 mb-6">
+            <div className="h-[2px] w-20 bg-[#fcb22f]" />
+            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">Team Building</span>
+            <div className="h-[2px] w-20 bg-[#fcb22f]" />
+          </div>
+
+          <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">Elevate Your Team.<br/>Inspire Success.</h1>
+
+          <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">Energize culture, strengthen trust, and align teams around shared goals through hands-on activities and tailored workshops.</p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button type="button" className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]" onClick={() => {
+              const section = document.getElementById('team-activities');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}>Explore Activities</button>
+
+            <button type="button" className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10" onClick={() => {
+              const section = document.getElementById('team-building-questionnaire');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}>Plan Your Session</button>
+          </div>
+        </div>
+      </Hero>
       <HRDCorBanner />
-      <section className="pb-20 px-8 scroll-mt-32">        <style>{`
+      <section id="team-activities" className="pb-20 px-8 scroll-mt-32">        <style>{`
         @keyframes activitiesTitleSlide {
           from {
             opacity: 0;

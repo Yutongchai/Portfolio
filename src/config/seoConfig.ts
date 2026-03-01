@@ -15,9 +15,11 @@ export const BASE_URL = "https://eitogroup.com.my"; // Replace with your actual 
 
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
-  title: "EITO Group | Corporate Team Building & Training Programs Malaysia",
-  description: "Transform your team with EITO Group's corporate team building, leadership training, and CSR programs. Trusted by Petronas, AirAsia, Maxis, and 99 Speedmart. Book a consultation today.",
+  title: "EITO Group | HRDC Claimable Team Building & Training Malaysia",
+  description: "Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance.",
   keywords: [
+    "HRDC claimable training Malaysia",
+    "improve workplace performance",
     // Primary Keywords
     "team building Malaysia",
     "corporate training Malaysia",
@@ -44,7 +46,7 @@ export const defaultSEO: SEOConfig = {
     "outdoor team building activities Malaysia",
   ],
   url: BASE_URL,
-  image: `${BASE_URL}/EITO bw.png`,
+  image: `${BASE_URL}/EITO bw.webp`,
   locale: "en_US",
   type: "website",
 };
@@ -53,18 +55,18 @@ export const defaultSEO: SEOConfig = {
 export const pageSEO = {
   home: {
     title: "EITO Group | #1 Corporate Team Building & Training Malaysia",
-    description: "Leading corporate team building and training solutions in Malaysia. Trusted by Fortune 500 companies including Petronas, AirAsia, Maxis, TNB, and 99 Speedmart. Expert facilitators with 10+ years experience.",
+    description: "Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance.",
     keywords: [
       ...defaultSEO.keywords,
-      "professional team building company",
-      "corporate events Malaysia",
-      "team development programs",
+      "Corporate team building",
+      "HRDC claimable training in Malaysia",
+      "improve workplace performance",
     ],
     url: BASE_URL,
     type: "website",
   },
   
-  workShowcase: {
+  /* workShowcase: {
     title: "Our Work & Success Stories | EITO Group",
     description: "Explore EITO Group's portfolio of successful team building events and training programs. See how we've helped companies like Petronas, AirAsia, and Maxis transform their teams.",
     keywords: [
@@ -75,7 +77,7 @@ export const pageSEO = {
     ],
     url: `${BASE_URL}/work-showcase`,
     type: "website",
-  },
+  }, */
   
   personalStory: {
     title: "About Our Team Building Experts | EITO Group",
@@ -111,8 +113,8 @@ export const organizationSchema = {
   "name": "EITO Group",
   "description": "Leading corporate team building and training solutions provider in Malaysia",
   "url": BASE_URL,
-  "logo": `${BASE_URL}/EITO%20bw.png`,
-  "image": `${BASE_URL}/EITO%20bw.png`,
+  "logo": `${BASE_URL}/EITO-bw.webp`,
+  "image": `${BASE_URL}/EITO-bw.webp`,
   "email": "info@eitogroup.com",
   "telephone": "+60163287947",
   "address": {
@@ -203,7 +205,7 @@ export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "EITO Group",
-  "image": `${BASE_URL}/EITO%20bw.png`,
+  "image": `${BASE_URL}/EITO-bw.webp`,
   "telephone": "+60163287947",
   "email": "info@eitogroup.com",
   "address": {

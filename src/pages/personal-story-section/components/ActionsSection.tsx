@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ActionsSection.css';
-import teamBuildingHero from '../../../assets/team_building/hero.png';
+import teamBuildingHero from '../../../assets/team_building/hero.webp';
 import corporateEventsKick from '../../../assets/corporate_events/kick.webp';
 import corporateTrainingLeader from '../../../assets/corporate_training/leader.webp';
 import csrWellbeing from '../../../assets/csr/wellbeing.webp';
@@ -81,12 +81,13 @@ const ActionsSection = () => {
             key={cat.id}
             onClick={() => handleTabChange(cat)}
             className={`actions-tab ${activeTab.id === cat.id ? 'active' : ''}`}
+            aria-label={cat.label}
           >
             <span
               className="actions-tab-indicator"
               style={{ backgroundColor: cat.color }}
             />
-            {cat.label}
+            <span className="actions-tab-label">{cat.label}</span>
           </button>
         ))}
       </div>

@@ -65,12 +65,38 @@ const ImageHoverScrollSection = () => {
                 .eito-card-group:hover img {
                   transform: scale(1.05);
                 }
+                
+                /* Mobile: Horizontal scroll */
+                @media (max-width: 767px) {
+                  .eito-cards-container {
+                    display: flex !important;
+                    overflow-x: auto !important;
+                    gap: 20px !important;
+                    padding: 0 20px 20px 20px !important;
+                    scroll-snap-type: x mandatory;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: none;
+                  }
+                  .eito-cards-container::-webkit-scrollbar {
+                    display: none;
+                  }
+                  .eito-card-group {
+                    flex: 0 0 85vw !important;
+                    max-width: 400px !important;
+                    scroll-snap-align: center;
+                  }
+                }
+                
+                /* Desktop: Keep original 2x2 grid */
+                @media (min-width: 768px) {
+                  .eito-cards-container {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 40px;
+                  }
+                }
             `}</style>
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 40,
-            }}>
+            <div className="eito-cards-container">
                 {images.map((img) => (
                     <div
                         key={img.src}

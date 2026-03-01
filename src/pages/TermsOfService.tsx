@@ -1,6 +1,5 @@
 import React from 'react';
 import Footer from '../components/ui/Footer';
-import LogoImg from '../components/Logo.png';
 import { motion } from 'framer-motion';
 
 const TermsOfService = () => {

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Questionnaire from './components/Questionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
+import Hero from '../../components/ui/Hero';
 import Footer from '../../components/ui/Footer';
-import LogoImg from '../../components/Logo.png';
+import ScrollableCards from '../../components/ui/ScrollableCards';
 import { Globe, Heart, GraduationCap, TreePine, Users, Smile, Target, CheckCircle, Award, ArrowUp } from 'lucide-react';
 import HRDCorSection from './components/HRDCorBanner';
 import EnvironmentImg from '../../assets/csr/environment.webp';
@@ -64,24 +65,24 @@ const CSR = () => {
   }, []);
 
   useEffect(() => {
-  // 1. Get the ID from storage
-  const formId = sessionStorage.getItem('scrollToFormId');
-  
-  if (formId) {
-    // 2. We use a slightly longer timeout (600ms) because 
-    // these pages use Lazy Loading for the forms.
-    const timer = setTimeout(() => {
-      const el = document.getElementById(formId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        // 3. Clean up so it doesn't scroll again on refresh
-        sessionStorage.removeItem('scrollToFormId');
-      }
-    }, 600); 
+    // 1. Get the ID from storage
+    const formId = sessionStorage.getItem('scrollToFormId');
 
-    return () => clearTimeout(timer);
-  }
-}, []);
+    if (formId) {
+      // 2. We use a slightly longer timeout (600ms) because 
+      // these pages use Lazy Loading for the forms.
+      const timer = setTimeout(() => {
+        const el = document.getElementById(formId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          // 3. Clean up so it doesn't scroll again on refresh
+          sessionStorage.removeItem('scrollToFormId');
+        }
+      }, 600);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -99,103 +100,32 @@ const CSR = () => {
       {/* Global AltHeader handles site navigation */}
 
       {/* --- HERO SLIDER SECTION --- */}
-      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">        <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlide}
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0"
-        >
-          <div className="absolute inset-0 bg-black/40 z-10" />
-          <img
-            src={sliderImages[currentSlide].url}
-            className="w-full h-full object-cover"
-            alt="CSR Showcase"
-          />
-        </motion.div>
-      </AnimatePresence>
-
-        {/* Floating Content Overlay */}
+      <Hero background={sliderImages.map((s) => s.url)} autoplay interval={5000} overlayClassName="bg-black/40" minHeightClass="min-h-[85vh]">
         <div className="relative z-20 text-center text-white px-4">
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="flex items-center justify-center gap-6 mb-6"
-          >
-            {/* The "Line indicating the topic" */}
+          <div className="flex items-center justify-center gap-6 mb-6">
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
-            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
-              Social Responsibility
-            </span>
+            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">Social Responsibility</span>
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tighter leading-tight"
-          >
-            Corporate Social<br />Responsibility
-          </motion.h1>
-          {/* <motion.p
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-lg md:text-xl font-bold text-[#fcb22f] mb-6 tracking-[0.3em] uppercase"
-          >
-            (CSR)
-          </motion.p> */}
-          <p className="text-xl md:text-2xl font-medium max-w-2xl mx-auto opacity-90 leading-relaxed mb-10">
-            Create positive impact through meaningful CSR initiatives that align with your company values.
-          </p>
+          <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8 md:whitespace-nowrap">Corporate Social Responsibility</h1>
+
+          <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
+            Create positive impact through meaningful CSR initiatives that align with your company values.</p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              type="button"
-              className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
-              onClick={() => {
-                const section = document.getElementById('csr-categories');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Explore Activities
-            </button>
-            <button
-              type="button"
-              className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
-              onClick={() => {
-                const section = document.getElementById('csr-inquiry');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Make Inquiry
-            </button>
+            <button type="button" className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]" onClick={() => {
+              const section = document.getElementById('csr-categories');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}>Explore Activities</button>
+
+            <button type="button" className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10" onClick={() => {
+              const section = document.getElementById('csr-inquiry');
+              if (section) section.scrollIntoView({ behavior: 'smooth' });
+            }}>Make Inquiry</button>
           </div>
         </div>
-
-        {/* Slide Indicators */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-3">
-          {sliderImages.map((_, i) => (
-            <div
-              key={i}
-              className={`h-1 transition-all duration-500 rounded-full ${i === currentSlide ? 'w-12 bg-[#fcb22f]' : 'w-4 bg-white/30'}`}
-            />
-          ))}
-        </div>
-      </section>
+      </Hero>
 
       {/* --- HELPING SECTION --- */}
       <section className="relative py-32 px-8 max-w-7xl mx-auto flex flex-col items-center text-center bg-gradient-to-b from-white via-orange-50/20 to-white">
@@ -226,7 +156,7 @@ const CSR = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <ScrollableCards desktopColumns={3} gap={10}>
             {[
               {
                 title: "Environmental Sustainability",
@@ -302,12 +232,12 @@ const CSR = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </ScrollableCards>
         </div>
-      </section>
+      </section >
 
       {/* --- WHAT WE DO --- */}
-      <section className="py-32 px-6 bg-white">
+      < section className="py-32 px-6 bg-white" >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <span className="text-[#f68921] font-bold uppercase tracking-[0.3em] text-sm mb-4 block">Our Services</span>
@@ -319,7 +249,7 @@ const CSR = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <ScrollableCards desktopColumns={3} gap={8}>
             {[
               { icon: <Target size={32} />, title: 'Strategic Planning', desc: 'Align CSR initiatives with your business objectives and values' },
               { icon: <Users size={32} />, title: 'Community Partnerships', desc: 'Connect with NGOs and local organizations for greater impact' },
@@ -343,31 +273,32 @@ const CSR = () => {
                 <p className="text-slate-600 leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
-          </div>
-
-          {/* Call to Action */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="mt-16 text-center"
-          >
-            <a
-              href="#csr-inquiry"
-              className="inline-flex items-center gap-3 bg-[#f68921] text-white px-12 py-4 rounded-full font-black text-lg uppercase tracking-wider hover:bg-[#d67419] transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(246,137,33,0.5)] hover:-translate-y-1"
-            >
-              <span>Start Your CSR Journey</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </motion.div>
+          </ScrollableCards>
         </div>
-      </section>
+
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="mt-16 text-center"
+        >
+          <a
+            href="#csr-inquiry"
+            className="inline-flex items-center gap-3 bg-[#f68921] text-white px-12 py-4 rounded-full font-black text-lg uppercase tracking-wider hover:bg-[#d67419] transition-all duration-300 hover:shadow-[0_20px_60px_-15px_rgba(246,137,33,0.5)] hover:-translate-y-1"
+          >
+            <span>Start Your CSR Journey</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </motion.div>
+
+      </section >
 
       {/* --- WHY CHOOSE US (Sticky Spotlight Section) --- */}
-      <section className="py-32 px-6 bg-[#0f172a] text-white overflow-hidden">
+      < section className="py-32 px-6 bg-[#0f172a] text-white overflow-hidden" >
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-16">
 
@@ -446,10 +377,10 @@ const CSR = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* --- INQUIRY FORM --- */}
-      <section id="csr-inquiry" className="py-24 px-6 bg-gradient-to-t from-white via-slate-50/40 to-white">
+      < section id="csr-inquiry" className="py-24 px-6 bg-gradient-to-t from-white via-slate-50/40 to-white" >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-[#f68921] font-bold uppercase tracking-[0.3em] text-sm mb-4 block">Get Started</span>
@@ -462,7 +393,7 @@ const CSR = () => {
           </div>
           <Questionnaire formType="csr" />
         </div>
-      </section>
+      </section >
 
       <Footer />
 
@@ -483,7 +414,7 @@ const CSR = () => {
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   );
 };
 

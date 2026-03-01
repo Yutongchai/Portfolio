@@ -411,14 +411,47 @@
 }
 
 @media (max-width: 768px) {
+  /* Tabs: single non-scrollable row with equal widths */
   .actions-tabs-wrapper {
-    gap: 0.75rem;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    overflow: hidden; /* prevent horizontal scrolling */
+    justify-content: space-between;
+    padding: 0 0.25rem;
   }
   
   .actions-tab {
-    padding: 0.75rem 1.25rem;
-    min-width: 120px;
+    padding: 0.6rem 0.75rem;
+    min-width: 0; /* allow flex to shrink */
     font-size: 0.85rem;
+    flex: 1 1 0%; /* equal width tabs */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hide text label on mobile tabs; show only the indicator */
+  .actions-tab-label {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+  .actions-tab-indicator {
+    margin-right: 0.5rem;
+  }
+
+  /* On small screens, hide the textual label and enlarge the dot */
+  @media (max-width: 480px) {
+    .actions-tab-label { display: none; }
+    .actions-tab-indicator {
+      width: 12px;
+      height: 12px;
+      margin-right: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 10px currentColor;
+    }
   }
   
   .actions-tab-content {
@@ -431,8 +464,22 @@
     align-items: flex-start;
   }
   
+  /* Subcategory cards: mobile becomes horizontally scrollable carousel */
   .actions-subcategories-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.5rem 1rem 1rem 1rem;
+    scroll-snap-type: x mandatory;
+  }
+
+  .actions-subcategories-grid::-webkit-scrollbar { display: none; }
+
+  .actions-subcat-card {
+    flex: 0 0 85vw;
+    max-width: 420px;
+    scroll-snap-align: center;
   }
   
   .actions-subcat-title {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import LogoImg from '/black.png';
+import LogoImg from '/black.webp';
 import { Menu, X } from 'lucide-react'; // Make sure to install lucide-react or use your own icons
 
 const COLORS = {
@@ -131,7 +131,7 @@ const AltHeader: React.FC = () => {
 
                         {/* DESKTOP: RIGHT CURTAIN */}
                         <div className={`hidden md:flex items-center gap-4 transition-all duration-300 ${isShrunk ? 'opacity-0 translate-x-8 pointer-events-none absolute' : 'opacity-100 translate-x-0'}`}>
-                            <button onClick={() => navigateTo('/connection-hub')} className={`text-lg font-black ${isActive('/connection-hub') ? 'text-[#ee424c]' : 'text-[#153462]'}`}>CONNECT</button>
+                            <button onClick={() => navigateTo('/connection-hub')} className={`text-lg font-black px-3 py-1 rounded-lg transition-all hover:rotate-3 ${isActive('/connection-hub') ? 'bg-[#ee424c] text-white' : 'text-[#153462]'}`}>CONNECT</button>
                             <button onClick={() => navigateTo('/connection-hub#availability-calendar')} className="bg-[#fcb22f] border-4 border-[#153462] px-6 py-2 rounded-full font-black text-[#153462] shadow-[4px_4px_0px_0px_#153462]">
                                 ENQUIRE NOW
                             </button>

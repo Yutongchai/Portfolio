@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+import ScrollableCards from '../../../components/ui/ScrollableCards';
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
 import Engagement from '../../../assets/Engagement.webp';
@@ -217,10 +218,12 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Cards Grid - Now sitting on the deepening background */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24" style={{ perspective: "1200px" }}>
-          {beliefs.map((belief, index) => (
-            <TiltCard key={index} belief={belief} />
-          ))}
+        <div style={{ perspective: "1200px" }} className="mb-24">
+          <ScrollableCards desktopColumns={3} gap={8} className="">
+            {beliefs.map((belief, index) => (
+              <TiltCard key={index} belief={belief} />
+            ))}
+          </ScrollableCards>
         </div>
 
         {/* This creates the visual "Floor" before the next section */}
