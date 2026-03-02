@@ -420,7 +420,7 @@ const ConnectionHub = () => {
                         }
                       }}
                     >
-                      Enquiry Now <ArrowRight size={14} />
+                      Explore More<ArrowRight size={14} />
                     </button>
                   </div>
                 ))}

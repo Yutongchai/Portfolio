@@ -128,7 +128,7 @@ const CSR = () => {
       </Hero>
 
       {/* --- HELPING SECTION --- */}
-      <section className="relative py-32 px-8 max-w-7xl mx-auto flex flex-col items-center text-center bg-gradient-to-b from-white via-orange-50/20 to-white">
+      <section className="relative py-20 px-8 max-w-7xl mx-auto flex flex-col items-center text-center bg-gradient-to-b from-white via-orange-50/20 to-white">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-[#fcb22f] to-transparent" />
         <h2 className="text-4xl md:text-6xl font-black mb-10 leading-tight">
           How CSR with EITO <br /><span className="text-[#fcb22f]">helps your organization</span>

@@ -172,7 +172,7 @@ const QuestionnaireTP = () => {
   const inputWrapperStyle = "mb-6";
 
   return (
-    <div className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] shadow-[12px_12px_0px_0px_#153462] p-8 md:p-12">
+    <div className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] md:shadow-[12px_12px_0px_0px_#153462] p-8 md:p-12">
       
       {/* Header + Progress Bar */}
       <div className="mb-10">
