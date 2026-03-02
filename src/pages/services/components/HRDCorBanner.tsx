@@ -115,7 +115,7 @@ const HRDCorSection: React.FC = () => {
               width={240}
               height={240}
               loading="eager"
-              fetchPriority="high"
+              {...{ fetchpriority: "high" } as any}
               decoding="sync"
               className="h-60 object-contain hrdc-logo"
             />
@@ -127,7 +127,7 @@ const HRDCorSection: React.FC = () => {
               width={240}
               height={240}
               loading="eager"
-              fetchPriority="high"
+              {...{ fetchpriority: "high" } as any}
               decoding="sync"
               className="h-60 object-contain hrdc-provider-badge"
             />

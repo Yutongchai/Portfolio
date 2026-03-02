@@ -74,7 +74,7 @@ const Footer = () => {
                 alt="EITO Logo"
                 loading="eager"
                 decoding="async"
-                fetchPriority="high"
+                {...{ fetchpriority: "high" } as any}
                 width={300}
                 height={72}
                 className="h-18 w-auto object-contain group-hover:rotate-12 transition-transform"
@@ -150,7 +150,7 @@ const Footer = () => {
                 <circle cx="17.3" cy="6.7" r="0.9" fill="#153462" />
               </svg>
             </a>
-            
+
             <a
               href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}
               target="_blank"
