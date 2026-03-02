@@ -22,17 +22,39 @@ const CorePrinciple: React.FC = () => {
   const bgY2 = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
 
   useEffect(() => {
+    let lastValue = 0;
+    let bounceTimer: ReturnType<typeof setTimeout>;
+
     const unsubscribe = scrollYProgress.on('change', (latest) => {
-      if (latest > 0.3 && latest < 0.7) {
-        const curveAmount = 20 + Math.sin(latest * Math.PI * 4) * 30;
+      const delta = latest - lastValue;
+      lastValue = latest;
+
+      // Scale scroll velocity to a curve offset (positive = up, negative = down)
+      const curveOffset = Math.max(-60, Math.min(60, delta * 3000));
+
+      gsap.to('#curved-path', {
+        attr: { d: `M 30,100 Q 400,${100 - curveOffset} 770,100` },
+        duration: 0.12,
+        ease: 'none',
+        overwrite: true,
+      });
+
+      // Spring back to flat when scrolling stops
+      clearTimeout(bounceTimer);
+      bounceTimer = setTimeout(() => {
         gsap.to('#curved-path', {
-          attr: { d: `M 30,100 Q 400,${100 - curveAmount} 770,100` },
-          duration: 0.3,
-          ease: 'power2.out'
+          attr: { d: 'M 30,100 Q 400,100 770,100' },
+          duration: 1.4,
+          ease: 'elastic.out(1.3, 0.35)',
+          overwrite: true,
         });
-      }
+      }, 120);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribe();
+      clearTimeout(bounceTimer);
+    };
   }, [scrollYProgress]);
 
   return (
@@ -71,26 +93,31 @@ const CorePrinciple: React.FC = () => {
 
       {/* --- MAIN CONTENT --- */}
 <div className="relative z-10 max-w-7xl mx-auto px-6">
-  <div className="flex flex-col md:flex-row items-start gap-12">
+  <div className="flex flex-col md:flex-row items-start gap-4 md:gap-12">
     
     {/* Left Column: Sticky Header (Reduced width to md:w-[35%]) */}
     <motion.div
-      className="md:sticky md:top-24 w-full md:w-[35%] py-12 z-10"
+      className="md:sticky md:top-24 w-full md:w-[35%] py-4 md:py-12 z-10"
       style={{ opacity: curvedTextOpacity }}
     >
-      <div className="space-y-2 pt-16">
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#153462]">
-          CORE
+      {/* Mobile: one-line heading; Desktop: stacked two-line heading */}
+      <div className="pt-4 md:pt-16">
+        {/* Mobile: single line */}
+        <h3 className="md:hidden text-4xl font-black uppercase tracking-tighter">
+          <span className="text-[#153462]">CORE </span>
+          <span className="text-[#f68921]">PRINCIPLES</span>
         </h3>
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#f68921]">
-          PRINCIPLES
-        </h3>
+        {/* Desktop: stacked */}
+        <div className="hidden md:block space-y-2">
+          <h3 className="text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#153462]">CORE</h3>
+          <h3 className="text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#f68921]">PRINCIPLES</h3>
+        </div>
       </div>
 
       {/* Curved Text Section */}
-              <div className="w-full flex justify-center md:justify-start mt-6">
+              <div className="w-full flex justify-center md:justify-start mt-1 md:mt-6">
                 <div
-                  className="curved-text-container flex-1 flex justify-center max-w-3xl"
+                  className="curved-text-container flex-1 flex justify-center max-w-3xl mt-0 md:mt-6"
                   onMouseEnter={() => {
                     gsap.killTweensOf('#curved-path');
                     gsap.to('#curved-path', {
@@ -112,7 +139,7 @@ const CorePrinciple: React.FC = () => {
                     <path id="curved-path" fill="none" d="M 30,100 Q 400,100 770,100" />
                     <text className="font-bold uppercase tracking-[0.2em] fill-[#103C61]/60 text-[40px]">
                       <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                          <tspan dy="-28">The E I T O Fundamentals</tspan>
+                          <tspan dy="-28">The EITO Fundamentals</tspan>
                       </textPath>
                     </text>
                   </svg>

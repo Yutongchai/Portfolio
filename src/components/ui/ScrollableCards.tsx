@@ -3,7 +3,7 @@ import React from 'react';
 interface ScrollableCardsProps {
   children: React.ReactNode;
   /** Number of columns on desktop (default: 3) */
-  desktopColumns?: 2 | 3 | 4;
+  desktopColumns?: 1 | 2 | 3 | 4;
   /** Gap between cards in pixels (default: 6) */
   gap?: 4 | 6 | 8 | 10;
   /** Enable horizontal scroll on mobile (default: true) */

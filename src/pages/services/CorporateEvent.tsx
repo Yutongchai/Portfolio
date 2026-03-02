@@ -317,7 +317,7 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {offerings.map((offering, idx) => (
               <motion.div
                 key={idx}
@@ -325,12 +325,12 @@ const CorporateEvent = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05, duration: 0.5 }}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center"
+                className="bg-white rounded-2xl p-4 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center"
               >
-                <div className="text-[#f68921] mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="text-[#f68921] mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300">
                   {offering.icon}
                 </div>
-                <h3 className="text-xl font-black text-[#153462] uppercase tracking-tight">{offering.title}</h3>
+                <h3 className="text-xs md:text-sm font-black text-[#153462] uppercase tracking-tight">{offering.title}</h3>
               </motion.div>
             ))}
           </div>
@@ -350,7 +350,7 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="space-y-32">
+          <ScrollableCards desktopColumns={1} gap={8}>
             {howWeWork.map((step, idx) => (
               <motion.div
                 key={step.id}
@@ -358,7 +358,7 @@ const CorporateEvent = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8 }}
-                className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center`}
+                className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center w-[85vw] md:w-auto`}
               >
                 {/* Text Content */}
                 <div className="flex-1 space-y-6">
@@ -386,7 +386,7 @@ const CorporateEvent = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </ScrollableCards>
         </div>
       </section>
 

@@ -101,7 +101,7 @@ const Footer = () => {
 
           {/* Row 1 Mobile / Column 1 Desktop: Company (accordion on mobile) */}
           <div className="flex flex-col items-center sm:items-start w-full">
-            <MobileSection title="Company">
+            <MobileSection title="Company" accentText="#153462">
               <nav className="flex flex-col gap-3 text-center sm:text-left">
                 <Link to="/personal-story-section#beliefs-values" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Our Values</Link>
                 <Link to="/connection-hub#contact-methods" className="font-bold text-[#153462] hover:text-[#f68921] transition-colors">Contact Us</Link>

@@ -86,7 +86,7 @@ const HRDCorSection: React.FC = () => {
           <p className="text-gray-600 text-lg leading-relaxed font-medium mb-8">
             Maximize your HRD Corp levy with our approved training programmes. We handle all documentation and claims, ensuring 100% compliance and hassle-free funding for your team's development.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 max-w-xl">
             <div className="flex items-center gap-3">
               <span className="text-[#12a28f] font-black text-xl">✓</span>
               <p className="text-gray-700 font-bold">National Standards</p>

@@ -108,7 +108,7 @@ const ActionsSection = () => {
             className={`actions-tab-content ${activeTab.id === cat.id ? 'active' : ''} ${prevTab.id === cat.id && activeTab.id !== cat.id ? 'exiting' : ''}`}
           >
             {/* Content Header */}
-            <div className="actions-content-header">
+           <div className="actions-content-header"> 
               <h3 className="actions-content-title">
                 {cat.label} <span style={{ color: cat.color }}>Solutions</span>
               </h3>
