@@ -111,7 +111,7 @@ export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "EITO Group",
-  "description": "Leading corporate team building and training solutions provider in Malaysia",
+  "description": "Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance.",
   "url": BASE_URL,
   "logo": `${BASE_URL}/EITO-bw.webp`,
   "image": `${BASE_URL}/EITO-bw.webp`,
