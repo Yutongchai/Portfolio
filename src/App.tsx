@@ -5,6 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ScrollToTopButton from "./components/ui/ScrollToTopButton";
 import WhatsAppFloating from "./components/ui/WhatsAppFloating";
 import CookieConsent from "./components/CookieConsent";
+import { Analytics } from "@vercel/analytics/react";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         {/* <ScrollToTopButton /> */}
         <WhatsAppFloating />
         <CookieConsent />
+        <Analytics />
       </AuthProvider>
     </ThemeProvider>
   );
