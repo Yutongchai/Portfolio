@@ -6,8 +6,10 @@ import ScrollToTopButton from "./components/ui/ScrollToTopButton";
 import WhatsAppFloating from "./components/ui/WhatsAppFloating";
 import CookieConsent from "./components/CookieConsent";
 import ReactGA from 'react-ga4';
+import { useLocation } from "react-router-dom";
    
 const App: React.FC = () => {
+  const location = useLocation(); 
   useEffect(() => {
        ReactGA.send({ hitType: "pageview", page: location.pathname });
      }, [location]);
