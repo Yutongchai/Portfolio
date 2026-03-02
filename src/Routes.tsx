@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AltHeader from './components/ui/AltHeader';
 import SEOHead from './components/SEOHead';
@@ -39,6 +40,7 @@ const PageLoader = () => (
 const Routes: React.FC = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Analytics />
       <ErrorBoundary>
         {/* Render AltHeader only on non-admin routes */}
         <HeaderGuard />
