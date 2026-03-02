@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
+import { supabase } from '../../../config/supabaseClient';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 
@@ -9,6 +10,8 @@ const AdminLogin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const { signIn, user, isAdmin, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -25,6 +28,24 @@ const AdminLogin: React.FC = () => {
       }
     }
   }, [user, isAdmin, authLoading, navigate, loading]);
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email address first.');
+      return;
+    }
+    setError('');
+    setResetLoading(true);
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/admin/reset-password`,
+    });
+    setResetLoading(false);
+    if (resetError) {
+      setError(resetError.message);
+    } else {
+      setResetSent(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,12 +107,22 @@ const AdminLogin: React.FC = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={resetLoading}
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium disabled:opacity-50"
+                >
+                  {resetLoading ? 'Sending…' : 'Forgot password?'}
+                </button>
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -101,6 +132,11 @@ const AdminLogin: React.FC = () => {
                 required
                 className="w-full"
               />
+              {resetSent && (
+                <p className="mt-2 text-xs text-green-600 dark:text-green-400">
+                  Recovery email sent! Check your inbox and click the link.
+                </p>
+              )}
             </div>
 
             <Button
