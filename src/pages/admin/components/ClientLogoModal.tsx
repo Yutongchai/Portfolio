@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../../../config/supabaseClient';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
+import { convertToWebp } from '../../../utils/convertToWebp';
 
 interface ClientLogoModalProps {
   onClose: () => void;
@@ -43,16 +44,17 @@ const ClientLogoModal: React.FC<ClientLogoModalProps> = ({ onClose }) => {
         console.log(`Uploading logo ${i + 1} of ${selectedFiles.length}...`);
         
         // Upload to Supabase Storage
-        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const webpFile = await convertToWebp(file);
+        const fileName = `${Date.now()}_${webpFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
         console.log('Uploading to storage bucket:', fileName);
         
         const uploadPromise = supabase.storage
-          .from('client-logos')
-          .upload(fileName, file, {
-            contentType: file.type,
-            cacheControl: '3600',
-            upsert: false
-          });
+        .from('client-logos')
+        .upload(fileName, webpFile, {       
+          contentType: 'image/webp',        
+          cacheControl: '3600',
+          upsert: false
+        });
 
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => reject(new Error('Upload timeout')), 60000);
