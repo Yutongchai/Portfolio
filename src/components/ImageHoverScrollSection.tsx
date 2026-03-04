@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const images = [
-    { src: import.meta.env.BASE_URL + 'e.webp', label: 'Equilibrium', hoverText: 'Turning fun into meaningful impact' },
-    { src: import.meta.env.BASE_URL + 'i.webp', label: 'Integrity', hoverText: 'Turning values into trust' },
-    { src: import.meta.env.BASE_URL + 't.webp', label: 'Teamwork', hoverText: 'Turning collaboration into success' },
-    { src: import.meta.env.BASE_URL + 'o.webp', label: 'Honour', hoverText: 'Turning promises into real results' },
+    { src: import.meta.env.BASE_URL + 'e_opt.webp', label: 'Equilibrium', hoverText: 'Turning fun into meaningful impact' },
+    { src: import.meta.env.BASE_URL + 'i_opt.webp', label: 'Integrity', hoverText: 'Turning values into trust' },
+    { src: import.meta.env.BASE_URL + 't_opt.webp', label: 'Teamwork', hoverText: 'Turning collaboration into success' },
+    { src: import.meta.env.BASE_URL + 'o_opt.webp', label: 'Honour', hoverText: 'Turning promises into real results' },
 ];
 
 interface AutoFitTextProps {
@@ -125,7 +125,7 @@ const ImageHoverScrollSection = () => {
                             <img
                                 src={img.src}
                                 alt={img.label}
-                                loading="lazy"
+                                loading="eager"
                                 decoding="async"
                                 style={{
                                     position: 'absolute',
