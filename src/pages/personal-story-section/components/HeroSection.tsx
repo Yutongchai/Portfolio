@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { PersonalInfo } from '../types';
 import SimpleRotatingText from './SimpleRotatingText';
 import { supabase } from '../../../config/supabaseClient';
@@ -26,6 +26,12 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   const FALLBACK_IMAGES = [
     '/connect.webp',
   ];
+
+  // Track initial mount so the first slide skips its opacity:0 → 1 fade (prevents LCP delay)
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    isInitialMount.current = false;
+  }, []);
 
   // Background images — initialised with fallbacks so first image paints immediately
   const [backgroundImages, setBackgroundImages] = useState<string[]>(FALLBACK_IMAGES);
@@ -103,10 +109,22 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
     <section id="hero-section" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Slideshow Background */}
       <div className="absolute inset-0 z-0">
+        {/* LCP <img>: immediately visible to browser/Lighthouse; covered by motion.div once loaded */}
+        <img
+          src={FALLBACK_IMAGES[0]}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
         {backgroundImages.map((image, index) => {
           const isCurrent = index === currentImageIndex;
           const isPrev = index === (currentImageIndex - 1 + backgroundImages.length) % backgroundImages.length;
           if (!isCurrent && !isPrev) return null;
+
+          // First slide on initial mount: skip opacity:0 so LCP image is visible immediately (no fade-in jump)
+          const initialOpacity = isInitialMount.current && index === 0 ? 1 : 0;
 
           return (
             <motion.div
@@ -116,15 +134,16 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
                 backgroundImage: `url(${image})`,
                 willChange: 'opacity',
                 transform: 'translateZ(0)',
+                zIndex: 1,
               }}
-              initial={{ opacity: 0 }}
+              initial={{ opacity: initialOpacity }}
               animate={{ opacity: isCurrent ? 1 : 0 }}
               transition={{ duration: 1.5 }}
             />
           );
         })}
         {/* Semi-transparent overlay */}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/50" style={{ zIndex: 2 }} />
       </div>
 
       <div
