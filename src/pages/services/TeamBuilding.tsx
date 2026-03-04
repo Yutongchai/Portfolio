@@ -207,7 +207,8 @@ const TeamBuilding = () => {
   // Parallax Scroll Logic for floating background elements
   const { scrollYProgress } = useScroll({
     target: clientSectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
+    layoutEffect: false
   });
 
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -150]);

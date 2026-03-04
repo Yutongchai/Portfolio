@@ -14,7 +14,8 @@ export const useParallax = (
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   const range = direction === 'vertical' ? [-100, 100] : [-50, 50];

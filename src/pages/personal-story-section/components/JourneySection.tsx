@@ -14,7 +14,8 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
   
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"],
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["80px", "-80px"]);

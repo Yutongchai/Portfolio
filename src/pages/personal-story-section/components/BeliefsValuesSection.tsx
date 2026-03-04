@@ -181,12 +181,14 @@ const BeliefsValuesSection = () => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "center center"],
+    layoutEffect: false
   });
 
   const { scrollYProgress: curvedTextScroll } = useScroll({
     target: curvedTextRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "center center"],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [200, 0]);

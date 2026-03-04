@@ -12,7 +12,8 @@ const CorePrinciple: React.FC = () => {
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   useEffect(() => {

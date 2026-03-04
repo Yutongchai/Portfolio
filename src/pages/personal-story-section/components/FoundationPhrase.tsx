@@ -5,7 +5,7 @@ const FoundationPhrase: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'center center'] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'center center'], layoutEffect: false });
   const yScroll = useTransform(scrollYProgress, [0, 1], [60, 0]);
   const smoothY = useSpring(yScroll, { stiffness: 100, damping: 20 });
 
