@@ -1,18 +1,19 @@
 import React, { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useInView } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 
 const CorePrinciple: React.FC = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const leftColRef = useRef<HTMLDivElement | null>(null);
+
+  // Trigger once when the section enters the viewport — no scroll-driven opacity
+  const leftColInView = useInView(leftColRef, { once: true, margin: '0px' });
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: ['start end', 'center center']
+    offset: ['start end', 'end start']
   });
-
-  // Content Motion — kept lightweight, removed unused transforms
-  const curvedTextOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
 
   useEffect(() => {
     let lastValue = 0;
@@ -103,10 +104,13 @@ const CorePrinciple: React.FC = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-start gap-4 md:gap-12">
 
-          {/* Left Column */}
+          {/* Left Column — fades in once when section enters viewport */}
           <motion.div
+            ref={leftColRef}
             className="md:sticky md:top-24 w-full md:w-[35%] py-4 md:py-12 z-10"
-            style={{ opacity: curvedTextOpacity }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={leftColInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             <div className="pt-4 md:pt-16">
               <h3 className="md:hidden text-4xl font-black uppercase tracking-tighter">
@@ -150,6 +154,20 @@ const CorePrinciple: React.FC = () => {
               </div>
             </div>
           </motion.div>
+
+          {/* Swipe indicator — mobile only, sits between title and cards */}
+          <div className="flex md:hidden items-center gap-2 -mt-2 mb-1 px-1">
+            <motion.div
+              className="flex items-center gap-2 text-[#f68921]"
+              animate={{ x: [0, 6, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </motion.div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe to explore</span>
+          </div>
 
           {/* Right Column: Cards */}
           <div className="w-full md:w-[65%] relative z-20">

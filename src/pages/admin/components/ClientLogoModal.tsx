@@ -6,9 +6,10 @@ import { convertToWebp } from '../../../utils/convertToWebp';
 
 interface ClientLogoModalProps {
   onClose: () => void;
+  onSuccess?: (count: number) => void;
 }
 
-const ClientLogoModal: React.FC<ClientLogoModalProps> = ({ onClose }) => {
+const ClientLogoModal: React.FC<ClientLogoModalProps> = ({ onClose, onSuccess }) => {
   const [companyName, setCompanyName] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -98,7 +99,7 @@ const ClientLogoModal: React.FC<ClientLogoModalProps> = ({ onClose }) => {
       }
 
       console.log('All logos uploaded successfully!');
-      alert(`Successfully uploaded ${selectedFiles.length} logo(s)!`);
+      onSuccess?.(selectedFiles.length);
       onClose();
     } catch (error: any) {
       console.error('Error uploading logo:', error);
