@@ -67,7 +67,7 @@ const AltHeader: React.FC = () => {
 
     return (
         <header className="fixed top-6 left-0 right-0 z-50 px-4">
-            <div 
+            <div
                 className="max-w-6xl mx-auto flex justify-center"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => { setIsHovered(false); setOpen(false); }}
@@ -86,7 +86,7 @@ const AltHeader: React.FC = () => {
 
                         {/* MOBILE: HAMBURGER (Hidden on Desktop) */}
                         <div className="md:hidden flex-1">
-                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]">
+                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]" aria-label="Open menu">
                                 <Menu size={28} strokeWidth={3} />
                             </button>
                         </div>
@@ -106,7 +106,7 @@ const AltHeader: React.FC = () => {
                                 >
                                     SERVICES <span>{open ? '▲' : '▼'}</span>
                                 </button>
-                                
+
                                 <div className={`absolute top-[130%] left-0 w-64 bg-white border-4 border-[#153462] rounded-2xl shadow-[6px_6px_0px_0px_#153462] transition-all duration-300 ${open && !isShrunk ? 'scale-100 opacity-100 visible' : 'scale-90 opacity-0 invisible'}`}>
                                     <div className="p-2 flex flex-col gap-2">
                                         {services.map((s) => (

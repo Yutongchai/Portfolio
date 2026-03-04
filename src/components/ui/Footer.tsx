@@ -86,8 +86,7 @@ const Footer = () => {
         {/* CUSTOMER REQUEST: Tagline Under Logo */}
         <div className="text-center mb-16 max-w-2xl">
           <h2 className="text-[#153462] text-2xl md:text-4xl font-black uppercase tracking-tighter leading-tight">
-            We <span className="text-[#f68921]">design</span> experiences that bring teams together
-          </h2>
+            We <span className="text-[#c05500]">design</span> experiences that bring teams together          </h2>
           {/* Signature Underline - three equal strips */}
           <div className="mt-6 flex justify-center gap-2">
             <div className="w-12 h-2 bg-[#fcb22f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
@@ -222,13 +221,11 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="w-full mt-10 pt-8 border-t-2 border-[#153462]/10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40">
-            © 2026 EITO Group • Empowering Teams through Play
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#153462]/70">            © 2026 EITO Group • Empowering Teams through Play
           </p>
           <div className="flex gap-8">
-            <Link to="/privacy-policy" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40 hover:text-[#153462] transition-colors">Privacy Policy</Link>
-            <Link to="/terms-of-service" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/40 hover:text-[#153462] transition-colors">Terms of Service</Link>
-          </div>
+            <Link to="/privacy-policy" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/70 hover:text-[#153462] transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="text-[10px] font-black uppercase tracking-widest text-[#153462]/70 hover:text-[#153462] transition-colors">Terms of Service</Link> </div>
         </div>
       </div>
     </footer>

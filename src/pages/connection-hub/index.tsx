@@ -18,7 +18,7 @@ import ClientMarquee from '../../pages/personal-story-section/components/ClientM
 import { toSupabaseThumbnail } from '../../utils/supabaseImageTransform';
 
 const COLORS = {
-  NAVY: '#153462',
+  NAVY: '#437cd3',
   GOLD: '#fcb22f',
   TEAL: '#12a28f',
   ORANGE: '#f68921',

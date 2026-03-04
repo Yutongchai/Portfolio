@@ -21,7 +21,7 @@ const loadImage = (src?: string) => {
 
 const PageLoader: React.FC<PageLoaderProps> = ({
   onLoaded,
-  minMs = 400,
+  minMs = 0,
   imagesToPreload = [],
 }) => {
   const [visible, setVisible] = useState(true);
@@ -31,20 +31,22 @@ const PageLoader: React.FC<PageLoaderProps> = ({
 
     const run = async () => {
       try {
-        const fontsReady = (document as any).fonts?.ready ?? Promise.resolve();
         const imageLoads = imagesToPreload.map(loadImage);
-        await Promise.all([fontsReady, wait(minMs), ...imageLoads]);
+        if (imageLoads.length > 0) {
+          await Promise.all(imageLoads);
+        }
+        // Add a minimal wait only if there are images to preload
+        if (minMs > 0) await wait(minMs);
       } catch (e) {
         // ignore
       }
 
       if (!mounted) return;
 
-      // Trigger fade-out, then notify parent after transition completes
+      // Notify parent immediately so the page content becomes visible
+      // The loader will fade out via its own CSS transition concurrently
+      if (mounted && onLoaded) onLoaded();
       setVisible(false);
-      setTimeout(() => {
-        if (mounted && onLoaded) onLoaded();
-      }, 350); // matches transition duration below
     };
 
     run();
