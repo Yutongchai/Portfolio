@@ -288,10 +288,6 @@ const ConnectionHub = () => {
               {contactMethods.map((method, idx) => (
                 <motion.div
                   key={method.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
                   className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all border border-slate-100 group cursor-pointer"
                   onClick={method.action}
                   tabIndex={0}
@@ -342,9 +338,6 @@ const ConnectionHub = () => {
             {/* THE EITO APPROACH / VALUE SECTION */}
             <section className="max-w-7xl mx-auto px-6 mb-24 text-center">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 className="mb-16"
               >
                 <h2 className="text-4xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter mb-4">

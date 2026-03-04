@@ -11,10 +11,6 @@ interface TestimonialCardProps {
 const TestimonialCard = ({ testimonial, index }: TestimonialCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
       className="bg-card border border-border rounded-2xl p-8 hover:shadow-elevation transition-all duration-300"
     >
       <div className="flex items-center space-x-4 mb-6">

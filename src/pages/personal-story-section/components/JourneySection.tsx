@@ -53,10 +53,6 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
         {/* Collapsible Header */}
         <motion.div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -73,10 +69,6 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
               </motion.h2>
               <motion.div
                 className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#12a28f] via-[#fcb22f] to-[#ee424c] rounded-full"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
               />
             </div>
 

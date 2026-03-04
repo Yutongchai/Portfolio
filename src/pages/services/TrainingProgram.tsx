@@ -208,9 +208,6 @@ const TrainingProgram = () => {
       <section id="training-types" className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Our Training Programmes</h2>
@@ -223,10 +220,6 @@ const TrainingProgram = () => {
           <ScrollableCards desktopColumns={2} gap={6}>
             {/* Mental Health - Tall (Left side, spans 2 rows) */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: 0, duration: 0.4 }}
               className="md:row-span-2 relative overflow-hidden rounded-3xl group cursor-pointer h-[400px] md:h-full"
             >
               {/* Background Image */}
@@ -270,10 +263,6 @@ const TrainingProgram = () => {
 
             {/* Leadership - Top Right */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
               className="relative overflow-hidden rounded-3xl group cursor-pointer h-[400px]"
             >
               {/* Background Image */}
@@ -317,10 +306,6 @@ const TrainingProgram = () => {
 
             {/* Soft Skills - Bottom Right */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
               className="relative overflow-hidden rounded-3xl group cursor-pointer h-[400px]"
             >
               {/* Background Image */}
@@ -374,9 +359,6 @@ const TrainingProgram = () => {
       <section className="py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-20"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Why Choose EITO Group?</h2>
@@ -388,9 +370,7 @@ const TrainingProgram = () => {
           <div className="space-y-24">
             {/* Row 1: Expertise - Image Right, Text Left */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+
               className="flex flex-col md:flex-row items-center gap-12"
             >
               <div className="flex-1">
@@ -429,9 +409,6 @@ const TrainingProgram = () => {
 
             {/* Row 2: Tailored - Image Left, Text Right (Reversed) */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className="flex flex-col md:flex-row-reverse items-center gap-12"
             >
               <div className="flex-1">
@@ -470,9 +447,6 @@ const TrainingProgram = () => {
 
             {/* Row 3: Impact - Image Right, Text Left */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className="flex flex-col md:flex-row items-center gap-12"
             >
               <div className="flex-1">
@@ -512,9 +486,6 @@ const TrainingProgram = () => {
 
           {/* CTA Button */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             className="text-center mt-20"
           >
             <motion.button
@@ -533,9 +504,6 @@ const TrainingProgram = () => {
       <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-20"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">How We Shape Excellence</h2>
@@ -556,9 +524,7 @@ const TrainingProgram = () => {
                     stroke="url(#timeline-gradient)"
                     strokeWidth="4"
                     fill="none"
-                    initial={{ pathLength: 0 }}
-                    whileInView={{ pathLength: 1 }}
-                    viewport={{ once: true }}
+                    animate={{ pathLength: 1 }}
                     transition={{ duration: 2, ease: "easeInOut" }}
                   />
                   <defs>
@@ -574,10 +540,6 @@ const TrainingProgram = () => {
                 {methodology.map((item, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.3, duration: 0.5 }}
                     className="absolute top-1/2 -translate-y-1/2"
                     style={{ left: `${(idx * 28) + 8}%` }}
                   >
@@ -595,10 +557,6 @@ const TrainingProgram = () => {
                 {methodology.map((item, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.2 }}
                     className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-shadow group"
                   >
                     {/* Watermark Background Image */}
@@ -633,10 +591,6 @@ const TrainingProgram = () => {
               {methodology.map((item, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.15 }}
                   className="relative"
                 >
                   <div className="flex gap-6">
@@ -812,9 +766,6 @@ const TrainingProgram = () => {
       <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Why Choose EITO?</h2>

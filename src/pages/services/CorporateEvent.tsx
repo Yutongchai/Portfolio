@@ -261,10 +261,6 @@ const CorporateEvent = () => {
             {subCategories.map((category, idx) => (
               <motion.div
                 key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.6 }}
                 className="flip-card"
               >
                 <div className="flip-card-inner">
@@ -332,10 +328,6 @@ const CorporateEvent = () => {
             {offerings.map((offering, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
                 className="bg-white rounded-2xl p-4 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center"
               >
                 <div className="text-[#f68921] mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -375,10 +367,6 @@ const CorporateEvent = () => {
             {howWeWork.map((step, idx) => (
               <motion.div
                 key={step.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
                 className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center w-[85vw] md:w-auto`}
               >
                 {/* Text Content */}
@@ -444,10 +432,6 @@ const CorporateEvent = () => {
             {whyChooseUs.map((reason, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.2, duration: 0.6 }}
                 className="bg-white/5 backdrop-blur-sm rounded-[2rem] p-10 border border-white/10 hover:bg-white/10 transition-all duration-300"
               >
                 <div

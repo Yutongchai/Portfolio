@@ -199,10 +199,6 @@ const CSR = () => {
             ].map((card, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.8 }}
                 className="group relative h-[600px] overflow-hidden rounded-[2.5rem] shadow-2xl transition-all duration-700"
               >
                 {/* Background Image with Zoom Effect */}
@@ -296,10 +292,6 @@ const CSR = () => {
             ].map((item, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
                 className="bg-white border border-slate-200 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="text-[#f68921] mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -314,10 +306,6 @@ const CSR = () => {
 
         {/* Call to Action */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
           className="mt-16 text-center"
         >
           <a
@@ -341,9 +329,6 @@ const CSR = () => {
             {/* Left Column: Sticky Title */}
             <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
               >
                 <span className="text-[#fcb22f] font-bold uppercase tracking-[0.3em] text-sm mb-4 block">
                   EITO Advantage
@@ -386,10 +371,6 @@ const CSR = () => {
               ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: i * 0.1 }}
                   className={`relative group bg-gradient-to-r ${item.color} to-transparent border-l-4 border-[#fcb22f] p-12 rounded-r-[2rem] hover:bg-white/5 transition-all duration-500`}
                 >
                   {/* Background Accent */}

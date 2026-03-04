@@ -12,10 +12,6 @@ interface ContactMethodCardProps {
 const ContactMethodCard = ({ method, index, onAction }: ContactMethodCardProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
       className={`relative group ${
         method.primary
           ? 'bg-accent/10 border-2 border-accent' :'bg-card border border-border'

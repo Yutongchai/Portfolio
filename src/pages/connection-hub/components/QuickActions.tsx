@@ -22,10 +22,6 @@ const QuickActions = ({ actions }: QuickActionsProps) => {
       {actions.map((action, index) => (
         <motion.div
           key={action.id}
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
         >
           <Button
             variant="outline"

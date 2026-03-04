@@ -19,7 +19,7 @@ import RemoteImg from "../../assets/team_building/remote.webp";
 import ScavengerImg from "../../assets/team_building/scavenger.webp";
 import EscapeImg from "../../assets/team_building/escape.webp";
 import TriviaImg from "../../assets/team_building/trivia.webp";
-import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { supabase } from '../../config/supabaseClient';
@@ -111,15 +111,8 @@ type DetailCardProps = {
 };
 
 const DetailCard: React.FC<DetailCardProps> = ({ item, index }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
       className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 h-[400px]"
     >
       {/* Background Image */}
@@ -168,9 +161,6 @@ const DetailedSection: React.FC<DetailedSectionProps> = ({ categoryData, index }
         {/* Section Header */}
         <div className="text-center mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-[#4a90e2] uppercase tracking-tight mb-6"
           >
             {categoryData.category}
@@ -404,10 +394,6 @@ const TeamBuilding = () => {
           <div className="max-w-7xl mx-auto relative z-10">
             <motion.div
               className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
             >
               <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
                 Trusted Partnerships
