@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { PersonalInfo } from '../types';
 import SimpleRotatingText from './SimpleRotatingText';
-import { supabase } from '../../../config/supabaseClient';
+// supabase is dynamically imported inside the 3s delay so its chunk (~40 KiB)
+// doesn't block the initial page load
 import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 interface HeroSectionProps {
@@ -43,6 +44,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
     // the LCP element. Supabase images replace them after the LCP window closes.
     const fetchTimer = setTimeout(async () => {
       try {
+        const { supabase } = await import('../../../config/supabaseClient');
         const { data, error } = await supabase
           .from('hero_images')
           .select('image_url')

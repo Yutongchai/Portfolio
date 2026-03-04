@@ -60,6 +60,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
           <img
             src={belief.bgImage}
             alt={belief.title}
+            width={1000}
+            height={1333}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
           />
         </div>
