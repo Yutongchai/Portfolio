@@ -17,14 +17,8 @@ export default defineConfig(({ command }) => ({
         assetFileNames: 'assets/[name]-[hash].[ext]',
         // Code splitting for better performance
         manualChunks: {
-          // Core React runtime — always needed
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          // Animation library — heavy, load separately
-          motion: ['framer-motion'],
-          // Icon library — smaller, separate from motion
-          icons: ['lucide-react'],
-          // Supabase client — lazy-loaded actions only
-          supabase: ['@supabase/supabase-js'],
+          ui: ['framer-motion', 'lucide-react'],
         }
       }
     },

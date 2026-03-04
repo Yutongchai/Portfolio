@@ -34,11 +34,11 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
     isInitialMount.current = false;
   }, []);
 
-  // Background images — initialised with fallbacks so first image paints immediately
-  const [backgroundImages, setBackgroundImages] = useState<string[]>(FALLBACK_IMAGES);
+  // Background images from database
+  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Fetch hero images from database (replaces fallbacks once loaded)
+  // Fetch hero images from database
   useEffect(() => {
     const fetchHeroImages = async () => {
       try {
@@ -52,15 +52,31 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         if (error) throw error;
 
         if (data && data.length > 0) {
-          // Apply Image Transform to reduce hero image size (1200 wide, 70 quality)
-          // This converts multi-MB originals to ~200–400 KB — critical for LCP on mobile
-          setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1200, 70)));
-          setCurrentImageIndex(0);
+          setBackgroundImages(data.map(img => img.image_url));
+        } else {
+          // Fallback to hardcoded images if no images in database
+          setBackgroundImages([
+            '/Portfolio/_JIN3046.webp',
+            '/Portfolio/different.webp',
+            '/Portfolio/collage.webp',
+            '/Portfolio/mainPic.webp',
+            '/Portfolio/training.webp',
+            '/Portfolio/discuss.webp',
+            '/Portfolio/teamwork.webp',
+          ]);
         }
-        // If no DB images, keep fallbacks — do nothing
       } catch (error) {
         console.error('Error fetching hero images:', error);
-        // Keep fallbacks — do nothing
+        // Fallback to hardcoded images on error
+        setBackgroundImages([
+          '/Portfolio/_JIN3046.webp',
+          '/Portfolio/different.webp',
+          '/Portfolio/collage.webp',
+          '/Portfolio/mainPic.webp',
+          '/Portfolio/training.webp',
+          '/Portfolio/discuss.webp',
+          '/Portfolio/teamwork.webp',
+        ]);
       }
     };
 
