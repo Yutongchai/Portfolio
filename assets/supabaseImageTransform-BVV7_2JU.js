@@ -1,1 +1,0 @@
-function e(e,t=360,r=75){if(!e)return e;try{if(!new URL(e).hostname.endsWith(".supabase.co"))return e;const n=e.replace("/storage/v1/object/public/","/storage/v1/render/image/public/"),i=n.includes("?")?"&":"?";return`${n}${i}width=${t}&quality=${r}&resize=contain`}catch{return e}}export{e as t};

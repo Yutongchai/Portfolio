@@ -20,12 +20,21 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/EITO bw.webp" />
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts – single consolidated request, loaded async (non-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-    rel="stylesheet">
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'"
+  >
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
+    >
+  </noscript>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J45HZDCVNQ"></script>
@@ -37,10 +46,10 @@
     gtag('config', 'G-J45HZDCVNQ');
   </script>
 
-  <script type="module" crossorigin src="/assets/index-mEQMfaku.js"></script>
+  <script type="module" crossorigin src="/assets/index-BvqMnAWb.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/vendor-eyX32RLL.js">
   <link rel="modulepreload" crossorigin href="/assets/ui-Df28J_fA.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-9qYMUMt_.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-DYfbl-fK.css">
 </head>
 
 <body>
