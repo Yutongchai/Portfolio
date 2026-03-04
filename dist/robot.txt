@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://www.eitogroup.com.my/sitemap.xml

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import myPhoto from "../../components/mainPic.jpg";
 import Footer from "../../components/ui/Footer";
@@ -9,12 +9,11 @@ import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
 import SectionWrapper from "./components/SectionWrapper";
 import CorePrinciple from "./components/CorePrinciple";
+import PageLoader from "../../components/PageLoader"; // ← adjust path as needed
 import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
-  // Removed per-section loader — Home.tsx already shows a page-level
-  // PageLoader that waits for fonts + hero image. A second loader here
-  // caused a sequential 400 ms+ extra delay on every page load.
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
@@ -97,11 +96,28 @@ const PersonalStorySection = () => {
         <link rel="icon" type="image/webp" href="/Portfolio/EITO-bw.webp" />
       </Helmet>
 
-      <div className="min-h-screen bg-background relative">
+      {/* Loader blocks the page until fonts + hero image are ready */}
+      {!appReady && (
+        <PageLoader
+          minMs={400}
+          imagesToPreload={[myPhoto]}
+          onLoaded={() => setAppReady(true)}
+        />
+      )}
+
+      <div
+        className="min-h-screen bg-background relative"
+        style={{
+          opacity: appReady ? 1 : 0,
+          transition: "opacity 400ms ease",
+        }}
+      >
         <main className="relative z-10">
           <HeroSection personalInfo={personalInfo} />
 
-          <BeliefsValuesSection />
+          <SectionWrapper delay={0.1}>
+            <BeliefsValuesSection />
+          </SectionWrapper>
 
           <CorePrinciple />
           <ActionsSection />

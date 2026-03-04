@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import ScrollableCards from "../../../components/ui/ScrollableCards";
 
 export interface Activity {
@@ -149,18 +148,6 @@ const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
           width: 100%;
         }
       `}</style>
-
-      {/* Swipe indicator — mobile only */}
-      <div className="flex md:hidden items-center justify-center gap-3 mb-5">
-        <motion.div
-          animate={{ x: [-6, 6, -6] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-          className="text-[#fcb22f] text-xl select-none"
-        >
-          👆
-        </motion.div>
-        <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Swipe to explore</span>
-      </div>
 
       <ScrollableCards desktopColumns={3} gap={8}>
         {activities.map((activity, index) => (

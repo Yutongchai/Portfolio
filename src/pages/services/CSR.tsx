@@ -156,26 +156,6 @@ const CSR = () => {
             </p>
           </div>
 
-          {/* Swipe indicator — mobile only */}
-          <div className="flex md:hidden items-center justify-center gap-2 mb-5">
-            <motion.div
-              className="flex items-center gap-[3px]"
-              animate={{ x: [0, 8, 0] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              {[16, 10, 6].map((w, i) => (
-                <motion.div
-                  key={i}
-                  className="h-1.5 rounded-full bg-[#fcb22f]"
-                  animate={{ opacity: [1, 0.4, 1] }}
-                  transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.15 }}
-                  style={{ width: w }}
-                />
-              ))}
-            </motion.div>
-            <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-white/40">Swipe to explore</span>
-          </div>
-
           <ScrollableCards desktopColumns={3} gap={10}>
             {[
               {
@@ -267,22 +247,6 @@ const CSR = () => {
             <p className="text-slate-600 text-lg max-w-2xl mx-auto font-medium">
               Comprehensive CSR solutions from strategy to execution.
             </p>
-          </div>
-
-          {/* Swipe indicator — mobile only */}
-          <div className="flex md:hidden items-center justify-center gap-3 mb-5">
-            <div className="flex items-center gap-1">
-              {[0, 1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  className="w-2 h-2 rounded-full"
-                  animate={{ backgroundColor: ['#f68921', '#153462', '#f68921'], scale: [1, 1.4, 1] }}
-                  transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.2, ease: 'easeInOut' }}
-                  style={{ backgroundColor: '#f68921' }}
-                />
-              ))}
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe to explore</span>
           </div>
 
           <ScrollableCards desktopColumns={3} gap={8}>

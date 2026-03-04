@@ -86,7 +86,7 @@ const AltHeader: React.FC = () => {
 
                         {/* MOBILE: HAMBURGER (Hidden on Desktop) */}
                         <div className="md:hidden flex-1">
-                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]" aria-label="Open menu">
+                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]">
                                 <Menu size={28} strokeWidth={3} />
                             </button>
                         </div>
@@ -122,7 +122,7 @@ const AltHeader: React.FC = () => {
                         {/* LOGO: (Universal) */}
                         <div className={`flex justify-center items-center transition-all duration-500 ${isShrunk ? 'absolute inset-0' : 'flex-1'}`}>
                             <button onClick={() => navigateTo('/')} className="flex items-center gap-2 group">
-                                <img src={LogoImg} alt="Logo" width={40} height={40} loading="eager" decoding="async" className={`${isShrunk ? 'w-10 h-10' : 'w-8 h-8 md:w-10 md:h-10'} object-contain`} />
+                                <img src={LogoImg} alt="Logo" className={`${isShrunk ? 'w-10 h-10' : 'w-8 h-8 md:w-10 md:h-10'} object-contain`} />
                                 <span className={`text-xl md:text-2xl font-black tracking-tighter text-[#153462] ${isShrunk ? 'hidden' : 'block'}`}>
                                     EITO&nbsp;GROUP
                                 </span>

@@ -53,7 +53,7 @@ const CookieConsent = () => {
                   <p className="text-sm md:text-base text-gray-700 leading-relaxed">
                     We use cookies to improve your browsing experience, analyze site traffic, and personalize content. 
                     By clicking "Accept," you consent to our use of cookies in accordance with our{' '}
-                    <a href="/privacy-policy" className="text-[#b45309] hover:underline font-semibold">
+                    <a href="/privacy-policy" className="text-[#f68921] hover:underline font-semibold">
                       Privacy Policy
                     </a>
                     . You can manage your preferences at any time.
@@ -81,11 +81,11 @@ const CookieConsent = () => {
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500 text-center">
                   Learn more about how we protect your data in our{' '}
-                  <a href="/privacy-policy" className="text-[#b45309] hover:underline font-semibold">
+                  <a href="/privacy-policy" className="text-[#f68921] hover:underline font-semibold">
                     Privacy Policy
                   </a>
                   {' '}and{' '}
-                  <a href="/terms-of-service" className="text-[#b45309] hover:underline font-semibold">
+                  <a href="/terms-of-service" className="text-[#f68921] hover:underline font-semibold">
                     Terms of Service
                   </a>
                   .

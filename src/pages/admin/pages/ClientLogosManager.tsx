@@ -25,7 +25,6 @@ const ClientLogosManager: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ id: number; logoUrl: string } | null>(null);
   const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
-  const [successDialog, setSuccessDialog] = useState<{ count: number } | null>(null);
 
   useEffect(() => {
     fetchLogos();
@@ -76,10 +75,6 @@ const ClientLogosManager: React.FC = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     fetchLogos();
-  };
-
-  const handleUploadSuccess = (count: number) => {
-    setSuccessDialog({ count });
   };
 
   // Extract just the image URLs for the 3D gallery
@@ -257,35 +252,7 @@ const ClientLogosManager: React.FC = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <ClientLogoModal onClose={handleModalClose} onSuccess={handleUploadSuccess} />
-      )}
-
-      {/* Success Dialog */}
-      {successDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-8 flex flex-col items-center text-center animate-fade-in">
-            {/* Green checkmark circle */}
-            <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center mb-5">
-              <svg className="w-9 h-9 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              Upload Successful!
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
-              {successDialog.count === 1
-                ? '1 logo has been uploaded and is now live.'
-                : `${successDialog.count} logos have been uploaded and are now live.`}
-            </p>
-            <Button
-              onClick={() => setSuccessDialog(null)}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
+        <ClientLogoModal onClose={handleModalClose} />
       )}
 
       {/* Delete Confirmation Dialog */}

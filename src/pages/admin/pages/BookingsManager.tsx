@@ -23,7 +23,6 @@ const BookingsManager: React.FC = () => {
     const [unavailableDates, setUnavailableDates] = useState<any[]>([]);
     const [newUnavailable, setNewUnavailable] = useState({ date: '', reason: '' });
     const [removingId, setRemovingId] = useState<string | null>(null);
-    const [showHistory, setShowHistory] = useState(false);
 
     useEffect(() => {
         fetchBookings();
@@ -55,6 +54,17 @@ const BookingsManager: React.FC = () => {
         } catch (err) {
             console.error('Error adding unavailable date', err);
             alert('Failed to add');
+        }
+    };
+
+    const updateUnavailableDate = async (id: string, updates: any) => {
+        try {
+            const { error } = await (supabase as any).from('unavailable_dates').update(updates).eq('id', id);
+            if (error) throw error;
+            fetchUnavailableDates();
+        } catch (err) {
+            console.error('Error updating unavailable date', err);
+            alert('Failed to update');
         }
     };
 
@@ -131,12 +141,6 @@ const BookingsManager: React.FC = () => {
             alert('Failed to delete booking');
         }
     };
-
-    // Split unavailable dates into upcoming (active) vs already-passed (history)
-    const todayMidnight = new Date();
-    todayMidnight.setHours(0, 0, 0, 0);
-    const activeBlocks = unavailableDates.filter(d => new Date(d.date + 'T00:00:00') >= todayMidnight);
-    const pastBlocks   = unavailableDates.filter(d => new Date(d.date + 'T00:00:00') <  todayMidnight);
 
     const filteredBookings = bookings.filter(booking =>
         booking.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -217,84 +221,24 @@ const BookingsManager: React.FC = () => {
                                 <Button onClick={addUnavailableDate} className="bg-[#153462] text-white">Block Date</Button>
                             </div>
 
-                            {/* ── Active Blocks (today and future) ── */}
                             <div className="mt-4">
-                                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                    Active Blocks
-                                    <span className="ml-2 text-xs font-normal text-gray-400">({activeBlocks.length})</span>
-                                </h4>
+                                <h4 className="text-sm text-gray-600 mb-2">Active Blocks</h4>
                                 <div className="space-y-2">
-                                    {activeBlocks.length === 0 && (
-                                        <div className="text-sm text-gray-500">No upcoming blocked dates.</div>
-                                    )}
-                                    {activeBlocks.map((d) => (
-                                        <div key={d.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center flex-shrink-0">
-                                                    <svg className="w-4 h-4 text-orange-600 dark:text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium text-gray-900 dark:text-white">
-                                                        {new Date(d.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
-                                                    </div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{d.reason || 'No reason given'}</div>
-                                                </div>
+                                    {unavailableDates.length === 0 && <div className="text-sm text-gray-500">No blocked dates.</div>}
+                                    {unavailableDates.map((d) => (
+                                        <div key={d.id} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-2 rounded">
+                                            <div className="flex-1">
+                                                <div className="font-medium">{new Date(d.date).toLocaleDateString()}</div>
+                                                <div className="text-xs text-gray-500">{d.reason || 'No reason'}</div>
                                             </div>
-                                            <Button
-                                                onClick={() => removeUnavailableDate(d.id)}
-                                                disabled={removingId === d.id}
-                                                className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1"
-                                            >
-                                                {removingId === d.id ? 'Removing…' : 'Remove'}
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                <input className="px-2 py-1 border rounded" defaultValue={d.reason || ''} onBlur={(e) => updateUnavailableDate(d.id, { reason: e.target.value })} />
+                                                <Button onClick={() => removeUnavailableDate(d.id)} disabled={removingId === d.id} className="bg-red-600 text-white">{removingId === d.id ? 'Removing...' : 'Remove'}</Button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-
-                            {/* ── Past Blocks (history) ── */}
-                            {pastBlocks.length > 0 && (
-                                <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-                                    <button
-                                        onClick={() => setShowHistory(h => !h)}
-                                        className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-                                    >
-                                        <svg
-                                            className={`w-4 h-4 transition-transform ${showHistory ? 'rotate-90' : ''}`}
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                        </svg>
-                                        Past Blocks / History
-                                        <span className="ml-1 px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-medium">{pastBlocks.length}</span>
-                                    </button>
-
-                                    {showHistory && (
-                                        <div className="mt-3 space-y-2">
-                                            {pastBlocks.map((d) => (
-                                                <div key={d.id} className="flex items-center justify-between bg-gray-100 dark:bg-gray-900/60 p-3 rounded-lg border border-gray-200 dark:border-gray-700 opacity-70">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                                                            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-gray-600 dark:text-gray-400 line-through">
-                                                                {new Date(d.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
-                                                            </div>
-                                                            <div className="text-xs text-gray-400">{d.reason || 'No reason given'}</div>
-                                                        </div>
-                                                    </div>
-                                                    <span className="text-xs text-gray-400 italic">Passed</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
                             {/* Bulk import
                             <div className="mt-4">
                                 <h4 className="text-sm text-gray-600 mb-2">Bulk Import (CSV lines: YYYY-MM-DD,Reason,recurring)</h4>

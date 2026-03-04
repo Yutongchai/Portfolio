@@ -24,7 +24,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { supabase } from '../../config/supabaseClient';
 import ClientMarquee from '../personal-story-section/components/ClientMarquee';
-import { toSupabaseThumbnail } from '../../utils/supabaseImageTransform';
 
 const teamBuildingActivities: Activity[] = [
   {
@@ -177,20 +176,6 @@ const DetailedSection: React.FC<DetailedSectionProps> = ({ categoryData, index }
           </motion.h2>
         </div>
 
-        {/* Swipe indicator — mobile only */}
-        <div className="flex md:hidden justify-center items-center gap-1.5 mb-5">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="rounded-full bg-[#4a90e2]"
-              animate={{ opacity: [0.2, 1, 0.2], scaleX: [1, 1.8, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.25, ease: 'easeInOut' }}
-              style={{ width: 8, height: 8 }}
-            />
-          ))}
-          <span className="ml-2 text-[10px] font-black uppercase tracking-widest text-[#4a90e2]/60">Drag to explore</span>
-        </div>
-
         {/* Horizontal Grid of Cards - Mobile: Scrollable, Desktop: 4 columns */}
         <ScrollableCards desktopColumns={4} gap={6}>
           {categoryData.subItems.map((item, idx) => (
@@ -244,7 +229,7 @@ const TeamBuilding = () => {
                 if (error) throw error;
 
                 if (data && data.length > 0) {
-                  const logoUrls = data.map(logo => toSupabaseThumbnail(logo.logo_url));
+                  const logoUrls = data.map(logo => logo.logo_url);
                   setClients(logoUrls);
                   console.log('Fetched client logos:', logoUrls);
                 } else {

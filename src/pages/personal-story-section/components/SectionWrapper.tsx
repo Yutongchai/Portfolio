@@ -9,19 +9,16 @@ interface SectionWrapperProps {
 
 const SectionWrapper = ({ children, className = '', delay = 0 }: SectionWrapperProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  // once: true — section animates in once and stays visible. once:false caused
-  // sections to go blank when scrolled out of the -100px margin, then need
-  // 800ms to fade back in — that was the main source of perceived lag.
-  const isInView = useInView(ref, { once: true, margin: '150px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   return (
     <motion.section
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{
-        duration: 0.4,
-        delay: delay * 0.5,
+        duration: 0.8,
+        delay,
         ease: [0.22, 1, 0.36, 1]
       }}
       className={className}

@@ -15,7 +15,6 @@ import supabase from "../../config/supabaseClient";
 // Import your TextGenerateEffect component
 import { TextGenerateEffect } from '../../components/ui/TextGenerateEffect';
 import ClientMarquee from '../../pages/personal-story-section/components/ClientMarquee';
-import { toSupabaseThumbnail } from '../../utils/supabaseImageTransform';
 
 const COLORS = {
   NAVY: '#153462',
@@ -48,7 +47,7 @@ const ConnectionHub = () => {
           .order('display_order', { ascending: true });
         if (error) throw error;
         if (data && data.length > 0) {
-          const logoUrls = data.map((logo: any) => toSupabaseThumbnail(logo.logo_url));
+          const logoUrls = data.map((logo: any) => logo.logo_url);
           setClientLogos(logoUrls);
         }
       } catch (error) {
@@ -465,26 +464,26 @@ const ConnectionHub = () => {
                 )}
               </div>
 
-              <div className="relative min-h-0 md:min-h-[450px]">
+              <div className="relative min-h-[450px]">
                 <AnimatePresence mode="wait">
                   {!selectedSlot ? (
                     <motion.div key="calendar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border-4 border-[#153462] rounded-[2rem] p-4 bg-[#FFEBD2]/30">
                       <AvailabilityCalendar slots={sampleSlots} onBookSlot={(slot: any) => setSelectedSlot(slot)} />
                     </motion.div>
                   ) : (
-                    <motion.div key="booking-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="max-w-2xl mx-auto bg-white border-4 md:border-8 border-[#153462] rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-12 shadow-none md:shadow-[16px_16px_0px_0px_#f68921]">
-                      <div className="mb-5 md:mb-10 p-4 md:p-6 bg-[#153462] text-white border-4 border-dashed border-[#fcb22f] relative overflow-hidden">
+                    <motion.div key="booking-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="max-w-2xl mx-auto bg-white border-8 border-[#153462] rounded-[2rem] p-8 md:p-12 shadow-[16px_16px_0px_0px_#f68921]">
+                      <div className="mb-10 p-6 bg-[#153462] text-white border-4 border-dashed border-[#fcb22f] relative overflow-hidden">
                         <p className="text-xs font-black uppercase tracking-[0.3em] text-[#fcb22f] mb-1">Confirmed Selection</p>
-                        <p className="text-xl md:text-2xl font-black italic">{selectedSlot.day} @ {selectedSlot.time}</p>
+                        <p className="text-2xl font-black italic">{selectedSlot.day} @ {selectedSlot.time}</p>
                       </div>
-                      <form onSubmit={triggerEmailNotification} className="space-y-4 md:space-y-8">
-                        {[{ label: 'Full Name', val: 'name', ph: 'Your Name' }, { label: 'Company', val: 'company', ph: 'Your Company Name' }, { label: 'Email', val: 'email', ph: 'your@email.com', type: 'email' }].map((input) => (
+                      <form onSubmit={triggerEmailNotification} className="space-y-8">
+                        {[{ label: 'Full Name', val: 'name', ph: 'Adam Smith' }, { label: 'Company', val: 'company', ph: 'EITO Group' }, { label: 'Email', val: 'email', ph: 'your@email.com', type: 'email' }].map((input) => (
                           <div key={input.val}>
                             <label className="block text-xs font-black uppercase tracking-widest text-[#153462] mb-3">{input.label}</label>
-                            <input required type={input.type || "text"} className="w-full border-4 border-[#153462] px-4 py-3 md:px-5 md:py-4 font-bold outline-none shadow-[4px_4px_0px_0px_#153462] focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all" placeholder={input.ph} value={bookingData[input.val as keyof typeof bookingData]} onChange={(e) => setBookingData({ ...bookingData, [input.val]: e.target.value })} />
+                            <input required type={input.type || "text"} className="w-full border-4 border-[#153462] px-5 py-4 font-bold outline-none shadow-[4px_4px_0px_0px_#153462] focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all" placeholder={input.ph} value={bookingData[input.val as keyof typeof bookingData]} onChange={(e) => setBookingData({ ...bookingData, [input.val]: e.target.value })} />
                           </div>
                         ))}
-                        <button type="submit" disabled={isSubmitting} className="w-full bg-[#f68921] text-white border-4 border-[#153462] py-4 md:py-6 font-black uppercase tracking-widest text-base md:text-lg flex items-center justify-center gap-4 shadow-[4px_4px_0px_0px_#153462] md:shadow-[8px_8px_0px_0px_#153462] hover:shadow-none transition-all">
+                        <button type="submit" disabled={isSubmitting} className="w-full bg-[#f68921] text-white border-4 border-[#153462] py-6 font-black uppercase tracking-widest text-lg flex items-center justify-center gap-4 shadow-[8px_8px_0px_0px_#153462] hover:shadow-none transition-all">
                           {isSubmitting ? "Sending..." : "Generate Request"}
                         </button>
                       </form>

@@ -184,10 +184,6 @@ const ClientMarquee = ({
                 <img
                   src={logo || "/placeholder.svg"}
                   alt="Partner logo"
-                  loading="lazy"
-                  decoding="async"
-                  width={LOGO_WIDTH}
-                  height={LOGO_HEIGHT}
                   className="max-w-[85%] max-h-[70%] object-contain opacity-100 transition-transform duration-300 group-hover:scale-110"
                   /* Changed opacity to 100 and added a subtle scale effect instead */
                   draggable={false}

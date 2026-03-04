@@ -6,7 +6,6 @@ import Collab from '../../../assets/contact.webp';
 import { Button } from '../../../components/ui/Button';
 import ClientMarquee from './ClientMarquee';
 import { supabase } from '../../../config/supabaseClient';
-import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 
 // Google reviews removed per request
@@ -31,8 +30,8 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         if (error) throw error;
 
         if (data && data.length > 0) {
-
-          const logoUrls = data.map(logo => toSupabaseThumbnail(logo.logo_url));
+          // logo_url already contains the full public URL
+          const logoUrls = data.map(logo => logo.logo_url);
           setClients(logoUrls);
           console.log('Fetched client logos:', logoUrls);
         } else {
