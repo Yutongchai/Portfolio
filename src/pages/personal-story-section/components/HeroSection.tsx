@@ -24,12 +24,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
   // Static fallback images (from public/) — paint immediately so LCP fires early
   const FALLBACK_IMAGES = [
-    '/CE.webp',
     '/connect.webp',
-    '/csr.webp',
-    '/Engagement.webp',
-    '/Living.webp',
-    '/LEGO.webp',
   ];
 
   // Background images — initialised with fallbacks so first image paints immediately
@@ -49,7 +44,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        
+
         if (data && data.length > 0) {
           // Apply Image Transform to reduce hero image size (1200 wide, 70 quality)
           setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1200, 70)));
@@ -67,7 +62,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
   useEffect(() => {
     if (backgroundImages.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
     }, 5000); // Change image every 5 seconds
@@ -131,8 +126,8 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         {/* Semi-transparent overlay */}
         <div className="absolute inset-0 bg-black/50" />
       </div>
-      
-      <div 
+
+      <div
         className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
       >
         <div className="flex flex-col items-center text-center">
@@ -140,7 +135,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
           <div className="space-y-6 sm:space-y-8 max-w-3xl">
             <div className="space-y-4 sm:space-y-6">
               {/* Large Bold Name */}
-              <motion.h1 
+              <motion.h1
                 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none"
                 style={{ color: '#fcb22f' }}
                 initial={{ y: 20 }}
@@ -149,7 +144,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
               >
                 {personalInfo.name}
               </motion.h1>
-              
+
               {/* Subtitle — plain div so it renders before React animations run */}
               <div className="text-3xl sm:text-4xl md:text-5xl handwritten text-foreground/90">
                 <span className="font-bold" style={{ color: '#ffffff' }}>We Build Unforgettable Team Experiences — For </span>
@@ -160,21 +155,21 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
                   interval={2000}
                 />
               </div>
-              
+
               {/* Body Text */}
               <p className="text-lg sm:text-xl md:text-2xl text-foreground/70 font-light leading-relaxed">
                 {personalInfo.tagline}
               </p>
             </div>
-            
+
             {/* Accent Line Divider */}
-            <motion.div 
+            <motion.div
               className="h-1 bg-primary rounded-full mx-auto"
               initial={{ width: 0 }}
               animate={{ width: 120 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             />
-            
+
             {/* Bio Text */}
             <p className="text-lg sm:text-xl leading-relaxed text-white font-bold">
               {personalInfo.bio}
