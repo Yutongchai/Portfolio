@@ -20,12 +20,16 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/EITO bw.webp" />
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-    rel="stylesheet">
+  <!-- Critical inline CSS: sets background/text before the main stylesheet loads,
+       preventing the white flash during blocking CSS download (~300ms on slow 4G) -->
+  <style>
+    html { background: #fafbfc; }
+    body { margin: 0; background: #fafbfc; color: #0f172a;
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  </style>
+
+  <!-- Preload first hero image to improve LCP -->
+  <link rel="preload" as="image" href="/connect.webp" fetchpriority="high" />
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J45HZDCVNQ"></script>

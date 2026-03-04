@@ -125,6 +125,8 @@ const ImageHoverScrollSection = () => {
                             <img
                                 src={img.src}
                                 alt={img.label}
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     position: 'absolute',
                                     top: 0,

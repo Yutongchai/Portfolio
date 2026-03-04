@@ -151,7 +151,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           {/* Projects Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
+          {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Projects
@@ -167,7 +167,7 @@ const AdminDashboard: React.FC = () => {
             >
               Manage Projects
             </Button>
-          </div>
+          </div> */}
 
           {/* Inquiries Card */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
@@ -208,7 +208,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           {/* Media Library Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
+          {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Media Library
@@ -221,7 +221,7 @@ const AdminDashboard: React.FC = () => {
             <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-auto">
               Open Media Library
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* Quick Stats */}

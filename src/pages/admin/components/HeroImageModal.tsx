@@ -41,7 +41,7 @@ async function getCroppedImg(imageSrc: string, pixelCrop: any): Promise<Blob> {
     canvas.toBlob((file) => {
       if (file) resolve(file);
       else reject(new Error('Canvas is empty'));
-    }, 'image/jpeg');
+    }, 'image/webp', 0.82);
   });
 }
 
@@ -111,13 +111,13 @@ const HeroImageModal: React.FC<HeroImageModalProps> = ({ onClose }) => {
       console.log('Image cropped successfully, size:', croppedImageBlob.size, 'bytes');
       
       // Upload to Supabase Storage with timeout
-      const fileName = `${Date.now()}_${currentFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+      const fileName = `${Date.now()}_${currentFile.name.replace(/\.[^/.]+$/, '.webp').replace(/[^a-zA-Z0-9.-]/g, '_')}`;
       console.log('Uploading to storage bucket:', fileName);
       
       const uploadPromise = supabase.storage
         .from('hero-images')
         .upload(fileName, croppedImageBlob, {
-          contentType: 'image/jpeg',
+          contentType: 'image/webp',
           cacheControl: '3600',
           upsert: false
         });

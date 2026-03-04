@@ -110,17 +110,11 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Lora", "serif"],
-        serif: [
-          "Playfair Display",
-          "Lora",
-          "Libre Baskerville",
-          "Georgia",
-          "serif",
-        ],
-        display: ["Playfair Display", "serif"],
-        body: ["Lora", "serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif"],
+        serif: ["Georgia", '"Times New Roman"', "serif"],
+        display: ["Georgia", '"Times New Roman"', "serif"],
+        body: ["-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "Roboto", "Arial", "sans-serif"],
+        mono: ['"JetBrains Mono"', "Menlo", "Monaco", "Consolas", '"Courier New"', "monospace"],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1rem" }],

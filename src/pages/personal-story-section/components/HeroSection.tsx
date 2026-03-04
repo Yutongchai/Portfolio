@@ -1,8 +1,10 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import { PersonalInfo } from '../types';
-import RotatingText from './RotatingText';
-import { supabase } from '../../../config/supabaseClient';
+import SimpleRotatingText from './SimpleRotatingText';
+// supabase is dynamically imported inside the 3s delay so its chunk (~40 KiB)
+// doesn't block the initial page load
+import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -20,15 +22,17 @@ const defaultPersonalInfo: PersonalInfo = {
 
 const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSectionProps) => {
   const personalInfo = propPersonalInfo || defaultPersonalInfo;
-  
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start']
-  });
 
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.6]);
+  // Static fallback images (from public/) — paint immediately so LCP fires early
+  const FALLBACK_IMAGES = [
+    '/connect.webp',
+  ];
+
+  // Track initial mount so the first slide skips its opacity:0 → 1 fade (prevents LCP delay)
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    isInitialMount.current = false;
+  }, []);
 
   // Background images from database
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
@@ -38,6 +42,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   useEffect(() => {
     const fetchHeroImages = async () => {
       try {
+        const { supabase } = await import('../../../config/supabaseClient');
         const { data, error } = await supabase
           .from('hero_images')
           .select('image_url')
@@ -45,7 +50,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        
+
         if (data && data.length > 0) {
           setBackgroundImages(data.map(img => img.image_url));
         } else {
@@ -80,7 +85,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
   useEffect(() => {
     if (backgroundImages.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
     }, 5000); // Change image every 5 seconds
@@ -118,105 +123,96 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   }
 
   return (
-    <section id="hero-section" ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="hero-section" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Slideshow Background */}
       <div className="absolute inset-0 z-0">
-        {backgroundImages.map((image, index) => (
-          <motion.div
-            key={image}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: index === currentImageIndex ? 1 : 0,
-            }}
-            transition={{ duration: 1.5 }}
-          />
-        ))}
+        {/* LCP <img>: immediately visible to browser/Lighthouse; covered by motion.div once loaded */}
+        <img
+          src={FALLBACK_IMAGES[0]}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
+        {backgroundImages.map((image, index) => {
+          const isCurrent = index === currentImageIndex;
+          const isPrev = index === (currentImageIndex - 1 + backgroundImages.length) % backgroundImages.length;
+          if (!isCurrent && !isPrev) return null;
+
+          // First slide on initial mount: skip opacity:0 so LCP image is visible immediately (no fade-in jump)
+          const initialOpacity = isInitialMount.current && index === 0 ? 1 : 0;
+
+          return (
+            <motion.div
+              key={image}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${image})`,
+                willChange: 'opacity',
+                transform: 'translateZ(0)',
+                zIndex: 1,
+              }}
+              initial={{ opacity: initialOpacity }}
+              animate={{ opacity: isCurrent ? 1 : 0 }}
+              transition={{ duration: 1.5 }}
+            />
+          );
+        })}
         {/* Semi-transparent overlay */}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/50" style={{ zIndex: 2 }} />
       </div>
-      
-      <motion.div 
+
+      <div
         className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
-        style={{ opacity, y }}
       >
         <div className="flex flex-col items-center text-center">
-          {/* Text Content Centered */}
-          <motion.div 
-            className="space-y-6 sm:space-y-8 max-w-3xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
+          {/* Text Content — no opacity:0 initial so text is visible immediately (no LCP delay) */}
+          <div className="space-y-6 sm:space-y-8 max-w-3xl">
             <div className="space-y-4 sm:space-y-6">
-              {/* Large Bold Name - Primary Accent Color */}
-              <motion.h1 
+              {/* Large Bold Name */}
+              <motion.h1
                 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-none"
                 style={{ color: '#fcb22f' }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
                 {personalInfo.name}
               </motion.h1>
-              
-              {/* Expressive Handwritten Subtitle */}
-              <motion.div 
-                className="text-3xl sm:text-4xl md:text-5xl handwritten text-foreground/90"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
+
+              {/* Subtitle — plain div so it renders before React animations run */}
+              <div className="text-3xl sm:text-4xl md:text-5xl handwritten text-foreground/90">
                 <span className="font-bold" style={{ color: '#ffffff' }}>We Build Unforgettable Team Experiences — For </span>
-                <RotatingText
+                <SimpleRotatingText
                   texts={['People.', 'Culture.', 'Growth.']}
-                  mainClassName="inline-flex font-extrabold"
+                  className="font-extrabold"
                   style={{ color: '#fcb22f' }}
-                  staggerFrom="last"
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  exit={{ y: "-120%" }}
-                  staggerDuration={0.025}
-                  splitLevelClassName="overflow-hidden"
-                  transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                  rotationInterval={2000}
+                  interval={2000}
                 />
-              </motion.div>
-              
-              {/* Clean Body Text */}
-              <motion.p 
-                className="text-lg sm:text-xl md:text-2xl text-foreground/70 font-light leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
+              </div>
+
+              {/* Body Text */}
+              <p className="text-lg sm:text-xl md:text-2xl text-foreground/70 font-light leading-relaxed">
                 {personalInfo.tagline}
-              </motion.p>
+              </p>
             </div>
-            
+
             {/* Accent Line Divider */}
-            <motion.div 
+            <motion.div
               className="h-1 bg-primary rounded-full mx-auto"
               initial={{ width: 0 }}
               animate={{ width: 120 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.8, delay: 0.3 }}
             />
-            
+
             {/* Bio Text */}
-            <motion.p 
-              className="text-lg sm:text-xl leading-relaxed text-white font-bold"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
+            <p className="text-lg sm:text-xl leading-relaxed text-white font-bold">
               {personalInfo.bio}
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 import ScrollableCards from '../../../components/ui/ScrollableCards';
@@ -60,6 +60,10 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
           <img
             src={belief.bgImage}
             alt={belief.title}
+            width={1000}
+            height={1333}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -88,12 +92,12 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
             {belief.accent}
           </div>
 
-          <h3
+          <p
             className="text-3xl md:text-4xl font-extrabold text-white mb-3 group-hover:text-[#e1620b] transition-colors"
             style={{ textShadow: '0 8px 20px rgba(0,0,0,0.55)' }}
           >
             {belief.title}
-          </h3>
+          </p>
 
           <p
             className="text-base md:text-lg text-white/90 leading-relaxed font-medium mb-6 max-w-prose"
@@ -172,32 +176,12 @@ const BeliefsValuesSection = () => {
     },
   ];
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const curvedTextRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "center center"]
-  });
-
-  const { scrollYProgress: curvedTextScroll } = useScroll({
-    target: curvedTextRef,
-    offset: ["start end", "center center"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [200, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
-  const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
   return (
 
     <section
       id="beliefs-values"
-      ref={containerRef}
-      /* We use a gradient that transitions from light beige to the dark charcoal of your images */
       className="py-16 px-4 relative transition-colors"
       style={{
         background: `linear-gradient(to bottom, #f5f7fa 0%, #FFEBD2 40%, #020202 90%)`

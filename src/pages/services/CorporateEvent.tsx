@@ -246,6 +246,17 @@ const CorporateEvent = () => {
             </p>
           </div>
 
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden items-center justify-center gap-2 mb-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe</span>
+            <motion.div className="flex gap-1" animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}>
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} />
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} />
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} />
+            </motion.div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">to explore</span>
+          </div>
+
           <ScrollableCards desktopColumns={4} gap={8}>
             {subCategories.map((category, idx) => (
               <motion.div
@@ -350,6 +361,16 @@ const CorporateEvent = () => {
             </p>
           </div>
 
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden items-center justify-center gap-3 mb-5">
+            <motion.span
+              className="text-xl select-none"
+              animate={{ rotate: [0, -15, 15, -15, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            >👋</motion.span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe through steps</span>
+          </div>
+
           <ScrollableCards desktopColumns={1} gap={8}>
             {howWeWork.map((step, idx) => (
               <motion.div
@@ -401,6 +422,22 @@ const CorporateEvent = () => {
             <p className="text-white/80 text-lg max-w-2xl mx-auto font-medium">
               Our commitment to excellence drives everything we do.
             </p>
+          </div>
+
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden flex-col items-center gap-2 mb-5">
+            <div className="flex items-center gap-1.5">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="h-1.5 rounded-full bg-[#fcb22f]"
+                  animate={{ width: i === 0 ? [20, 8, 8, 20] : [8, 8, 8, 8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }}
+                  style={{ width: i === 0 ? 20 : 8 }}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Swipe to explore</span>
           </div>
 
           <ScrollableCards desktopColumns={3} gap={8}>
