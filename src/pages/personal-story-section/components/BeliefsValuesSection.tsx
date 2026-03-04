@@ -88,12 +88,12 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
             {belief.accent}
           </div>
 
-          <h3
+          <p
             className="text-3xl md:text-4xl font-extrabold text-white mb-3 group-hover:text-[#e1620b] transition-colors"
             style={{ textShadow: '0 8px 20px rgba(0,0,0,0.55)' }}
           >
             {belief.title}
-          </h3>
+          </p>
 
           <p
             className="text-base md:text-lg text-white/90 leading-relaxed font-medium mb-6 max-w-prose"

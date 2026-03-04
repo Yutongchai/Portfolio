@@ -24,7 +24,6 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
   // Static fallback images (from public/) — paint immediately so LCP fires early
   const FALLBACK_IMAGES = [
-    '/TB.webp',
     '/CE.webp',
     '/connect.webp',
     '/csr.webp',
@@ -114,26 +113,6 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
           const isPrev = index === (currentImageIndex - 1 + backgroundImages.length) % backgroundImages.length;
           if (!isCurrent && !isPrev) return null;
 
-          // First image: real <img> tag so the browser preload scanner finds it
-          // and it registers as the LCP element (background-image is invisible to preload scanner)
-          if (index === 0) {
-            return (
-              <img
-                key={image}
-                src={image}
-                alt=""
-                aria-hidden="true"
-                fetchPriority="high"
-                decoding="async"
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{
-                  opacity: isCurrent ? 1 : 0,
-                  transition: 'opacity 1.5s ease',
-                  transform: 'translateZ(0)',
-                }}
-              />
-            );
-          }
           return (
             <motion.div
               key={image}

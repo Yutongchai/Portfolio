@@ -86,7 +86,7 @@ const AltHeader: React.FC = () => {
 
                         {/* MOBILE: HAMBURGER (Hidden on Desktop) */}
                         <div className="md:hidden flex-1">
-                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]">
+                            <button onClick={() => setMobileMenuOpen(true)} className="p-2 text-[#153462]" aria-label="Open menu">
                                 <Menu size={28} strokeWidth={3} />
                             </button>
                         </div>
