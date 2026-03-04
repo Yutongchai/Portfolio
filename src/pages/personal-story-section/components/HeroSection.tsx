@@ -38,11 +38,9 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   const [backgroundImages, setBackgroundImages] = useState<string[]>(FALLBACK_IMAGES);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Fetch hero images from database (delayed so local fallback paints as LCP first)
+  // Fetch hero images from database (replaces fallbacks once loaded)
   useEffect(() => {
-    // Delay the DB fetch by 3s — local fallback images are preloaded and will be
-    // the LCP element. Supabase images replace them after the LCP window closes.
-    const fetchTimer = setTimeout(async () => {
+    const fetchHeroImages = async () => {
       try {
         const { supabase } = await import('../../../config/supabaseClient');
         const { data, error } = await supabase
@@ -55,17 +53,18 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
         if (data && data.length > 0) {
           // Apply Image Transform to reduce hero image size (1200 wide, 70 quality)
+          // This converts multi-MB originals to ~200–400 KB — critical for LCP on mobile
           setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1200, 70)));
-          // Don't reset index — let the current slide continue without a flash
+          setCurrentImageIndex(0);
         }
         // If no DB images, keep fallbacks — do nothing
       } catch (error) {
         console.error('Error fetching hero images:', error);
         // Keep fallbacks — do nothing
       }
-    }, 3000);
+    };
 
-    return () => clearTimeout(fetchTimer);
+    fetchHeroImages();
   }, []);
 
   useEffect(() => {
