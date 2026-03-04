@@ -33,7 +33,11 @@ serve(async (req: any) => {
             });
         }
 
-        const OWNER_EMAIL = 'yutongchai2@gmail.com';
+        // PRODUCTION: secrets set via Supabase dashboard / CLI
+        // TESTING: swap ADMIN_EMAIL_TO secret to yutongchai2@gmail.com
+        //   npx supabase secrets set ADMIN_EMAIL_TO=yutongchai2@gmail.com
+        const OWNER_EMAIL = Deno.env.get('ADMIN_EMAIL_TO') || 'info@eitogroup.com.my';
+        const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'EITO Group <info@eitogroup.com.my>';
 
         // HTML template for customer
         const customerHtml = `
@@ -68,7 +72,7 @@ serve(async (req: any) => {
         // Send email to owner first
         console.log('Sending email to owner:', OWNER_EMAIL);
         const ownerResult = await resend.emails.send({
-            from: "EITO Admin <onboarding@resend.dev>", // Added 'Admin' to distinguish
+            from: FROM_EMAIL,
             to: [OWNER_EMAIL],
             subject: `NEW BOOKING: ${companyName}`,
             html: ownerHtml,
@@ -78,11 +82,11 @@ serve(async (req: any) => {
         // Send confirmation email to customer (may fail in Resend sandbox mode)
         let customerEmailId = null;
         try {
-            console.log('Sending email to customer (redirected to owner for testing):', OWNER_EMAIL);
+            console.log('Sending confirmation email to customer:', email);
             const customerResult = await resend.emails.send({
-                from: "EITO Confirmation <onboarding@resend.dev>", // Different name
-                to: [OWNER_EMAIL], // You are sending to yourself for testing
-                subject: `CONFIRMATION: ${companyName}`,
+                from: FROM_EMAIL,
+                to: [email],
+                subject: `Booking Confirmed – ${companyName}`,
                 html: customerHtml,
             });
             console.log('Customer email result:', JSON.stringify(customerResult));

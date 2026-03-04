@@ -6,9 +6,12 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 serve(async (req) => {
   try {
     // 1. Read secrets
+    // PRODUCTION: secrets set via Supabase dashboard / CLI
+    // TESTING: swap ADMIN_EMAIL_TO secret to yutongchai2@gmail.com
+    //   npx supabase secrets set ADMIN_EMAIL_TO=yutongchai2@gmail.com
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    const ADMIN_EMAIL_TO = Deno.env.get("ADMIN_EMAIL_TO");
-    const FROM_EMAIL = Deno.env.get("FROM_EMAIL");
+    const ADMIN_EMAIL_TO = Deno.env.get("ADMIN_EMAIL_TO") ?? 'info@eitogroup.com.my';
+    const FROM_EMAIL = Deno.env.get("FROM_EMAIL") ?? 'EITO Group <info@eitogroup.com.my>';
 
     if (!RESEND_API_KEY || !ADMIN_EMAIL_TO || !FROM_EMAIL) {
       throw new Error("Missing email configuration");

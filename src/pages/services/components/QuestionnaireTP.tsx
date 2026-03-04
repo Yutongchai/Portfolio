@@ -159,8 +159,12 @@ const QuestionnaireTP = () => {
         remarks: formData.remarks,
       };
 
-      const { error } = await supabase.from("training_program_inquiries").insert(submitData);
+      const { data: inserted, error } = await supabase.from("training_program_inquiries").insert(submitData).select().single();
       if (error) throw error;
+
+      await supabase.functions.invoke('send-inquiry-email', {
+        body: { table: 'training_program_inquiries', record: inserted },
+      });
 
       setShowToast(true);
       setTimeout(() => setShowToast(false), 4000);
