@@ -20,12 +20,20 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/EITO bw.webp" />
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- Google Fonts -->
+  <!-- Preload first hero image to improve LCP -->
+  <link rel="preload" as="image" href="/TB.webp" fetchpriority="high" />
+
+  <!-- Google Fonts — loaded asynchronously to avoid render-blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
+  <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
-    rel="stylesheet">
+    onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap"
+      rel="stylesheet">
+  </noscript>
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J45HZDCVNQ"></script>
@@ -37,10 +45,12 @@
     gtag('config', 'G-J45HZDCVNQ');
   </script>
 
-  <script type="module" crossorigin src="/assets/index-BuXMRp59.js"></script>
+  <script type="module" crossorigin src="/assets/index-Dudse7_C.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/vendor-eyX32RLL.js">
-  <link rel="modulepreload" crossorigin href="/assets/ui-Df28J_fA.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-9qYMUMt_.css">
+  <link rel="modulepreload" crossorigin href="/assets/icons-BO9lCwOL.js">
+  <link rel="modulepreload" crossorigin href="/assets/supabase-DXTAdBI_.js">
+  <link rel="modulepreload" crossorigin href="/assets/motion-DMK7Yb8T.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-Dkpp5vUF.css">
 </head>
 
 <body>
