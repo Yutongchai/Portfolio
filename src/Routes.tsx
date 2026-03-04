@@ -1,6 +1,7 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate, useLocation } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
+import ReactGA from 'react-ga4';
 import ErrorBoundary from "./components/ErrorBoundary";
 import AltHeader from './components/ui/AltHeader';
 import SEOHead from './components/SEOHead';
@@ -40,6 +41,7 @@ const PageLoader = () => (
 const Routes: React.FC = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <RouteTracker />
       <Analytics />
       <ErrorBoundary>
         {/* Render AltHeader only on non-admin routes */}
@@ -93,6 +95,21 @@ const Routes: React.FC = () => {
       </ErrorBoundary>
     </BrowserRouter>
   );
+};
+
+// RouteTracker: initialize GA and send pageviews on route change
+const RouteTracker: React.FC = () => {
+  const location = useLocation();
+  useEffect(() => {
+    // Initialize once
+    ReactGA.initialize('G-CP9NYZR2TH');
+  }, []);
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
+  }, [location]);
+
+  return null;
 };
 
 // HeaderGuard: shows AltHeader except for /admin routes
