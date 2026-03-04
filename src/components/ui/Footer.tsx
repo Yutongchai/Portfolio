@@ -168,6 +168,7 @@ const Footer = () => {
 
           {/* Desktop only: Column 3 - Appreciations */}
           <div className="hidden md:flex flex-col items-center sm:items-start w-full">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462]">Appreciations</h3>
             <div className="flex justify-center sm:justify-start">
               <img
                 src={HRDImg}
@@ -183,6 +184,7 @@ const Footer = () => {
 
           {/* Desktop only: Column 4 - Socials */}
           <div className="hidden md:flex flex-col items-center sm:items-start w-full">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-[#153462]">Social</h3>
             <div className="flex gap-4 justify-center sm:justify-start">
               {/* Instagram */}
               <a

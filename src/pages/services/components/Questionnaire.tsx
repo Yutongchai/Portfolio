@@ -180,24 +180,24 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   };
 
   // Neo-Brutalist Shared Styles
-  const brutInputStyle = "border-4 border-[#153462] p-4 font-bold placeholder:text-slate-400 focus:ring-0 shadow-[4px_4px_0px_0px_#153462] transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none";
+  const brutInputStyle = "border-4 border-[#153462] p-3 md:p-4 font-bold placeholder:text-slate-400 focus:ring-0 shadow-[4px_4px_0px_0px_#153462] transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none";
   const labelStyle = "block text-xs font-black uppercase tracking-widest text-[#153462] mb-2";
-  const inputWrapperStyle = "mb-6";
+  const inputWrapperStyle = "mb-4 md:mb-6";
 
   return (
-    <div className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] md:shadow-[12px_12px_0px_0px_#153462] p-8 md:p-12">
+    <div className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] md:shadow-[12px_12px_0px_0px_#153462] p-5 md:p-12">
 
       {/* Header + Progress Bar */}
-      <div className="mb-10">
+      <div className="mb-5 md:mb-10">
         <div className="inline-block border-4 border-[#153462] bg-[#f68921] px-4 py-1 mb-2 rotate-[-1deg] shadow-[4px_4px_0px_0px_#153462]">
           <span className="text-white font-black uppercase tracking-widest text-sm">Get a Quote</span>
         </div>
-        <h3 className="text-4xl md:text-5xl font-black text-[#153462] uppercase italic tracking-tighter mb-8">
+        <h3 className="text-4xl md:text-5xl font-black text-[#153462] uppercase italic tracking-tighter mb-4 md:mb-8">
           Let's <span className="text-[#f68921]">Connect_</span>
         </h3>
 
         {/* Progress Bar */}
-        <div className="flex justify-between gap-4 mb-6 border-b-4 border-[#153462] pb-6">
+        <div className="flex justify-between gap-4 mb-3 md:mb-6 border-b-4 border-[#153462] pb-4 md:pb-6">
           {[1, 2, 3].map((num) => (
             <div key={num} className="flex items-center gap-2 flex-1 justify-center">
               <div className={`w-8 h-8 flex items-center justify-center font-black border-2 border-[#153462] transition-all ${step === num ? 'bg-[#f68921] text-white scale-110' :
@@ -215,7 +215,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
       </div>
 
       {submitMessage && (
-        <div className={`mb-8 p-4 border-4 border-[#153462] font-black uppercase italic ${submitMessage.type === "success" ? "bg-green-400" : "bg-red-400"} shadow-[4px_4px_0px_0px_#153462]`}>
+        <div className={`mb-4 md:mb-8 p-4 border-4 border-[#153462] font-black uppercase italic ${submitMessage.type === "success" ? "bg-green-400" : "bg-red-400"} shadow-[4px_4px_0px_0px_#153462]`}>
           {submitMessage.text}
         </div>
       )}
@@ -225,7 +225,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         {/* STEP 1: COMPANY DETAILS */}
         {step === 1 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <h3 className="text-2xl font-black text-[#153462] mb-6 uppercase italic">Step 1: Company Information</h3>
+            <h3 className="text-2xl font-black text-[#153462] mb-4 md:mb-6 uppercase italic">Step 1: Company Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className={inputWrapperStyle}>
                 <label className={labelStyle}>Full Name *</label>
@@ -287,7 +287,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             <button
               type="button"
               onClick={goToNextStep}
-              className="w-full bg-[#153462] text-[#fcb22f] py-4 font-black uppercase tracking-widest hover:bg-[#f68921] hover:text-white transition-all shadow-[4px_4px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+              className="w-full bg-[#153462] text-[#fcb22f] py-3 md:py-4 font-black uppercase tracking-widest hover:bg-[#f68921] hover:text-white transition-all shadow-[4px_4px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
             >
               Next: Event Details →
             </button>
@@ -297,7 +297,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         {/* STEP 2: EVENT LOGISTICS */}
         {step === 2 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <h3 className="text-2xl font-black text-[#153462] mb-6 uppercase italic">Step 2: Event Details</h3>
+            <h3 className="text-2xl font-black text-[#153462] mb-4 md:mb-6 uppercase italic">Step 2: Event Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className={inputWrapperStyle}>
                 <label className={labelStyle}>Number of Pax *</label>
@@ -376,18 +376,18 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
               </div>
             </div>
 
-            <div className="flex gap-4 mt-6">
+            <div className="flex gap-4 mt-4 md:mt-6">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 border-4 border-[#153462] py-4 font-black uppercase hover:bg-gray-100 transition-all"
+                className="flex-1 border-4 border-[#153462] py-3 md:py-4 font-black uppercase hover:bg-gray-100 transition-all"
               >
                 ← Back
               </button>
               <button
                 type="button"
                 onClick={goToNextStep}
-                className="flex-1 bg-[#153462] text-[#fcb22f] py-4 font-black uppercase shadow-[4px_4px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                className="flex-1 bg-[#153462] text-[#fcb22f] py-3 md:py-4 font-black uppercase shadow-[4px_4px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
               >
                 Next: Preferences →
               </button>
@@ -398,7 +398,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         {/* STEP 3: FINAL REQUIREMENTS */}
         {step === 3 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <h3 className="text-2xl font-black text-[#153462] mb-6 uppercase italic">Step 3: Preferences</h3>
+            <h3 className="text-2xl font-black text-[#153462] mb-4 md:mb-6 uppercase italic">Step 3: Preferences</h3>
 
             <div className={inputWrapperStyle}>
               <label className={labelStyle}>HRDC Claimable?</label>
@@ -468,18 +468,18 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
               {fieldErrors.privacyConsent && <div className="text-sm text-red-600 mt-2">{fieldErrors.privacyConsent}</div>}
             </div>
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-5 md:mt-8">
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="w-1/3 border-4 border-[#153462] py-4 font-black uppercase hover:bg-gray-100 transition-all"
+                className="w-1/3 border-4 border-[#153462] py-3 md:py-4 font-black uppercase hover:bg-gray-100 transition-all"
               >
                 ← Back
               </button>
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-5 bg-[#153462] text-[#fcb22f] font-black text-lg uppercase italic border-4 border-[#153462] shadow-[8px_8px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                className="flex-1 py-3 md:py-5 bg-[#153462] text-[#fcb22f] font-black text-base md:text-lg uppercase italic border-4 border-[#153462] shadow-[4px_4px_0px_0px_#f68921] md:shadow-[8px_8px_0px_0px_#f68921] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
               >
                 {loading ? "SENDING..." : "GET MY QUOTE →"}
               </Button>
