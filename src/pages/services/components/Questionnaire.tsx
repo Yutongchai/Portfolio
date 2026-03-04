@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { supabase } from "../../../config/supabaseClient";
 import { INDUSTRIES } from "./industries";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Select from "../../../components/ui/Select";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
+import { CheckCircle } from 'lucide-react';
 
 type FormType = "csr" | "team_building" | "corporate_event";
 
@@ -56,6 +57,9 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
+  const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -152,8 +156,12 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
       const { error } = await supabase.from(tableMap[formType]).insert(submitData);
       if (error) throw error;
 
-      setSubmitMessage({ type: "success", text: "Sent! We'll get back to you soon." });
-      // Reset logic...
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 4000);
+      setStep(1);
+      scrollToForm();
+      setFormData({ name: "", contact: "", companyName: "", companyEmail: "", industryOption: "", industryOther: "", noOfPax: "", duration: "", durationOther: "", eventMonth: "", eventYear: "", budget: "", hrdc: "Yes", location: "", languages: [], languagesOther: "", remarks: "" });
+      setPrivacyConsent(false);
     } catch (error: any) {
       setSubmitMessage({ type: "error", text: "Database error. Please try again." });
     } finally {
@@ -174,6 +182,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   const goToNextStep = () => {
     if (validateStep(step)) {
       setStep(step + 1);
+      scrollToForm();
     } else {
       setSubmitMessage({ type: "error", text: "Please fill in all required fields" });
     }
@@ -185,7 +194,21 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
   const inputWrapperStyle = "mb-4 md:mb-6";
 
   return (
-    <div className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] md:shadow-[12px_12px_0px_0px_#153462] p-5 md:p-12">
+    <>
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-24 right-6 z-[100] bg-[#12a28f] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold"
+          >
+            <CheckCircle size={24} />
+            <span>Sent! We'll be in touch soon.</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div ref={formRef} className="max-w-4xl mx-auto bg-white border-4 border-[#153462] rounded-[2rem] md:rounded-[3rem] md:shadow-[12px_12px_0px_0px_#153462] p-5 md:p-12">
 
       {/* Header + Progress Bar */}
       <div className="mb-5 md:mb-10">
@@ -379,7 +402,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             <div className="flex gap-4 mt-4 md:mt-6">
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => { setStep(1); scrollToForm(); }}
                 className="flex-1 border-4 border-[#153462] py-3 md:py-4 font-black uppercase hover:bg-gray-100 transition-all"
               >
                 ← Back
@@ -471,7 +494,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
             <div className="flex gap-4 mt-5 md:mt-8">
               <button
                 type="button"
-                onClick={() => setStep(2)}
+                onClick={() => { setStep(2); scrollToForm(); }}
                 className="w-1/3 border-4 border-[#153462] py-3 md:py-4 font-black uppercase hover:bg-gray-100 transition-all"
               >
                 ← Back
@@ -487,7 +510,8 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
           </motion.div>
         )}
       </form>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -200,6 +200,13 @@ const ConnectionHub = () => {
             const displayHour = hour % 12 || 12;
             const timeStr = `${displayHour}:${min} ${ampm}`;
             const slotId = `${dateKey}-${hour}${min}`;
+
+            // Skip past slots (with 30-min buffer). Admin-blocked days still show all slots
+            // so the day card still renders as "Fully Booked".
+            const slotTime = new Date(year, month, day, hour, parseInt(min));
+            const bufferMs = 30 * 60 * 1000;
+            if (!dayBlocked && slotTime.getTime() <= now.getTime() + bufferMs) return;
+
             slots.push({
               id: slotId,
               date: dateKey,
