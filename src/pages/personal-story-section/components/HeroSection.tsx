@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
 import RotatingText from './RotatingText';
 import { supabase } from '../../../config/supabaseClient';
+import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -47,7 +48,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         if (error) throw error;
         
         if (data && data.length > 0) {
-          setBackgroundImages(data.map(img => img.image_url));
+          setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1920, 75)));
         } else {
           // Fallback to hardcoded images if no images in database
           setBackgroundImages([

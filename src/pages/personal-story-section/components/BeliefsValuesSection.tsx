@@ -5,9 +5,9 @@ import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection
 import ScrollableCards from '../../../components/ui/ScrollableCards';
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
-import Engagement from '../../../assets/Engagement.webp';
-import Living from '../../../assets/learn.webp';
-import Valued from '../../../assets/Valued.webp';
+import Engagement from '../../../assets/Engagement_opt.webp';
+import Living from '../../../assets/learn_opt.webp';
+import Valued from '../../../assets/Valued_opt.webp';
 
 // --- Types ---
 type Belief = {
@@ -60,6 +60,8 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
           <img
             src={belief.bgImage}
             alt={belief.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
           />
         </div>

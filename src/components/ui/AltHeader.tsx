@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import LogoImg from '/black.webp';
+import LogoImg from '/black_opt.webp';
 import { Menu, X } from 'lucide-react'; // Make sure to install lucide-react or use your own icons
 
 const COLORS = {

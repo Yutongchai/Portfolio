@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import LogoImg from '/beige2.webp';
+import LogoImg from '/beige2_opt.webp';
 import HRDImg from '../../assets/hrd_training_provider.webp';
 
 const COLORS = {
