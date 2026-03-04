@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 import ScrollableCards from '../../../components/ui/ScrollableCards';
@@ -172,32 +172,12 @@ const BeliefsValuesSection = () => {
     },
   ];
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  const curvedTextRef = useRef<HTMLDivElement | null>(null);
   const [mouse, setMouse] = React.useState({ x: 0, y: 0, isOver: false });
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "center center"]
-  });
-
-  const { scrollYProgress: curvedTextScroll } = useScroll({
-    target: curvedTextRef,
-    offset: ["start end", "center center"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [200, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
-  const smoothY = useSpring(y, { stiffness: 100, damping: 20 });
 
   return (
 
     <section
       id="beliefs-values"
-      ref={containerRef}
-      /* We use a gradient that transitions from light beige to the dark charcoal of your images */
       className="py-16 px-4 relative transition-colors"
       style={{
         background: `linear-gradient(to bottom, #f5f7fa 0%, #FFEBD2 40%, #020202 90%)`

@@ -101,9 +101,7 @@ const PersonalStorySection = () => {
         <main className="relative z-10">
           <HeroSection personalInfo={personalInfo} />
 
-          <SectionWrapper delay={0.1}>
-            <BeliefsValuesSection />
-          </SectionWrapper>
+          <BeliefsValuesSection />
 
           <CorePrinciple />
           <ActionsSection />

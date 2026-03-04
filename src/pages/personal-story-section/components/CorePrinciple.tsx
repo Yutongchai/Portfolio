@@ -1,14 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { motion, useScroll, useInView } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 
 const CorePrinciple: React.FC = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const leftColRef = useRef<HTMLDivElement | null>(null);
-
-  // Trigger once when the section enters the viewport — no scroll-driven opacity
-  const leftColInView = useInView(leftColRef, { once: true, margin: '0px' });
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
@@ -104,12 +100,12 @@ const CorePrinciple: React.FC = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-start gap-4 md:gap-12">
 
-          {/* Left Column — fades in once when section enters viewport */}
+          {/* Left Column — fires 200px before entering viewport for reliability */}
           <motion.div
-            ref={leftColRef}
             className="md:sticky md:top-24 w-full md:w-[35%] py-4 md:py-12 z-10"
             initial={{ opacity: 0, y: 20 }}
-            animate={leftColInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '200px' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             <div className="pt-4 md:pt-16">
