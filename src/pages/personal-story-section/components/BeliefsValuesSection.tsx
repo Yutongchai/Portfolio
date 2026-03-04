@@ -185,8 +185,8 @@ const BeliefsValuesSection = () => {
     >
       {/* 1. ANIMATED BLOBS (Kept for the top half) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#12a28f' }} />
-        <div className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#fcb22f' }} />
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#12a28f', transform: 'translateZ(0)', willChange: 'transform' }} />
+        <div className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl" style={{ backgroundColor: '#fcb22f', transform: 'translateZ(0)', willChange: 'transform' }} />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">

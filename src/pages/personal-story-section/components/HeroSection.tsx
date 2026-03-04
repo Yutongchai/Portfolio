@@ -1,8 +1,9 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
 import RotatingText from './RotatingText';
 import { supabase } from '../../../config/supabaseClient';
+import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -22,19 +23,23 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   const personalInfo = propPersonalInfo || defaultPersonalInfo;
   
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start start', 'end start']
-  });
 
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.6]);
+  // Static fallback images (from public/) — paint immediately so LCP fires early
+  const FALLBACK_IMAGES = [
+    '/TB.webp',
+    '/CE.webp',
+    '/connect.webp',
+    '/csr.webp',
+    '/Engagement.webp',
+    '/Living.webp',
+    '/LEGO.webp',
+  ];
 
-  // Background images from database
-  const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
+  // Background images — initialised with fallbacks so first image paints immediately
+  const [backgroundImages, setBackgroundImages] = useState<string[]>(FALLBACK_IMAGES);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Fetch hero images from database
+  // Fetch hero images from database (replaces fallbacks once loaded)
   useEffect(() => {
     const fetchHeroImages = async () => {
       try {
@@ -47,31 +52,15 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         if (error) throw error;
         
         if (data && data.length > 0) {
-          setBackgroundImages(data.map(img => img.image_url));
-        } else {
-          // Fallback to hardcoded images if no images in database
-          setBackgroundImages([
-            '/Portfolio/_JIN3046.webp',
-            '/Portfolio/different.webp',
-            '/Portfolio/collage.webp',
-            '/Portfolio/mainPic.webp',
-            '/Portfolio/training.webp',
-            '/Portfolio/discuss.webp',
-            '/Portfolio/teamwork.webp',
-          ]);
+          // Apply Image Transform to reduce hero image size (1200 wide, 70 quality)
+          // This converts multi-MB originals to ~200–400 KB — critical for LCP on mobile
+          setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1200, 70)));
+          setCurrentImageIndex(0);
         }
+        // If no DB images, keep fallbacks — do nothing
       } catch (error) {
         console.error('Error fetching hero images:', error);
-        // Fallback to hardcoded images on error
-        setBackgroundImages([
-          '/Portfolio/_JIN3046.webp',
-          '/Portfolio/different.webp',
-          '/Portfolio/collage.webp',
-          '/Portfolio/mainPic.webp',
-          '/Portfolio/training.webp',
-          '/Portfolio/discuss.webp',
-          '/Portfolio/teamwork.webp',
-        ]);
+        // Keep fallbacks — do nothing
       }
     };
 
@@ -119,29 +108,33 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
 
   return (
     <section id="hero-section" ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Slideshow Background */}
+      {/* Slideshow Background — only render current + adjacent image to minimise GPU layers */}
       <div className="absolute inset-0 z-0">
-        {backgroundImages.map((image, index) => (
-          <motion.div
-            key={image}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: index === currentImageIndex ? 1 : 0,
-            }}
-            transition={{ duration: 1.5 }}
-          />
-        ))}
+        {backgroundImages.map((image, index) => {
+          const isCurrent = index === currentImageIndex;
+          const isPrev = index === (currentImageIndex - 1 + backgroundImages.length) % backgroundImages.length;
+          if (!isCurrent && !isPrev) return null;
+          return (
+            <motion.div
+              key={image}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${image})`,
+                willChange: 'opacity',
+                transform: 'translateZ(0)',
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isCurrent ? 1 : 0 }}
+              transition={{ duration: 1.5 }}
+            />
+          );
+        })}
         {/* Semi-transparent overlay */}
         <div className="absolute inset-0 bg-black/50" />
       </div>
       
-      <motion.div 
+      <div 
         className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32"
-        style={{ opacity, y }}
       >
         <div className="flex flex-col items-center text-center">
           {/* Text Content Centered */}
@@ -216,7 +209,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
             </motion.p>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };
