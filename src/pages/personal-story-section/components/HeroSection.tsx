@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { PersonalInfo } from '../types';
 import RotatingText from './RotatingText';
 import { supabase } from '../../../config/supabaseClient';
+import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 interface HeroSectionProps {
   personalInfo?: PersonalInfo;
@@ -24,7 +25,8 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start start', 'end start']
+    offset: ['start start', 'end start'],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
@@ -47,7 +49,7 @@ const HeroSection = ({ personalInfo: propPersonalInfo, preview = false }: HeroSe
         if (error) throw error;
         
         if (data && data.length > 0) {
-          setBackgroundImages(data.map(img => img.image_url));
+          setBackgroundImages(data.map(img => toSupabaseThumbnail(img.image_url, 1920, 75)));
         } else {
           // Fallback to hardcoded images if no images in database
           setBackgroundImages([

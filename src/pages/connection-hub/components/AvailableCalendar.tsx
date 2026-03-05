@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock, Info } from 'lucide-react';
 import Icon from '../../../components/AppIcon';
@@ -13,11 +13,21 @@ interface AvailabilityCalendarProps {
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ slots, onBookSlot }) => {
   const [step, setStep] = React.useState(1);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
+  const [isDesktop, setIsDesktop] = useState<boolean>(true);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
 
   // Group slots by Month first, then by Date
   const monthlyGroups = useMemo(() => {
     const months: Record<string, any> = {};
     slots.forEach(s => {
+      if (!s.date) return; // Skip slots without dates
       const dateObj = new Date(s.date);
       const monthName = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
       if (!months[monthName]) months[monthName] = {};
@@ -35,7 +45,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ slots, onBo
             {monthName}
           </h3>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-5 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {Object.entries(dates).map(([dateStr, daySlots]: any) => {
               const blocked = daySlots.every((s: any) => !s.available);
               const reason = daySlots.find((s: any) => s.blockedReason)?.blockedReason;
@@ -47,15 +57,15 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ slots, onBo
                   <button
                     onClick={() => { setSelectedDate(dateStr); setStep(2); }}
                     disabled={blocked}
-                    className={`w-full p-4 border-4 border-[#153462] transition-all
+                    className={`w-full p-3 sm:p-4 border-4 sm:border-4 border-[#153462] transition-all text-left
                       ${isSelected 
                         ? 'bg-[#fcb22f] border-[#153462] text-[#153462] shadow-none translate-x-1 translate-y-1' 
                         : 'bg-white text-[#153462] shadow-[4px_4px_0px_0px_#153462]'}
                       ${blocked ? 'bg-slate-100 opacity-40 grayscale' : ''}
                     `}
                   >
-                    <span className="text-[10px] font-black uppercase">{d.toLocaleDateString(undefined, { weekday: 'short' })}</span>
-                    <span className="text-2xl font-black">{d.getDate()}</span>
+                    <span className="text-[9px] sm:text-[10px] font-black uppercase block">{d.toLocaleDateString(undefined, { weekday: 'short' })}</span>
+                    <span className="text-xl sm:text-2xl font-black block">{d.getDate()}</span>
                   </button>
 
                   {/* Show reason if blocked */}
@@ -78,7 +88,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ slots, onBo
             ← BACK TO CALENDAR
           </button>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {/* Find slots for the selected date across the monthlyGroups */}
             {Object.values(monthlyGroups)
               .flatMap(month => month[selectedDate] || [])
@@ -87,7 +97,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ slots, onBo
                 <button
                   key={slot.id}
                   onClick={() => onBookSlot(slot)}
-                  className="py-4 border-4 border-[#153462] bg-white text-[#153462] font-black shadow-[4px_4px_0px_0px_#153462] hover:bg-[#12a28f] hover:text-white transition-all"
+                  className="py-3 sm:py-4 border-4 border-[#153462] bg-white text-[#153462] font-black shadow-[4px_4px_0px_0px_#153462] hover:bg-[#12a28f] hover:text-white transition-all text-sm"
                 >
                   {slot.time}
                 </button>

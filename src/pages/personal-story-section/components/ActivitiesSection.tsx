@@ -14,7 +14,8 @@ const ActivitiesSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ['50px', '-50px']);
@@ -75,10 +76,6 @@ const ActivitiesSection = () => {
         {/* Section Header */}
         <motion.div
           className="text-center mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-5xl lg:text-6xl font-bold text-foreground mb-4">
             What To Play

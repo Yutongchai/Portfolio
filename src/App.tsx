@@ -5,7 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ScrollToTopButton from "./components/ui/ScrollToTopButton";
 import WhatsAppFloating from "./components/ui/WhatsAppFloating";
 import CookieConsent from "./components/CookieConsent";
-
+   
 const App: React.FC = () => {
   return (
     <ThemeProvider>

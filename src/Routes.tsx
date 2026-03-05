@@ -1,5 +1,7 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route, Navigate, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
+import ReactGA from 'react-ga4';
 import ErrorBoundary from "./components/ErrorBoundary";
 import AltHeader from './components/ui/AltHeader';
 import SEOHead from './components/SEOHead';
@@ -17,6 +19,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 // Lazy load admin pages
 const AdminLogin = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminLogin })));
 const AdminRegister = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminRegister })));
+const AdminResetPassword = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminResetPassword })));
 const AdminDashboard = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminDashboard })));
 const HeroImagesManager = lazy(() => import('./pages/admin').then(mod => ({ default: mod.HeroImagesManager })));
 const ClientLogosManager = lazy(() => import('./pages/admin').then(mod => ({ default: mod.ClientLogosManager })));
@@ -38,6 +41,8 @@ const PageLoader = () => (
 const Routes: React.FC = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <RouteTracker />
+      <Analytics />
       <ErrorBoundary>
         {/* Render AltHeader only on non-admin routes */}
         <HeaderGuard />
@@ -60,9 +65,10 @@ const Routes: React.FC = () => {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
 
-            {/* Admin Login/Register - Public */}
+            {/* Admin Login/Register/Reset - Public */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/admin/reset-password" element={<AdminResetPassword />} />
 
             {/* All other /admin/* routes require authentication */}
             <Route path="/admin/*" element={
@@ -89,6 +95,21 @@ const Routes: React.FC = () => {
       </ErrorBoundary>
     </BrowserRouter>
   );
+};
+
+// RouteTracker: initialize GA and send pageviews on route change
+const RouteTracker: React.FC = () => {
+  const location = useLocation();
+  useEffect(() => {
+    // Initialize once
+    ReactGA.initialize('G-CP9NYZR2TH');
+  }, []);
+
+  useEffect(() => {
+    ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
+  }, [location]);
+
+  return null;
 };
 
 // HeaderGuard: shows AltHeader except for /admin routes

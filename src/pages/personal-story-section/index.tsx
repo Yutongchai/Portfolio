@@ -5,7 +5,6 @@ import Footer from "../../components/ui/Footer";
 import HeroSection from "./components/HeroSection";
 import BeliefsValuesSection from "./components/BeliefsValuesSection";
 import ActionsSection from "./components/ActionsSection";
-import OurRoleSection from "./components/OurRoleSection";
 import JourneySection from "./components/JourneySection";
 import PhilosophySection from "./components/PhilosophySection";
 import SectionWrapper from "./components/SectionWrapper";
@@ -13,17 +12,19 @@ import CorePrinciple from "./components/CorePrinciple";
 import { PersonalInfo, Journey, Philosophy } from "./types";
 
 const PersonalStorySection = () => {
+  // Removed per-section loader — Home.tsx already shows a page-level
+  // PageLoader that waits for fonts + hero image. A second loader here
+  // caused a sequential 400 ms+ extra delay on every page load.
+
   useEffect(() => {
-    // Enable smooth scrolling
     document.documentElement.style.scrollBehavior = "smooth";
 
-    // Handle hash navigation for direct links
     const hash = window.location.hash;
     if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       }, 100);
     }
@@ -39,10 +40,9 @@ const PersonalStorySection = () => {
       "We Build Unforgettable Team Experiences — For People, For Culture, For Growth.",
     tagline: " ",
     bio: " When people connect, companies grow. ",
-    image: myPhoto, // Use your local image
+    image: myPhoto,
     alt: "A diverse group of professionals participating in a fun team-building activity, smiling and collaborating together.",
   };
-
 
   const philosophies: Philosophy[] = [
     {
@@ -94,8 +94,9 @@ const PersonalStorySection = () => {
     <>
       <Helmet>
         <title>EITO Group</title>
-        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
+        <link rel="icon" type="image/webp" href="/Portfolio/EITO-bw.webp" />
       </Helmet>
+
       <div className="min-h-screen bg-background relative">
         <main className="relative z-10">
           <HeroSection personalInfo={personalInfo} />
@@ -106,49 +107,6 @@ const PersonalStorySection = () => {
 
           <CorePrinciple />
           <ActionsSection />
-          {/* <SectionWrapper delay={0.3}>
-            <OurRoleSection />
-          </SectionWrapper> */}
-
-
-          {/*  <SectionWrapper delay={0.5}>
-            <div className="py-20 px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="max-w-4xl mx-auto text-center"
-              >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
-                  Ready to See What We've Done?
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
-                  Explore our portfolio of memorable team experiences, successful workshops, and transformative events.
-                </p>
-                <a
-                  href="/work-showcase"
-                  className="inline-flex items-center justify-center space-x-2 bg-accent hover:bg-primary text-accent-foreground font-semibold px-10 py-5 rounded-xl shadow-button hover:shadow-accent transition-all duration-300 hover:scale-105 text-lg"
-                >
-                  <span>View Our Work</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </a>
-              </motion.div>
-            </div>
-          </SectionWrapper> */}
 
           <SectionWrapper delay={0.4}>
             <PhilosophySection philosophies={philosophies} />

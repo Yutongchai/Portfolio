@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PersonalStorySection from './personal-story-section/index';
-import WorkShowcase from './services/index';
-import ConnectionHub from './connection-hub/index';
-import { motion, useScroll, useSpring } from 'framer-motion';
 import SEOHead from '../components/SEOHead';
 import { pageSEO } from '../config/seoConfig';
 import PageLoader from '../components/PageLoader';
+
+const PersonalStorySection = lazy(() => import('./personal-story-section/index'));
+const WorkShowcase = lazy(() => import('./services/index'));
+const ConnectionHub = lazy(() => import('./connection-hub/index'));
 
 type PageView = 'home' | 'service' | 'connect';
 
 const Home: React.FC = () => {
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState<PageView>('home');
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
 
   const handleNavigation = (page: string) => {
     const pageMap: { [key: string]: PageView } = {
@@ -79,9 +73,9 @@ const Home: React.FC = () => {
 
         {/* Global AltHeader is rendered site-wide; remove page-level header. */}
 
-        {currentPage === 'home' && <PersonalStorySection />}
-        {currentPage === 'service' && <WorkShowcase />}
-        {currentPage === 'connect' && <ConnectionHub />}
+        {currentPage === 'home' && <Suspense fallback={null}><PersonalStorySection /></Suspense>}
+        {currentPage === 'service' && <Suspense fallback={null}><WorkShowcase /></Suspense>}
+        {currentPage === 'connect' && <Suspense fallback={null}><ConnectionHub /></Suspense>}
       </div>
     </>
   );

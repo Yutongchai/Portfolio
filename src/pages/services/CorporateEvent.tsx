@@ -1,8 +1,10 @@
 import React from 'react';
+import Hero from '../../components/ui/Hero';
 import { useEffect } from 'react';
 import AltHeader from '../../components/ui/AltHeader';
 import Footer from '../../components/ui/Footer';
 import Questionnaire from './components/Questionnaire';
+import ScrollableCards from '../../components/ui/ScrollableCards';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Users, Trophy, Utensils, Mic, Settings, UserCheck, Music, Camera, Clock, Award, Lightbulb, Target, Sparkles, ArrowUp } from 'lucide-react';
 import AnnualDinnerImg from '../../assets/corporate_events/annual_dinner.webp';
@@ -145,107 +147,58 @@ const CorporateEvent = () => {
       <AltHeader />
 
       {/* 1. INTRO SECTION */}
-      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
-        <style>{`
-        @keyframes slideInDown {
-          from {
-            opacity: 0;
-            transform: translateY(-30px);
+      <style>{`
+          @keyframes slideInDown {
+            from {
+              opacity: 0;
+              transform: translateY(-30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-        }
-
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
+          .hero-title {
+            animation: slideInDown 0.8s ease-out;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+          .hero-description {
+            animation: slideInUp 0.8s ease-out 0.2s both;
           }
-        }
+        `}</style>
 
-        .hero-title {
-          animation: slideInDown 0.8s ease-out;
-        }
-
-        .hero-description {
-          animation: slideInUp 0.8s ease-out 0.2s both;
-        }
-      `}</style>
-
-        <motion.div
-          className="absolute inset-0"
-          initial={{ opacity: 0, scale: 1.12 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.4, ease: "easeInOut" }}
-        >
-          <img
-            src={AnnualDinnerImg}
-            alt="Corporate Events"
-            className="h-full w-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
-        </motion.div>
-
-        <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <div className="h-[2px] w-20 bg-[#fcb22f]" />
-            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
-              Corporate Events
-            </span>
-            <div className="h-[2px] w-20 bg-[#fcb22f]" />
-          </div>
-
-          <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
-            Turning Company Moments<br />Into Meaningful Connections
-          </h1>
-
-          <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
-            From celebrations to kick-offs, we design moments that build connection, trust, and team spirit.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              type="button"
-              className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
-              onClick={() => {
-                const section = document.getElementById('event-categories');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Explore Events
-            </button>
-            <button
-              type="button"
-              className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
-              onClick={() => {
-                const section = document.getElementById('corporate-event-questionnaire');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Plan Your Event
-            </button>
-          </div>
+      <Hero background={AnnualDinnerImg}>
+        <div className="flex items-center justify-center gap-6 mb-6">
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
+          <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">Corporate Events</span>
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
         </div>
-      </section>
+
+        <h1 className="hero-title text-3xl md:text-5xl font-black tracking-tight mb-8">Turning Company Moments<br/>Into Meaningful Connections</h1>
+
+        <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">From celebrations to kick-offs, we design moments that build connection, trust, and team spirit.</p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button type="button" className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]" onClick={() => {
+            const section = document.getElementById('event-categories');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
+          }}>Explore Events</button>
+
+          <button type="button" className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10" onClick={() => {
+            const section = document.getElementById('corporate-event-questionnaire');
+            if (section) section.scrollIntoView({ behavior: 'smooth' });
+          }}>Plan Your Event</button>
+        </div>
+      </Hero>
 
       {/* 2. SUB-CATEGORIES */}
       <section id="event-categories" className="py-24 px-6 bg-white">
@@ -293,14 +246,21 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden items-center justify-center gap-2 mb-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe</span>
+            <motion.div className="flex gap-1" animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}>
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} />
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} />
+              <motion.div className="w-2 h-2 rounded-full bg-[#f68921]" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} />
+            </motion.div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">to explore</span>
+          </div>
+
+          <ScrollableCards desktopColumns={4} gap={8}>
             {subCategories.map((category, idx) => (
               <motion.div
                 key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.6 }}
                 className="flip-card"
               >
                 <div className="flip-card-inner">
@@ -347,7 +307,7 @@ const CorporateEvent = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </ScrollableCards>
         </div>
       </section>
 
@@ -364,20 +324,16 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {offerings.map((offering, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
-                className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center"
+                className="bg-white rounded-2xl p-4 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col items-center text-center"
               >
-                <div className="text-[#f68921] mb-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="text-[#f68921] mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300">
                   {offering.icon}
                 </div>
-                <h3 className="text-xl font-black text-[#153462] uppercase tracking-tight">{offering.title}</h3>
+                <h3 className="text-xs md:text-sm font-black text-[#153462] uppercase tracking-tight">{offering.title}</h3>
               </motion.div>
             ))}
           </div>
@@ -397,15 +353,21 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="space-y-32">
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden items-center justify-center gap-3 mb-5">
+            <motion.span
+              className="text-xl select-none"
+              animate={{ rotate: [0, -15, 15, -15, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            >👋</motion.span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe through steps</span>
+          </div>
+
+          <ScrollableCards desktopColumns={1} gap={8}>
             {howWeWork.map((step, idx) => (
               <motion.div
                 key={step.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-                className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center`}
+                className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center w-[85vw] md:w-auto`}
               >
                 {/* Text Content */}
                 <div className="flex-1 space-y-6">
@@ -433,7 +395,7 @@ const CorporateEvent = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </ScrollableCards>
         </div>
       </section>
 
@@ -450,14 +412,26 @@ const CorporateEvent = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Swipe indicator — mobile only */}
+          <div className="flex md:hidden flex-col items-center gap-2 mb-5">
+            <div className="flex items-center gap-1.5">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="h-1.5 rounded-full bg-[#fcb22f]"
+                  animate={{ width: i === 0 ? [20, 8, 8, 20] : [8, 8, 8, 8] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.15, ease: 'easeInOut' }}
+                  style={{ width: i === 0 ? 20 : 8 }}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Swipe to explore</span>
+          </div>
+
+          <ScrollableCards desktopColumns={3} gap={8}>
             {whyChooseUs.map((reason, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.2, duration: 0.6 }}
                 className="bg-white/5 backdrop-blur-sm rounded-[2rem] p-10 border border-white/10 hover:bg-white/10 transition-all duration-300"
               >
                 <div
@@ -470,7 +444,7 @@ const CorporateEvent = () => {
                 <p className="text-white/80 leading-relaxed font-medium">{reason.description}</p>
               </motion.div>
             ))}
-          </div>
+          </ScrollableCards>
         </div>
       </section>
 

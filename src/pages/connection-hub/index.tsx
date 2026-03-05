@@ -15,9 +15,10 @@ import supabase from "../../config/supabaseClient";
 // Import your TextGenerateEffect component
 import { TextGenerateEffect } from '../../components/ui/TextGenerateEffect';
 import ClientMarquee from '../../pages/personal-story-section/components/ClientMarquee';
+import { toSupabaseThumbnail } from '../../utils/supabaseImageTransform';
 
 const COLORS = {
-  NAVY: '#153462',
+  NAVY: '#437cd3',
   GOLD: '#fcb22f',
   TEAL: '#12a28f',
   ORANGE: '#f68921',
@@ -47,7 +48,7 @@ const ConnectionHub = () => {
           .order('display_order', { ascending: true });
         if (error) throw error;
         if (data && data.length > 0) {
-          const logoUrls = data.map((logo: any) => logo.logo_url);
+          const logoUrls = data.map((logo: any) => toSupabaseThumbnail(logo.logo_url));
           setClientLogos(logoUrls);
         }
       } catch (error) {
@@ -199,6 +200,13 @@ const ConnectionHub = () => {
             const displayHour = hour % 12 || 12;
             const timeStr = `${displayHour}:${min} ${ampm}`;
             const slotId = `${dateKey}-${hour}${min}`;
+
+            // Skip past slots (with 30-min buffer). Admin-blocked days still show all slots
+            // so the day card still renders as "Fully Booked".
+            const slotTime = new Date(year, month, day, hour, parseInt(min));
+            const bufferMs = 30 * 60 * 1000;
+            if (!dayBlocked && slotTime.getTime() <= now.getTime() + bufferMs) return;
+
             slots.push({
               id: slotId,
               date: dateKey,
@@ -222,19 +230,10 @@ const ConnectionHub = () => {
     return slots;
   }, [bookedSlotIds, unavailableDates]);
 
-  // Scroll to form after navigation if sessionStorage flag is set
   useEffect(() => {
-    const formId = sessionStorage.getItem('scrollToFormId');
-    if (formId) {
-      setTimeout(() => {
-        const el = document.getElementById(formId);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-          sessionStorage.removeItem('scrollToFormId');
-        }
-      }, 400);
-    }
+    window.scrollTo(0, 0);
   }, []);
+
 
   return (
     <>
@@ -263,7 +262,7 @@ const ConnectionHub = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-[#153462]/90 via-[#153462]/60 to-[#fcfaf8]" />
           </div>
 
-          <div className="relative z-10 text-center px-6 max-w-5xl">
+          <div className="relative z-10 text-center px-6 max-w-5xl ">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -296,10 +295,6 @@ const ConnectionHub = () => {
               {contactMethods.map((method, idx) => (
                 <motion.div
                   key={method.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
                   className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/50 hover:shadow-2xl transition-all border border-slate-100 group cursor-pointer"
                   onClick={method.action}
                   tabIndex={0}
@@ -350,9 +345,6 @@ const ConnectionHub = () => {
             {/* THE EITO APPROACH / VALUE SECTION */}
             <section className="max-w-7xl mx-auto px-6 mb-24 text-center">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 className="mb-16"
               >
                 <h2 className="text-4xl md:text-6xl font-black text-[#153462] uppercase tracking-tighter mb-4">
@@ -370,35 +362,31 @@ const ConnectionHub = () => {
                     title: "Team Building",
                     icon: <Sparkles size={32} />,
                     color: COLORS.TEAL,
-                    servicePath: "/services/team-building",
-                    formId: "team-building-questionnaire"
+                    servicePath: "/services/team-building"
                   },
                   {
                     title: "Corporate Training",
                     icon: <Briefcase size={32} />,
                     color: COLORS.GOLD,
-                    servicePath: "/services/training-program",
-                    formId: "training-form"
+                    servicePath: "/services/training-program"
                   },
                   {
                     title: "CSR Programs",
                     icon: <CheckCircle2 size={32} />,
                     color: COLORS.NAVY,
-                    servicePath: "/services/csr",
-                    formId: "csr-inquiry"
+                    servicePath: "/services/csr"
                   },
                   {
                     title: "Corporate Events",
                     icon: <ArrowRight size={32} />,
                     color: COLORS.ORANGE,
-                    servicePath: "/services/corporate-event",
-                    formId: "corporate-event-questionnaire"
+                    servicePath: "/services/corporate-event"
                   }
                 ].map((service, i) => (
                   <div
-                    key={i}
-                    className="p-6 border-4 border-[#153462] bg-white shadow-[6px_6px_0px_0px_#153462] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-left group flex flex-col"
-                  >
+                      key={i}
+                      className="p-6 border-4 border-[#153462] rounded-[2rem] bg-white shadow-[6px_6px_0px_0px_#153462] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-left group flex flex-col"
+                    >
                     {/* Header Section: Icon and Title side-by-side */}
                     <div className="flex items-center gap-4 mb-4">
                       <div
@@ -424,15 +412,16 @@ const ConnectionHub = () => {
                       type="button"
                       onClick={() => {
                         const isCurrentPage = window.location.pathname === service.servicePath;
+
                         if (isCurrentPage) {
-                          document.getElementById(service.formId)?.scrollIntoView({ behavior: 'smooth' });
+                          // Already on the page? Smooth scroll to top
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
                         } else {
-                          sessionStorage.setItem('scrollToFormId', service.formId);
                           navigate(service.servicePath);
                         }
                       }}
                     >
-                      Enquiry Now <ArrowRight size={14} />
+                      Explore More<ArrowRight size={14} />
                     </button>
                   </div>
                 ))}
@@ -456,7 +445,7 @@ const ConnectionHub = () => {
             </div> */}
 
             {/* CALENDAR DESIGN PRESERVED */}
-            <div id="availability-calendar" className="relative bg-white p-8 md:p-12 border-4 border-[#153462] shadow-[12px_12px_0px_0px_#153462] mb-32">
+            <div id="availability-calendar" className="relative bg-white p-8 md:p-12 border-4 border-[#153462] rounded-[2rem] shadow-[12px_12px_0px_0px_#153462] mb-32">
               {/* ... rest of your calendar code remains exactly the same ... */}
               <div className="mb-12 flex justify-between items-start">
                 <div>
@@ -476,26 +465,26 @@ const ConnectionHub = () => {
                 )}
               </div>
 
-              <div className="relative min-h-[450px]">
+              <div className="relative min-h-0 md:min-h-[450px]">
                 <AnimatePresence mode="wait">
                   {!selectedSlot ? (
-                    <motion.div key="calendar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border-4 border-[#153462] p-4 bg-[#FFEBD2]/30">
+                    <motion.div key="calendar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border-4 border-[#153462] rounded-[2rem] p-4 bg-[#FFEBD2]/30">
                       <AvailabilityCalendar slots={sampleSlots} onBookSlot={(slot: any) => setSelectedSlot(slot)} />
                     </motion.div>
                   ) : (
-                    <motion.div key="booking-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="max-w-2xl mx-auto bg-white border-8 border-[#153462] p-8 md:p-12 shadow-[16px_16px_0px_0px_#f68921]">
-                      <div className="mb-10 p-6 bg-[#153462] text-white border-4 border-dashed border-[#fcb22f] relative overflow-hidden">
+                    <motion.div key="booking-form" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="max-w-2xl mx-auto bg-white border-4 md:border-8 border-[#153462] rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-12 shadow-none md:shadow-[16px_16px_0px_0px_#f68921]">
+                      <div className="mb-5 md:mb-10 p-4 md:p-6 bg-[#153462] text-white border-4 border-dashed border-[#fcb22f] relative overflow-hidden">
                         <p className="text-xs font-black uppercase tracking-[0.3em] text-[#fcb22f] mb-1">Confirmed Selection</p>
-                        <p className="text-2xl font-black italic">{selectedSlot.day} @ {selectedSlot.time}</p>
+                        <p className="text-xl md:text-2xl font-black italic">{selectedSlot.day} @ {selectedSlot.time}</p>
                       </div>
-                      <form onSubmit={triggerEmailNotification} className="space-y-8">
-                        {[{ label: 'Full Name', val: 'name', ph: 'Adam Smith' }, { label: 'Company', val: 'company', ph: 'EITO Group' }, { label: 'Email', val: 'email', ph: 'your@email.com', type: 'email' }].map((input) => (
+                      <form onSubmit={triggerEmailNotification} className="space-y-4 md:space-y-8">
+                        {[{ label: 'Full Name', val: 'name', ph: 'Your Name' }, { label: 'Company', val: 'company', ph: 'Your Company Name' }, { label: 'Email', val: 'email', ph: 'your@email.com', type: 'email' }].map((input) => (
                           <div key={input.val}>
                             <label className="block text-xs font-black uppercase tracking-widest text-[#153462] mb-3">{input.label}</label>
-                            <input required type={input.type || "text"} className="w-full border-4 border-[#153462] px-5 py-4 font-bold outline-none shadow-[4px_4px_0px_0px_#153462] focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all" placeholder={input.ph} value={bookingData[input.val as keyof typeof bookingData]} onChange={(e) => setBookingData({ ...bookingData, [input.val]: e.target.value })} />
+                            <input required type={input.type || "text"} className="w-full border-4 border-[#153462] px-4 py-3 md:px-5 md:py-4 font-bold outline-none shadow-[4px_4px_0px_0px_#153462] focus:shadow-none focus:translate-x-1 focus:translate-y-1 transition-all" placeholder={input.ph} value={bookingData[input.val as keyof typeof bookingData]} onChange={(e) => setBookingData({ ...bookingData, [input.val]: e.target.value })} />
                           </div>
                         ))}
-                        <button type="submit" disabled={isSubmitting} className="w-full bg-[#f68921] text-white border-4 border-[#153462] py-6 font-black uppercase tracking-widest text-lg flex items-center justify-center gap-4 shadow-[8px_8px_0px_0px_#153462] hover:shadow-none transition-all">
+                        <button type="submit" disabled={isSubmitting} className="w-full bg-[#f68921] text-white border-4 border-[#153462] py-4 md:py-6 font-black uppercase tracking-widest text-base md:text-lg flex items-center justify-center gap-4 shadow-[4px_4px_0px_0px_#153462] md:shadow-[8px_8px_0px_0px_#153462] hover:shadow-none transition-all">
                           {isSubmitting ? "Sending..." : "Generate Request"}
                         </button>
                       </form>

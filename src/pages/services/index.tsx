@@ -234,7 +234,7 @@ const WorkShowcase = () => {
     <>
       <Helmet>
         <title>EITO Group</title>
-        <link rel="icon" type="image/png" href="/Portfolio/EITO bw.png" />
+        <link rel="icon" type="image/webp" href="/Portfolio/EITO-bw.webp" />
         <meta
           name="description"
           content="Explore our portfolio of team building projects and corporate services. View detailed case studies and successful implementations."
@@ -288,10 +288,6 @@ const WorkShowcase = () => {
             )}
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
               className="mt-12 sm:mt-20 text-center"
             >
               <div className="bg-gradient-to-r from-accent/10 via-accent/5 to-accent/10 rounded-xl sm:rounded-2xl p-6 sm:p-12">

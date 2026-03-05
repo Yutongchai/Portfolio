@@ -101,10 +101,6 @@ const ContactForm = ({ onSubmit }: ContactFormProps) => {
 
   return (
     <motion.form
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
       onSubmit={handleSubmit}
       className="bg-card border border-border rounded-2xl p-8"
     >

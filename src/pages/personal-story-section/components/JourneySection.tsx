@@ -1,7 +1,11 @@
 import React, { useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import * as Icons from "lucide-react";
-import { ChevronDown } from "lucide-react";
+import {
+  Star, Award, Briefcase, Users, Heart, Zap, Target, TrendingUp,
+  CheckCircle, Lightbulb, Globe, GraduationCap, Clock, Sparkles,
+  ChevronDown, Trophy, TreePine, Smile, UserCheck, Gift, Shield,
+  type LucideProps,
+} from "lucide-react";
 import { Journey } from "../types";
 
 interface JourneySectionProps {
@@ -14,7 +18,8 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
   
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"],
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["80px", "-80px"]);
@@ -24,21 +29,18 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
     ["0%", "100%"]
   );
 
+  // Icon registry for journey items — add icons here as needed (matching Supabase icon field values)
+  const JOURNEY_ICONS: Record<string, React.ComponentType<LucideProps>> = {
+    Star, Award, Briefcase, Users, Heart, Zap, Target, TrendingUp,
+    CheckCircle, Lightbulb, Globe, GraduationCap, Clock, Sparkles,
+    ChevronDown, Trophy, TreePine, Smile, UserCheck, Gift, Shield,
+  };
+
   // Helper function to safely get icon component
-  const getIconComponent = (iconName?: string) => {
-    if (!iconName) return Icons.Star;
-
-    // Convert to PascalCase if needed (e.g., "code-2" -> "Code2")
-    const formattedName = iconName
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("");
-
-    // Check if icon exists in Icons
-    const IconComponent =
-      (Icons as any)[formattedName] || (Icons as any)[iconName];
-
-    return IconComponent || Icons.Star;
+  const getIconComponent = (iconName?: string): React.ComponentType<LucideProps> => {
+    if (!iconName) return Star;
+    const formatted = iconName.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+    return JOURNEY_ICONS[formatted] || JOURNEY_ICONS[iconName] || Star;
   };
 
   return (
@@ -53,10 +55,6 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
         {/* Collapsible Header */}
         <motion.div
           className="text-center mb-12"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -73,10 +71,6 @@ const JourneySection = ({ journeys }: JourneySectionProps) => {
               </motion.h2>
               <motion.div
                 className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#12a28f] via-[#fcb22f] to-[#ee424c] rounded-full"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
               />
             </div>
 

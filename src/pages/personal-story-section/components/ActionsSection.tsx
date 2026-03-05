@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './ActionsSection.css';
-import teamBuildingHero from '../../../assets/team_building/hero.png';
+import teamBuildingHero from '../../../assets/team_building/hero.webp';
 import corporateEventsKick from '../../../assets/corporate_events/kick.webp';
 import corporateTrainingLeader from '../../../assets/corporate_training/leader.webp';
 import csrWellbeing from '../../../assets/csr/wellbeing.webp';
@@ -69,8 +69,7 @@ const ActionsSection = () => {
       <div className="text-center mb-12 pt-10">
         <span className="text-[#f68921] font-bold uppercase tracking-[0.25em] text-sm">Our Expertise</span>
         <h2 className="text-4xl md:text-5xl font-black text-[#153462] mt-3 mb-2 uppercase tracking-tight">
-          Everyone In, <span className="text-[#f68921]">Team On!</span>
-        </h2>
+          Everyone In, <span className="text-[#c05500]">Team On!</span>        </h2>
         <p className="text-gray-500 text-base">Discover our comprehensive solutions designed for your team</p>
       </div>
 
@@ -81,12 +80,13 @@ const ActionsSection = () => {
             key={cat.id}
             onClick={() => handleTabChange(cat)}
             className={`actions-tab ${activeTab.id === cat.id ? 'active' : ''}`}
+            aria-label={cat.label}
           >
             <span
               className="actions-tab-indicator"
               style={{ backgroundColor: cat.color }}
             />
-            {cat.label}
+            <span className="actions-tab-label">{cat.label}</span>
           </button>
         ))}
       </div>

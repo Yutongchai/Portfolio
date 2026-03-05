@@ -15,14 +15,6 @@ const ActivityCard = ({ activity, index, onViewMore, getCategoryColor }: Activit
   return (
     <motion.div
       className="relative bg-background rounded-3xl shadow-xl overflow-hidden card-hover group"
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }}
     >
       {/* Featured Badge */}
       {activity.featured && (

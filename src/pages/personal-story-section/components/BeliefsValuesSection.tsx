@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
-import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
+import ScrollableCards from '../../../components/ui/ScrollableCards';
 import FoundationPhrase from './FoundationPhrase';
 import './BeliefsValuesSection.css';
-import Engagement from '../../../assets/Engagement.webp';
-import Living from '../../../assets/learn.webp';
-import Valued from '../../../assets/Valued.webp';
+import Engagement from '../../../assets/Engagement_opt.webp';
+import Living from '../../../assets/learn_opt.webp';
+import Valued from '../../../assets/Valued_opt.webp';
 
 // --- Types ---
 type Belief = {
@@ -59,6 +59,8 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
           <img
             src={belief.bgImage}
             alt={belief.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -87,12 +89,12 @@ const TiltCard: React.FC<TiltCardProps> = ({ belief }) => {
             {belief.accent}
           </div>
 
-          <h3
+          <p
             className="text-3xl md:text-4xl font-extrabold text-white mb-3 group-hover:text-[#e1620b] transition-colors"
             style={{ textShadow: '0 8px 20px rgba(0,0,0,0.55)' }}
           >
             {belief.title}
-          </h3>
+          </p>
 
           <p
             className="text-base md:text-lg text-white/90 leading-relaxed font-medium mb-6 max-w-prose"
@@ -178,12 +180,14 @@ const BeliefsValuesSection = () => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "center center"],
+    layoutEffect: false
   });
 
   const { scrollYProgress: curvedTextScroll } = useScroll({
     target: curvedTextRef,
-    offset: ["start end", "center center"]
+    offset: ["start end", "center center"],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [200, 0]);
@@ -217,10 +221,12 @@ const BeliefsValuesSection = () => {
         </div>
 
         {/* Cards Grid - Now sitting on the deepening background */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24" style={{ perspective: "1200px" }}>
-          {beliefs.map((belief, index) => (
-            <TiltCard key={index} belief={belief} />
-          ))}
+        <div style={{ perspective: "1200px" }} className="mb-24">
+          <ScrollableCards desktopColumns={3} gap={8} className="">
+            {beliefs.map((belief, index) => (
+              <TiltCard key={index} belief={belief} />
+            ))}
+          </ScrollableCards>
         </div>
 
         {/* This creates the visual "Floor" before the next section */}

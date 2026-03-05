@@ -1,131 +1,182 @@
 import React, { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useInView } from 'framer-motion';
 import { gsap } from 'gsap';
 import ImageHoverScrollSection from '../../../components/ImageHoverScrollSection';
 
 const CorePrinciple: React.FC = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const leftColRef = useRef<HTMLDivElement | null>(null);
+
+  // Trigger once when the section enters the viewport — no scroll-driven opacity
+  const leftColInView = useInView(leftColRef, { once: true, margin: '0px' });
 
   const { scrollYProgress } = useScroll({
     target: rootRef,
-    offset: ['start end', 'center center']
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
-  // Content Motion
-  const curvedTextY = useTransform(scrollYProgress, [0, 0.5, 1], [100, -20, 0]);
-  const curvedTextScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.1, 1]);
-  const curvedTextOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
-  const smoothY = useSpring(curvedTextY, { stiffness: 100, damping: 20 });
-
-  // Background Parallax
-  const bgY1 = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-  const bgY2 = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
-
   useEffect(() => {
+    let lastValue = 0;
+    let bounceTimer: ReturnType<typeof setTimeout>;
+
     const unsubscribe = scrollYProgress.on('change', (latest) => {
-      if (latest > 0.3 && latest < 0.7) {
-        const curveAmount = 20 + Math.sin(latest * Math.PI * 4) * 30;
+      const delta = latest - lastValue;
+      lastValue = latest;
+
+      const curveOffset = Math.max(-60, Math.min(60, delta * 3000));
+
+      gsap.to('#curved-path', {
+        attr: { d: `M 30,100 Q 400,${100 - curveOffset} 770,100` },
+        duration: 0.12,
+        ease: 'none',
+        overwrite: true,
+      });
+
+      clearTimeout(bounceTimer);
+      bounceTimer = setTimeout(() => {
         gsap.to('#curved-path', {
-          attr: { d: `M 30,100 Q 400,${100 - curveAmount} 770,100` },
-          duration: 0.3,
-          ease: 'power2.out'
+          attr: { d: 'M 30,100 Q 400,100 770,100' },
+          duration: 1.4,
+          ease: 'elastic.out(1.3, 0.35)',
+          overwrite: true,
         });
-      }
+      }, 120);
     });
-    return () => unsubscribe();
+
+    return () => {
+      unsubscribe();
+      clearTimeout(bounceTimer);
+    };
   }, [scrollYProgress]);
 
   return (
     <div ref={rootRef} className="relative overflow-hidden bg-[#fcfaf8] pt-10 pb-12">
-      {/* --- PREMIUM ATMOSPHERIC BACKGROUND --- */}
+
+      {/* BACKGROUND — blobs use translate3d so they stay on GPU, blur reduced */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
 
-        {/* Navy/Teal Mesh */}
-        <motion.div
+        {/* Navy/Teal blob — NO motion.div, static position, GPU-composited */}
+        <div
+          className="absolute rounded-full"
           style={{
-            y: bgY1,
             background: 'radial-gradient(circle, #153462 0%, #12a28f 100%)',
             width: '800px', height: '800px', top: '-200px', right: '-100px',
-            filter: 'blur(140px)', opacity: 0.15
+            filter: 'blur(80px)', // reduced from 140px — huge perf win
+            opacity: 0.15,
+            transform: 'translate3d(0,0,0)', // force GPU layer
+            willChange: 'transform',
           }}
-          className="absolute rounded-full"
         />
 
-        {/* Gold/Orange Mesh */}
-        <motion.div
+        {/* Gold/Orange blob */}
+        <div
+          className="absolute rounded-full"
           style={{
-            y: bgY2,
             background: 'radial-gradient(circle, #fcb22f 0%, #f68921 100%)',
             width: '600px', height: '600px', bottom: '-100px', left: '-100px',
-            filter: 'blur(120px)', opacity: 0.1
+            filter: 'blur(80px)', // reduced from 120px
+            opacity: 0.1,
+            transform: 'translate3d(0,0,0)',
+            willChange: 'transform',
           }}
-          className="absolute rounded-full"
         />
 
-        {/* Noise Texture for Depth */}
-        <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`, mixBlendMode: 'overlay' }}></div>
+        {/* Noise Texture */}
+        <div
+          className="absolute inset-0 opacity-[0.4]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            mixBlendMode: 'overlay',
+          }}
+        />
 
-        {/* Subtle Structural Grid */}
-        <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: `linear-gradient(#153462 1px, transparent 1px), linear-gradient(90deg, #153462 1px, transparent 1px)`, backgroundSize: '80px 80px' }} />
+        {/* Grid */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: `linear-gradient(#153462 1px, transparent 1px), linear-gradient(90deg, #153462 1px, transparent 1px)`,
+            backgroundSize: '80px 80px',
+          }}
+        />
       </div>
 
-      {/* --- MAIN CONTENT --- */}
-<div className="relative z-10 max-w-7xl mx-auto px-6">
-  <div className="flex flex-col md:flex-row items-start gap-12">
-    
-    {/* Left Column: Sticky Header (Reduced width to md:w-[35%]) */}
-    <motion.div
-      className="md:sticky md:top-24 w-full md:w-[35%] py-12 z-10"
-      style={{ opacity: curvedTextOpacity }}
-    >
-      <div className="space-y-2 pt-16">
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#153462]">
-          CORE
-        </h3>
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#f68921]">
-          PRINCIPLES
-        </h3>
-      </div>
+      {/* MAIN CONTENT */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-start gap-4 md:gap-12">
 
-      {/* Curved Text Section */}
-              <div className="w-full flex justify-center md:justify-start mt-6">
-                <div
-                  className="curved-text-container flex-1 flex justify-center max-w-3xl"
-                  onMouseEnter={() => {
-                    gsap.killTweensOf('#curved-path');
-                    gsap.to('#curved-path', {
-                      attr: { d: 'M 30,100 Q 400,40 770,100' },
-                      ease: 'elastic.out(1.4, 0.4)',
-                      duration: 0.8
-                    });
-                  }}
-                  onMouseLeave={() => {
-                    gsap.killTweensOf('#curved-path');
-                    gsap.to('#curved-path', {
-                      attr: { d: 'M 30,100 Q 400,100 770,100' },
-                      ease: 'elastic.out(1.8, 0.2)',
-                      duration: 1.5
-                    });
-                  }}
-                >
-                  <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
-                    <path id="curved-path" fill="none" d="M 30,100 Q 400,100 770,100" />
-                    <text className="font-bold uppercase tracking-[0.2em] fill-[#103C61]/60 text-[40px]">
-                      <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
-                          <tspan dy="-28">The E I T O Fundamentals</tspan>
-                      </textPath>
-                    </text>
-                  </svg>
-                </div>
-                </div>
-        </motion.div>
-
-            {/* Right Column: Cards (Increased width to md:w-[65%]) */}
-            <div className="w-full md:w-[65%] relative z-20">
-            <ImageHoverScrollSection />
+          {/* Left Column — fades in once when section enters viewport */}
+          <motion.div
+            ref={leftColRef}
+            className="md:sticky md:top-24 w-full md:w-[35%] py-4 md:py-12 z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={leftColInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          >
+            <div className="pt-4 md:pt-16">
+              <h3 className="md:hidden text-4xl font-black uppercase tracking-tighter">
+                <span className="text-[#153462]">CORE </span>
+                <span className="text-[#f68921]">PRINCIPLES</span>
+              </h3>
+              <div className="hidden md:block space-y-2">
+                <h3 className="text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#153462]">CORE</h3>
+                <h3 className="text-5xl lg:text-6xl font-black uppercase tracking-tighter text-[#f68921]">PRINCIPLES</h3>
+              </div>
             </div>
+
+            <div className="w-full flex justify-center md:justify-start mt-1 md:mt-6">
+              <div
+                className="curved-text-container flex-1 flex justify-center max-w-3xl mt-0 md:mt-6"
+                onMouseEnter={() => {
+                  gsap.killTweensOf('#curved-path');
+                  gsap.to('#curved-path', {
+                    attr: { d: 'M 30,100 Q 400,40 770,100' },
+                    ease: 'elastic.out(1.4, 0.4)',
+                    duration: 0.8,
+                  });
+                }}
+                onMouseLeave={() => {
+                  gsap.killTweensOf('#curved-path');
+                  gsap.to('#curved-path', {
+                    attr: { d: 'M 30,100 Q 400,100 770,100' },
+                    ease: 'elastic.out(1.8, 0.2)',
+                    duration: 1.5,
+                  });
+                }}
+              >
+                <svg viewBox="0 0 800 160" width="100%" height="160px" style={{ maxWidth: '800px' }}>
+                  <path id="curved-path" fill="none" d="M 30,100 Q 400,100 770,100" />
+                  <text className="font-bold uppercase tracking-[0.2em] fill-[#103C61]/60 text-[40px]">
+                    <textPath href="#curved-path" startOffset="50%" textAnchor="middle">
+                      <tspan dy="-28">The EITO Fundamentals</tspan>
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Swipe indicator — mobile only, sits between title and cards */}
+          <div className="flex md:hidden items-center gap-2 -mt-2 mb-1 px-1">
+            <motion.div
+              className="flex items-center gap-2 text-[#f68921]"
+              animate={{ x: [0, 6, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </motion.div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#153462]/50">Swipe to explore</span>
+          </div>
+
+          {/* Right Column: Cards */}
+          <div className="w-full md:w-[65%] relative z-20">
+            <ImageHoverScrollSection />
+          </div>
+
         </div>
-        </div>
+      </div>
     </div>
   );
 };

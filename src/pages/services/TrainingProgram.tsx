@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield, ArrowUp } from 'lucide-react';
-import LogoImg from '../../components/Logo.png';
 import TrainingImg from '../../assets/corporate_training/training.webp';
 import SoftSkillsImg from '../../assets/corporate_training/soft.webp';
 import LeadershipImg from '../../assets/corporate_training/leader.webp';
@@ -13,8 +12,9 @@ import SuccessImg from '../../assets/corporate_training/success.webp';
 import TruthImg from '../../assets/corporate_training/truth.webp';
 import ExcellenceImg from '../../assets/corporate_training/excellence.webp';
 import ResultImg from '../../assets/corporate_training/results.webp';
-
+import Hero from '../../components/ui/Hero';
 import Footer from '../../components/ui/Footer';
+import ScrollableCards from '../../components/ui/ScrollableCards';
 // Lazy load heavy components for faster initial load
 const QuestionnaireTP = lazy(() => import('./components/QuestionnaireTP'));
 const HRDCorBanner = lazy(() => import('./components/HRDCorBanner'));
@@ -154,111 +154,60 @@ const TrainingProgram = () => {
       {/* Global AltHeader handles site navigation */}
 
       {/* --- HERO SECTION (Consistent with other service pages) --- */}
-      <section className="relative min-h-[85vh] pt-32 pb-20 flex items-center justify-center overflow-hidden bg-black text-white">
-        <style>{`
-          @keyframes slideInDown {
-            from {
-              opacity: 0;
-              transform: translateY(-30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          @keyframes slideInUp {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          .hero-title {
-            animation: slideInDown 0.8s ease-out;
-          }
-          .hero-description {
-            animation: slideInUp 0.8s ease-out 0.2s both;
-          }
-        `}</style>
-        <motion.div
-          className="absolute inset-0"
-          initial={{ opacity: 0, scale: 1.12 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.4, ease: "easeInOut" }}
-        >
-          <img
-            src={TrainingImg}
-            alt="Training Programme"
-            className="h-full w-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35" />
-        </motion.div>
 
-        <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <div className="h-[2px] w-20 bg-[#fcb22f]" />
-            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">
-              Training Programme
-            </span>
-            <div className="h-[2px] w-20 bg-[#fcb22f]" />
-          </div>
-
-          <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
-            Empower Your Team.<br />Unlock Their Potential.
-          </h1>
-
-          <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
-            Engaging training experiences designed around your people and goals.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              type="button"
-              className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
-              onClick={() => {
-                const section = document.getElementById('training-types');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Explore Programmes
-            </button>
-            <button
-              type="button"
-              className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
-              onClick={() => {
-                const section = document.getElementById('training-form');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth' });
-                  if (window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                  }
-                }
-              }}
-            >
-              Plan My Programme
-            </button>
-          </div>
+      <Hero background={TrainingImg}>
+        <div className="flex items-center justify-center gap-6 mb-6">
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
+          <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">Training Programme</span>
+          <div className="h-[2px] w-20 bg-[#fcb22f]" />
         </div>
-      </section>
+        <h1 className="hero-title text-3xl md:text-6xl font-black tracking-tight mb-8">
+          Empower Your Team.<br />Unlock Their Potential.
+        </h1>
+
+        <p className="hero-description text-sm md:text-lg font-medium leading-relaxed text-white/85 mb-10">
+          Engaging training experiences designed around your people and goals.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            type="button"
+            className="rounded-full bg-[#fcb22f] px-10 py-3 font-bold text-[#153462] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-15px_rgba(246,137,33,0.65)]"
+            onClick={() => {
+              const section = document.getElementById('training-types');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                if (window.history.replaceState) {
+                  window.history.replaceState(null, '', window.location.pathname);
+                }
+              }
+            }}
+          >
+            Explore Programmes
+          </button>
+          <button
+            type="button"
+            className="rounded-full border border-white/70 px-10 py-3 font-bold backdrop-blur transition-colors duration-300 hover:bg-white/10"
+            onClick={() => {
+              const section = document.getElementById('training-form');
+              if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                if (window.history.replaceState) {
+                  window.history.replaceState(null, '', window.location.pathname);
+                }
+              }
+            }}
+          >
+            Plan My Programme
+          </button>
+        </div>
+      </Hero>
+
 
       {/* 2. TYPES OF TRAINING - BENTO GRID */}
       <section id="training-types" className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Our Training Programmes</h2>
@@ -268,13 +217,9 @@ const TrainingProgram = () => {
           </motion.div>
 
           {/* Bento Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:grid-rows-2">
+          <ScrollableCards desktopColumns={2} gap={6}>
             {/* Mental Health - Tall (Left side, spans 2 rows) */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: 0, duration: 0.4 }}
               className="md:row-span-2 relative overflow-hidden rounded-3xl group cursor-pointer h-[400px] md:h-full"
             >
               {/* Background Image */}
@@ -318,10 +263,6 @@ const TrainingProgram = () => {
 
             {/* Leadership - Top Right */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
               className="relative overflow-hidden rounded-3xl group cursor-pointer h-[400px]"
             >
               {/* Background Image */}
@@ -365,10 +306,6 @@ const TrainingProgram = () => {
 
             {/* Soft Skills - Bottom Right */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
               className="relative overflow-hidden rounded-3xl group cursor-pointer h-[400px]"
             >
               {/* Background Image */}
@@ -409,7 +346,7 @@ const TrainingProgram = () => {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </ScrollableCards>
         </div>
       </section>
 
@@ -422,9 +359,6 @@ const TrainingProgram = () => {
       <section className="py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-20"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Why Choose EITO Group?</h2>
@@ -436,9 +370,7 @@ const TrainingProgram = () => {
           <div className="space-y-24">
             {/* Row 1: Expertise - Image Right, Text Left */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+
               className="flex flex-col md:flex-row items-center gap-12"
             >
               <div className="flex-1">
@@ -477,9 +409,6 @@ const TrainingProgram = () => {
 
             {/* Row 2: Tailored - Image Left, Text Right (Reversed) */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className="flex flex-col md:flex-row-reverse items-center gap-12"
             >
               <div className="flex-1">
@@ -518,9 +447,6 @@ const TrainingProgram = () => {
 
             {/* Row 3: Impact - Image Right, Text Left */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className="flex flex-col md:flex-row items-center gap-12"
             >
               <div className="flex-1">
@@ -560,9 +486,6 @@ const TrainingProgram = () => {
 
           {/* CTA Button */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             className="text-center mt-20"
           >
             <motion.button
@@ -581,9 +504,6 @@ const TrainingProgram = () => {
       <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-20"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">How We Shape Excellence</h2>
@@ -604,9 +524,7 @@ const TrainingProgram = () => {
                     stroke="url(#timeline-gradient)"
                     strokeWidth="4"
                     fill="none"
-                    initial={{ pathLength: 0 }}
-                    whileInView={{ pathLength: 1 }}
-                    viewport={{ once: true }}
+                    animate={{ pathLength: 1 }}
                     transition={{ duration: 2, ease: "easeInOut" }}
                   />
                   <defs>
@@ -622,10 +540,6 @@ const TrainingProgram = () => {
                 {methodology.map((item, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.3, duration: 0.5 }}
                     className="absolute top-1/2 -translate-y-1/2"
                     style={{ left: `${(idx * 28) + 8}%` }}
                   >
@@ -643,10 +557,6 @@ const TrainingProgram = () => {
                 {methodology.map((item, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.2 }}
                     className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-shadow group"
                   >
                     {/* Watermark Background Image */}
@@ -681,10 +591,6 @@ const TrainingProgram = () => {
               {methodology.map((item, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.15 }}
                   className="relative"
                 >
                   <div className="flex gap-6">
@@ -860,9 +766,6 @@ const TrainingProgram = () => {
       <section className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#153462] mb-4">Why Choose EITO?</h2>

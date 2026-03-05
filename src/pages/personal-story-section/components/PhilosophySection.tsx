@@ -6,6 +6,7 @@ import Collab from '../../../assets/contact.webp';
 import { Button } from '../../../components/ui/Button';
 import ClientMarquee from './ClientMarquee';
 import { supabase } from '../../../config/supabaseClient';
+import { toSupabaseThumbnail } from '../../../utils/supabaseImageTransform';
 
 
 // Google reviews removed per request
@@ -30,8 +31,8 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
         if (error) throw error;
 
         if (data && data.length > 0) {
-          // logo_url already contains the full public URL
-          const logoUrls = data.map(logo => logo.logo_url);
+
+          const logoUrls = data.map(logo => toSupabaseThumbnail(logo.logo_url));
           setClients(logoUrls);
           console.log('Fetched client logos:', logoUrls);
         } else {
@@ -91,8 +92,6 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             <section className="py-8 px-4">
               <div className="max-w-4xl mx-auto text-center">
                 <motion.h2
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
                   className="text-2xl md:text-4xl font-black text-[#153462] mb-4 uppercase tracking-tight"
                 >
                   Start building with us <span className="text-[#f68921]">today</span> and see the difference.
@@ -118,10 +117,6 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
             {/* Google Reviews banner - clickable and opens Google Reviews in a new tab */}
             <motion.div
               className="py-10"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
             >
               <a
                 href={'https://www.google.com.my/maps/place/EITO+Group/@4.186514,109.1677,6z/data=!4m18!1m9!3m8!1s0x4a24fc223178a71f:0xbd1437cea1df2767!2sEITO+Group!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z!3m7!1s0x4a24fc223178a71f:0xbd1437cea1df2767!8m2!3d4.186514!4d109.1677!9m1!1b1!16s%2Fg%2F11yv7g2g7z?entry=ttu&g_ep=EgoyMDI2MDIxMC4wIKXMDSoASAFQAw%3D%3D'}

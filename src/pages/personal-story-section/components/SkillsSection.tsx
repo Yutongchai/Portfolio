@@ -10,7 +10,8 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
+    layoutEffect: false
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ['50px', '-50px']);
@@ -31,10 +32,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         {/* Section Header */}
         <motion.div 
           className="text-center mb-12 sm:mb-16 md:mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3 sm:mb-4">
             Skills & Expertise
@@ -50,14 +47,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
             <motion.div
               key={category}
               className="bg-background rounded-lg sm:rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg sm:shadow-xl"
-              initial={{ opacity: 0, x: catIndex % 2 === 0 ? -80 : 80 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ 
-                duration: 0.8, 
-                delay: catIndex * 0.1,
-                ease: [0.25, 0.46, 0.45, 0.94]
-              }}
             >
               <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-6 sm:mb-8">{category}</h3>
               <div className="space-y-4 sm:space-y-6">
@@ -65,14 +54,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
                   <motion.div
                     key={skill?.id}
                     className="space-y-2 sm:space-y-3"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: index * 0.05,
-                      ease: [0.25, 0.46, 0.45, 0.94]
-                    }}
                   >
                     <div className="flex justify-between items-center gap-2">
                       <span className="text-base sm:text-lg font-semibold text-foreground">
@@ -85,12 +66,9 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
                     <div className="h-2 sm:h-3 bg-secondary/20 rounded-full overflow-hidden">
                       <motion.div
                         className="h-full bg-primary rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill?.level}%` }}
-                        viewport={{ once: true }}
+                        animate={{ width: `${skill?.level}%` }}
                         transition={{ 
                           duration: 1, 
-                          delay: index * 0.05 + 0.2,
                           ease: [0.25, 0.46, 0.45, 0.94]
                         }}
                       />

@@ -44,10 +44,6 @@ const SolutionsSection = () => {
       <div className="max-w-6xl mx-auto">
         <motion.div 
           className="text-center mb-16"
-          initial={{ x: -100 }}
-          whileInView={{ x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-primary mb-8">
             Our Solutions
@@ -98,10 +94,6 @@ const SolutionsSection = () => {
           {/* Solution Details */}
           <motion.div 
             className="flex-1 max-w-xl"
-            initial={{ x: -100 }}
-            whileInView={{ x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -128,10 +120,6 @@ const SolutionsSection = () => {
 
         <motion.p 
           className="text-lg text-foreground/80 leading-relaxed text-center max-w-3xl mx-auto italic"
-          initial={{ x: -100 }}
-          whileInView={{ x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
         >
           Our programmes are not one-off events —
           <br />

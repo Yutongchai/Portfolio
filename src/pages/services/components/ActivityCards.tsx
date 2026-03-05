@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import ScrollableCards from "../../../components/ui/ScrollableCards";
 
 export interface Activity {
   id: string;
@@ -13,9 +15,50 @@ interface ActivityCardsProps {
   activities: Activity[];
 }
 
+interface ActivityCardItemProps {
+  activity: Activity;
+  index: number;
+}
+
+const ActivityCardItem: React.FC<ActivityCardItemProps> = ({ activity, index }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div
+      className="activity-card h-[420px]"
+      style={{ animationDelay: `${index * 0.12}s` }}
+    >
+      <div className="activity-card-inner">
+        {/* Dark placeholder shown while image loads */}
+        <div className="bg-image-placeholder" />
+        {activity.backgroundImage && (
+          <img
+            src={activity.backgroundImage}
+            alt={activity.title}
+            loading="lazy"
+            decoding="async"
+            className="bg-image"
+            style={{ opacity: loaded ? 1 : 0 }}
+            onLoad={() => setLoaded(true)}
+          />
+        )}
+        <div className="card-content max-w-[90%]">
+          <h3 className="text-2xl font-extrabold text-white leading-tight mb-2">
+            {activity.title}
+          </h3>
+          <p className="text-sm text-white/90 leading-relaxed">
+            {activity.shortDescription}
+          </p>
+          <div className="accent-line" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <>
       <style>{`
         @keyframes slideInUp {
           from {
@@ -72,10 +115,19 @@ const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
         .bg-image {
           position: absolute;
           inset: 0;
-          background-size: cover;
-          background-position: center;
-          transition: transform 0.6s ease;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          transition: transform 0.6s ease, opacity 0.8s ease;
           z-index: -1;
+        }
+
+        .bg-image-placeholder {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, #1e2a3a 0%, #0f1e30 100%);
+          z-index: -2;
         }
 
         .card-content {
@@ -98,33 +150,24 @@ const ActivityCards: React.FC<ActivityCardsProps> = ({ activities }) => {
         }
       `}</style>
 
-      {activities.map((activity, index) => (
-        <div
-          key={activity.id}
-          className="activity-card h-[420px]"
-          style={{ animationDelay: `${index * 0.12}s` }}
+      {/* Swipe indicator — mobile only */}
+      <div className="flex md:hidden items-center justify-center gap-3 mb-5">
+        <motion.div
+          animate={{ x: [-6, 6, -6] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-[#fcb22f] text-xl select-none"
         >
-          <div className="activity-card-inner">
-            {activity.backgroundImage && (
-              <div
-                className="bg-image"
-                style={{ backgroundImage: `url(${activity.backgroundImage})` }}
-              />
-            )}
+          👆
+        </motion.div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Swipe to explore</span>
+      </div>
 
-            <div className="card-content max-w-[90%]">
-              <h3 className="text-2xl font-extrabold text-white leading-tight mb-2">
-                {activity.title}
-              </h3>
-              <p className="text-sm text-white/90 leading-relaxed">
-                {activity.shortDescription}
-              </p>
-              <div className="accent-line" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+      <ScrollableCards desktopColumns={3} gap={8}>
+        {activities.map((activity, index) => (
+          <ActivityCardItem key={activity.id} activity={activity} index={index} />
+        ))}
+      </ScrollableCards>
+    </>
   );
 };
 
