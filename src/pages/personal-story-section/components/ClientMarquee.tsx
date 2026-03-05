@@ -10,9 +10,9 @@ interface ClientMarqueeProps {
   pauseOnHover?: boolean;
 }
 
-const LOGO_WIDTH = 180;
-const LOGO_HEIGHT = 80;
-const LOGO_GAP = 48;
+const LOGO_WIDTH = 260;
+const LOGO_HEIGHT = 120;
+const LOGO_GAP = 50;
 const ITEM_WIDTH = LOGO_WIDTH + LOGO_GAP;
 
 const ClientMarquee = ({
@@ -188,7 +188,7 @@ const ClientMarquee = ({
                   decoding="async"
                   width={LOGO_WIDTH}
                   height={LOGO_HEIGHT}
-                  className="max-w-[85%] max-h-[70%] object-contain opacity-100 transition-transform duration-300 group-hover:scale-110"
+                  className="max-w-[85%] max-h-[110%] object-contain opacity-100 transition-transform duration-300 group-hover:scale-110"
                   /* Changed opacity to 100 and added a subtle scale effect instead */
                   draggable={false}
                 />

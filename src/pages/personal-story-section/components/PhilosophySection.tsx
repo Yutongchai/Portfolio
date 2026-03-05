@@ -50,12 +50,12 @@ const PhilosophySection = ({ philosophies }: PhilosophySectionProps) => {
     <section className="relative overflow-hidden bg-transparent">
       <div className="relative z-10 w-full">
         {/* Our Clients Section - Clean White Background */}
-        <div className="py-16">
+        <div className="py-10">
           {/* Section Header */}
           <div
-            className="text-center mb-16 px-6"
+            className="text-center px-6"
           >
-            <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-4">
+            <p className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-[#f68921] mb-2">
               Trusted Partnerships
             </p>
             <h2 className="text-4xl lg:text-6xl font-black text-[#153462] mb-6 uppercase tracking-tighter">

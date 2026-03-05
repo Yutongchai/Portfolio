@@ -104,6 +104,62 @@ export const pageSEO = {
     url: `${BASE_URL}/connection-hub`,
     type: "website",
   },
+
+  csr: {
+    title: "CSR Programs Malaysia | Community & Environmental Initiatives | EITO Group",
+    description: "EITO Group designs impactful Corporate Social Responsibility programs in Malaysia — community outreach, environmental initiatives, and employee volunteerism tailored to your brand values.",
+    keywords: [
+      "CSR programs Malaysia",
+      "corporate social responsibility activities",
+      "employee volunteering Malaysia",
+      "community engagement program",
+      "environmental CSR initiative",
+    ],
+    url: `${BASE_URL}/services/csr`,
+    type: "website",
+  },
+
+  teamBuilding: {
+    title: "Team Building Activities Malaysia | EITO Group",
+    description: "Energize your workforce with EITO Group's corporate team building activities in Malaysia. From adventure challenges to leadership workshops — fully customizable for any team size.",
+    keywords: [
+      "team building activities Malaysia",
+      "corporate team building events",
+      "outdoor team building Malaysia",
+      "employee engagement activities",
+      "leadership team building",
+    ],
+    url: `${BASE_URL}/services/team-building`,
+    type: "website",
+  },
+
+  corporateEvent: {
+    title: "Corporate Event Management Malaysia | EITO Group",
+    description: "From annual dinners to family days and sports events — EITO Group delivers seamless corporate event experiences in Malaysia that celebrate your people and strengthen your culture.",
+    keywords: [
+      "corporate event management Malaysia",
+      "annual dinner organizer Malaysia",
+      "family day event Malaysia",
+      "corporate sports day",
+      "company event planner KL",
+    ],
+    url: `${BASE_URL}/services/corporate-event`,
+    type: "website",
+  },
+
+  trainingProgram: {
+    title: "HRDC Claimable Corporate Training Malaysia | EITO Group",
+    description: "Upskill your team with EITO Group's HRDC claimable training programs in Malaysia — soft skills, leadership, mental health, and more. Customized for your industry and team size.",
+    keywords: [
+      "HRDC claimable training Malaysia",
+      "corporate training programs Malaysia",
+      "soft skills training Malaysia",
+      "leadership development program",
+      "mental health workplace training",
+    ],
+    url: `${BASE_URL}/services/training-program`,
+    type: "website",
+  },
 };
 
 // Structured Data (JSON-LD) for Organization
@@ -129,7 +185,7 @@ export const organizationSchema = {
   ],
   "founder": {
     "@type": "Person",
-    "name": "Yu Tong Chai",
+    "name": "Chow Wyen Dee",
     "jobTitle": "Founder & Chief Facilitator",
   },
   "areaServed": {

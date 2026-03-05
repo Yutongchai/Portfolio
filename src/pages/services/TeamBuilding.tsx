@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet';
 import Footer from "../../components/ui/Footer";
 import Questionnaire from "./components/Questionnaire";
 import HRDCorBanner from "./components/HRDCorBanner";
@@ -286,6 +287,10 @@ const TeamBuilding = () => {
   }, []);
   return (
     <>
+      <Helmet>
+        <title>Team Building Activities Malaysia | EITO Group</title>
+        <meta name="description" content="Energize your workforce with EITO Group's corporate team building activities in Malaysia. From adventure challenges to leadership workshops — fully customizable for any team size." />
+      </Helmet>
 
       <Hero background={TeamWorkshopImg}>
         <div className="relative z-20 text-center text-white px-4">

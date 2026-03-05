@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import Hero from '../../components/ui/Hero';
 import { useEffect } from 'react';
 import AltHeader from '../../components/ui/AltHeader';
@@ -144,6 +145,10 @@ const CorporateEvent = () => {
   }, []);
   return (
     <>
+      <Helmet>
+        <title>Corporate Event Management Malaysia | EITO Group</title>
+        <meta name="description" content="From annual dinners to family days and sports events — EITO Group delivers seamless corporate event experiences in Malaysia that celebrate your people and strengthen your culture." />
+      </Helmet>
       <AltHeader />
 
       {/* 1. INTRO SECTION */}

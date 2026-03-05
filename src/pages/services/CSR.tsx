@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import Questionnaire from './components/Questionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import Hero from '../../components/ui/Hero';
@@ -90,6 +91,10 @@ const CSR = () => {
 
   return (
     <div className="bg-[#fdfdfb] text-[#23242b] overflow-x-hidden">
+      <Helmet>
+        <title>CSR Programs Malaysia | Community &amp; Environmental Initiatives | EITO Group</title>
+        <meta name="description" content="EITO Group designs impactful Corporate Social Responsibility programs in Malaysia — community outreach, environmental initiatives, and employee volunteerism tailored to your brand values." />
+      </Helmet>
       {/* Fixed Background Decorative Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-orange-100/30 blur-[120px]" />

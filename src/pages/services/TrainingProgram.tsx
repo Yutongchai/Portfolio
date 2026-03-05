@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { Helmet } from 'react-helmet';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Heart, Award, Star, CheckCircle, Users, Target, Lightbulb, ArrowRight, TrendingUp, Clock, Shield, ArrowUp } from 'lucide-react';
 import TrainingImg from '../../assets/corporate_training/training.webp';
@@ -151,6 +152,10 @@ const TrainingProgram = () => {
   }, []);
   return (
     <>
+      <Helmet>
+        <title>HRDC Claimable Corporate Training Malaysia | EITO Group</title>
+        <meta name="description" content="Upskill your team with EITO Group's HRDC claimable training programs in Malaysia — soft skills, leadership, mental health, and more. Customized for your industry and team size." />
+      </Helmet>
       {/* Global AltHeader handles site navigation */}
 
       {/* --- HERO SECTION (Consistent with other service pages) --- */}
