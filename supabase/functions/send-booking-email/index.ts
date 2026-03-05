@@ -2,8 +2,6 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { Resend } from "npm:resend";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY_BOOKING"));
-
 const CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -16,6 +14,7 @@ serve(async (req: any) => {
         return new Response("ok", { headers: CORS_HEADERS });
     }
     try {
+        const resend = new Resend(Deno.env.get("RESEND_API_KEY_BOOKING"));
         const body = await req.json();
         console.log('Received payload:', JSON.stringify(body));
 

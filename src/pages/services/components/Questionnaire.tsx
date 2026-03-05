@@ -153,12 +153,8 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
         remarks: formData.remarks,
       };
 
-      const { data: inserted, error } = await supabase.from(tableMap[formType]).insert(submitData).select().single();
+      const { error } = await supabase.from(tableMap[formType]).insert(submitData);
       if (error) throw error;
-
-      await supabase.functions.invoke('send-inquiry-email', {
-        body: { table: tableMap[formType], record: inserted },
-      });
 
       setShowToast(true);
       setTimeout(() => setShowToast(false), 4000);
