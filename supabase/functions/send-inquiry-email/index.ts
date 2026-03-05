@@ -3,7 +3,18 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "apikey, Authorization, Content-Type, x-client-info",
+};
+
 serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: CORS_HEADERS });
+  }
+
   try {
     // 1. Read secrets
     // PRODUCTION: secrets set via Supabase dashboard / CLI
@@ -26,7 +37,10 @@ serve(async (req) => {
     const isTrainingProgram = table === "training_program_inquiries";
 
     if (!record) {
-      return new Response("No record found", { status: 200 });
+      return new Response(JSON.stringify({ error: "No record found" }), {
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        status: 200,
+      });
     }
 
 // 3. Friendly subject
@@ -221,10 +235,16 @@ const emailHtml = `
       throw new Error(errorText);
     }
 
-    return new Response("Email sent", { status: 200 });
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
     console.error("Email function error:", error);
-    return new Response("Internal error", { status: 500 });
+    return new Response(JSON.stringify({ error: String(error) }), {
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
 

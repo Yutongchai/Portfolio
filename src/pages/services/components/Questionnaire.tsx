@@ -139,7 +139,7 @@ const Questionnaire = ({ formType = "csr" }: QuestionnaireProps) => {
 
       const submitData = {
         name: formData.name,
-        contact: formData.contact,
+        contact: parseInt(formData.contact.replace(/[\s+]/g, ''), 10),
         company_name: formData.companyName,
         company_email: formData.companyEmail,
         industry: formData.industryOption === "Other" ? formData.industryOther : formData.industryOption,
