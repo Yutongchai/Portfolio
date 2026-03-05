@@ -9,7 +9,7 @@ serve(async (req) => {
     // PRODUCTION: secrets set via Supabase dashboard / CLI
     // TESTING: swap ADMIN_EMAIL_TO secret to yutongchai2@gmail.com
     //   npx supabase secrets set ADMIN_EMAIL_TO=yutongchai2@gmail.com
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY_INQUIRY");
     const ADMIN_EMAIL_TO = Deno.env.get("ADMIN_EMAIL_TO") ?? 'info@eitogroup.com.my';
     const FROM_EMAIL = Deno.env.get("FROM_EMAIL") ?? 'EITO Group <info@eitogroup.com.my>';
 
