@@ -150,7 +150,7 @@ const ClientMarquee = ({
   }, []);
 
   return (
-    <section className="w-full"> {/* Removed background color here */}
+    <section className="w-full bg-white">
       <div className="max-w-full mx-auto">
         <div
           ref={containerRef}

@@ -1,6 +1,4 @@
-// supabase/functions/send-booking-email/index.ts
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { Resend } from "npm:resend";
 
 const CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
@@ -14,7 +12,16 @@ serve(async (req: any) => {
         return new Response("ok", { headers: CORS_HEADERS });
     }
     try {
-        const resend = new Resend(Deno.env.get("RESEND_API_KEY_BOOKING"));
+        const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY_BOOKING');
+        const resend = async (to: string, subject: string, html: string) => {
+            const res = await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        };
         const body = await req.json();
         console.log('Received payload:', JSON.stringify(body));
 
@@ -40,71 +47,136 @@ serve(async (req: any) => {
 
         // HTML template for customer
         const customerHtml = `
-      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="col  or: #153462;">Booking Confirmed</h2>
-        <p>Hi ${customerName},</p>
-        <p>Your consultation with <strong>EITO Group</strong> is confirmed:</p>
-        <ul style="list-style: none; padding: 0;">
-          <li><b>Date:</b> ${slot.day}</li>
-          <li><b>Time:</b> ${slot.time}</li>
-          <li><b>Company:</b> ${companyName}</li>
-        </ul>
-        <p>Booking ID: <small>${bookingId}</small></p>
-      </div>
-    `;
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+      <tr>
+        <td align="center">
+          <table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.1);">
+
+            <!-- Logo -->
+            <tr>
+              <td align="center" style="padding:28px 24px 12px;">
+                <img src="https://www.eitogroup.com.my/white-tr.webp" alt="EITO" height="56" style="display:block;" />
+              </td>
+            </tr>
+
+            <!-- Header -->
+            <tr>
+              <td style="background:#0F3B5F;color:#ffffff;padding:24px 32px;">
+                <h2 style="margin:0;font-size:22px;font-weight:700;">Booking Confirmed</h2>
+                <p style="margin:8px 0 0;font-size:14px;color:#dbeafe;">Your consultation with EITO Group is confirmed</p>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding:32px 36px;color:#1f2937;">
+                <p style="margin:0 0 24px;">Hi <strong>${customerName}</strong>, thank you for booking with us. Kindly wait for our admin to contact you to confirm the details.</p>
+
+                <h3 style="margin:0 0 12px;font-size:16px;color:#0F3B5F;">Booking Details</h3>
+                <table width="100%" cellpadding="6" cellspacing="0" style="margin-bottom:28px;">
+                  <tr><td width="35%" style="color:#6b7280;">Company</td><td style="font-weight:600;">${companyName}</td></tr>
+                  <tr><td style="color:#6b7280;">Date</td><td style="font-weight:600;">${slot.day}</td></tr>
+                  <tr><td style="color:#6b7280;">Time</td><td style="font-weight:600;">${slot.time}</td></tr>
+                  <tr><td style="color:#6b7280;">Booking ID</td><td style="font-weight:600;font-size:12px;color:#6b7280;">${bookingId}</td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background:#f9fafb;padding:18px 32px;font-size:12px;color:#6b7280;text-align:center;">
+                This email was generated automatically from the EITO booking system.<br/>
+                Please do not reply to this email. Our team will reach out to you shortly.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+`;
 
         // HTML template for owner
         const ownerHtml = `
-      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-        <h2 style="color: #153462;">New Booking Received</h2>
-        <p><strong>Customer:</strong> ${customerName}</p>
-        <p><strong>Company:</strong> ${companyName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <ul style="list-style: none; padding: 0;">
-          <li><b>Date:</b> ${slot.day}</li>
-          <li><b>Time:</b> ${slot.time}</li>
-        </ul>
-        <p>Booking ID: <small>${bookingId}</small></p>
-      </div>
-    `;
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+      <tr>
+        <td align="center">
+          <table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.1);">
 
-        // Send email to owner first
+            <!-- Logo -->
+            <tr>
+              <td align="center" style="padding:28px 24px 12px;">
+                <img src="https://www.eitogroup.com.my/white-tr.webp" alt="EITO" height="56" style="display:block;" />
+              </td>
+            </tr>
+
+            <!-- Header -->
+            <tr>
+              <td style="background:#0F3B5F;color:#ffffff;padding:24px 32px;">
+                <h2 style="margin:0;font-size:22px;font-weight:700;">New Booking Received</h2>
+                <p style="margin:8px 0 0;font-size:14px;color:#dbeafe;">Submitted via EITO website</p>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding:32px 36px;color:#1f2937;">
+                <h3 style="margin:0 0 12px;font-size:16px;color:#0F3B5F;">Customer Information</h3>
+                <table width="100%" cellpadding="6" cellspacing="0" style="margin-bottom:28px;">
+                  <tr><td width="35%" style="color:#6b7280;">Customer</td><td style="font-weight:600;">${customerName}</td></tr>
+                  <tr><td style="color:#6b7280;">Company</td><td style="font-weight:600;">${companyName}</td></tr>
+                  <tr><td style="color:#6b7280;">Email</td><td style="font-weight:600;">${email}</td></tr>
+                </table>
+
+                <div style="height:2px;background:#F7931E;width:48px;margin:32px 0;"></div>
+
+                <h3 style="margin:0 0 12px;font-size:16px;color:#0F3B5F;">Booking Details</h3>
+                <table width="100%" cellpadding="6" cellspacing="0">
+                  <tr><td width="35%" style="color:#6b7280;">Date</td><td style="font-weight:600;">${slot.day}</td></tr>
+                  <tr><td style="color:#6b7280;">Time</td><td style="font-weight:600;">${slot.time}</td></tr>
+                  <tr><td style="color:#6b7280;">Booking ID</td><td style="font-weight:600;font-size:12px;color:#6b7280;">${bookingId}</td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background:#f9fafb;padding:18px 32px;font-size:12px;color:#6b7280;text-align:center;">
+                This email was generated automatically from the EITO booking system.<br/>
+                Please respond directly to the customer using the email address above.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+`;
+
+        // Send email to owner
         console.log('Sending email to owner:', OWNER_EMAIL);
-        const ownerResult = await resend.emails.send({
-            from: FROM_EMAIL,
-            to: [OWNER_EMAIL],
-            subject: `NEW BOOKING: ${companyName}`,
-            html: ownerHtml,
-        });
-        console.log('Owner email result:', JSON.stringify(ownerResult));
+        await resend(OWNER_EMAIL, `NEW BOOKING from ${companyName}`, ownerHtml);
+        console.log('Owner email sent');
 
-        // Send confirmation email to customer (may fail in Resend sandbox mode)
-        let customerEmailId = null;
-        try {
-            console.log('Sending confirmation email to customer:', email);
-            const customerResult = await resend.emails.send({
-                from: FROM_EMAIL,
-                to: [email],
-                subject: `Booking Confirmed – ${companyName}`,
-                html: customerHtml,
-            });
-            console.log('Customer email result:', JSON.stringify(customerResult));
-
-            if (customerResult.error) {
-                console.warn('Customer email failed (likely Resend sandbox restriction):', customerResult.error);
-            } else {
-                customerEmailId = customerResult.data?.id;
-            }
-        } catch (customerError: any) {
-            console.warn('Customer email failed:', customerError?.message);
-            // Don't fail the whole request if customer email fails (Resend sandbox limitation)
-        }
+        // Send confirmation email to customer
+        console.log('Sending confirmation email to customer:', email);
+        const customerResult = await resend(email, `Booking Confirmed – ${companyName}`, customerHtml);
+        console.log('Customer email result:', JSON.stringify(customerResult));
+        const customerEmailId = customerResult?.id;
 
         return new Response(JSON.stringify({
             success: true,
-            ownerEmailId: ownerResult.data?.id,
             customerEmailId: customerEmailId,
-            note: customerEmailId ? 'Both emails sent' : 'Owner notified (customer email skipped - verify domain in Resend for production)'
         }), {
             headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
             status: 200,

@@ -86,7 +86,7 @@ const Footer = () => {
         {/* CUSTOMER REQUEST: Tagline Under Logo */}
         <div className="text-center mb-16 max-w-2xl">
           <h2 className="text-[#153462] text-2xl md:text-4xl font-black uppercase tracking-tighter leading-tight">
-            We <span className="text-[#c05500]">design</span> experiences that bring teams together          </h2>
+            We <span className="text-[#f68921]">design</span> experiences that bring teams together          </h2>
           {/* Signature Underline - three equal strips */}
           <div className="mt-6 flex justify-center gap-2">
             <div className="w-12 h-2 bg-[#fcb22f] rounded-full shadow-[2px_2px_0px_0px_#153462]" />
