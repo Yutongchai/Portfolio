@@ -53,7 +53,7 @@ const emailHtml = `
             <!-- Logo -->
             <tr>
               <td align="center" style="padding:28px 24px 12px;">
-                <img src="LOGO_URL_HERE" alt="EITO" height="56" style="display:block;" />
+                <img src="https://faclulceyzjtkaqeidge.supabase.co/storage/v1/object/public/client-logos/eito-logo.webp" alt="EITO" height="56" style="display:block;" />
               </td>
             </tr>
 
