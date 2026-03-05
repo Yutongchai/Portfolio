@@ -2,8 +2,7 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { Resend } from "npm:resend";
 
-// Uses a separate Resend API key from send-inquiry-email
-const resend = new Resend(Deno.env.get("RESEND_BOOKING_API_KEY"));
+const resend = new Resend(Deno.env.get("RESEND_API_KEY_BOOKING"));
 
 const CORS_HEADERS = {
     "Access-Control-Allow-Origin": "*",
