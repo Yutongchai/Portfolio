@@ -86,7 +86,7 @@ export const pageSEO = {
       "team building expert",
       "leadership coach Malaysia",
     ],
-    url: `${BASE_URL}/personal-story`,
+    url: `${BASE_URL}/personal-story-section`,
     type: "profile",
   },
   
