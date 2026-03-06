@@ -69,7 +69,7 @@ const ActionsSection = () => {
       <div className="text-center mb-12 pt-10">
         <span className="text-[#f68921] font-bold uppercase tracking-[0.25em] text-sm">Our Expertise</span>
         <h2 className="text-4xl md:text-5xl font-black text-[#153462] mt-3 mb-2 uppercase tracking-tight">
-          Everyone In, <span className="text-[#c05500]">Team On!</span>        </h2>
+          Everyone In, <span className="text-[#f68921]">Team On!</span>        </h2>
         <p className="text-gray-500 text-base">Discover our comprehensive solutions designed for your team</p>
       </div>
 
