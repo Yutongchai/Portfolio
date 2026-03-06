@@ -10,9 +10,7 @@ export interface SEOConfig {
   type: string;
 }
 
-// Base URL - update this when you deploy
-export const BASE_URL = "https://eitogroup.com.my"; // Replace with your actual domain
-
+export const BASE_URL = "https://eitogroup.com.my"; 
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
   title: "EITO Group | HRDC Claimable Team Building & Training Malaysia",
@@ -46,7 +44,7 @@ export const defaultSEO: SEOConfig = {
     "outdoor team building activities Malaysia",
   ],
   url: BASE_URL,
-  image: `${BASE_URL}/EITO bw.webp`,
+  image: `${BASE_URL}/EITO-bw.webp`,
   locale: "en_US",
   type: "website",
 };
