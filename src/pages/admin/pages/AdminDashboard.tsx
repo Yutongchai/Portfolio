@@ -252,6 +252,29 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Umami Analytics */}
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Website Analytics
+            </h2>
+            <a
+              href="https://cloud.umami.is/share/rVA1TljKrtqzMcyA"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Open in Umami ↗
+            </a>
+          </div>
+          <iframe
+            src="https://cloud.umami.is/share/rVA1TljKrtqzMcyA"
+            className="w-full border-0"
+            style={{ height: '600px' }}
+            title="Umami Analytics"
+          />
+        </div>
       </main>
     </div>
   );
