@@ -57,16 +57,16 @@ serve(async (req: any) => {
 
             <!-- Logo -->
             <tr>
-              <td align="center" style="padding:28px 24px 12px;">
-                <img src="https://www.eitogroup.com.my/black.webp" alt="EITO" height="56" style="display:block;" />
+              <td align="center" style="background:#ffffff;padding:28px 32px 20px;">
+                <img src="https://www.eitogroup.com.my/EITO-bw.png" alt="EITO" height="48" style="display:block;" />
               </td>
             </tr>
 
             <!-- Header -->
             <tr>
-              <td style="background:#0F3B5F;color:#ffffff;padding:24px 32px;">
-                <h2 style="margin:0;font-size:22px;font-weight:700;">Booking Confirmed</h2>
-                <p style="margin:8px 0 0;font-size:14px;color:#dbeafe;">Your consultation with EITO Group is confirmed</p>
+              <td style="padding:0 32px 24px;">
+                <h2 style="margin:0;font-size:22px;font-weight:700;color:#0F3B5F;">Booking Confirmed</h2>
+                <p style="margin:8px 0 0;font-size:14px;color:#6b7280;">Your consultation with EITO Group is confirmed</p>
               </td>
             </tr>
 
@@ -113,16 +113,16 @@ serve(async (req: any) => {
 
             <!-- Logo -->
             <tr>
-              <td align="center" style="padding:28px 24px 12px;">
-                <img src="https://www.eitogroup.com.my/black.webp" alt="EITO" height="56" style="display:block;" />
+              <td align="center" style="background:#ffffff;padding:28px 32px 20px;">
+                <img src="https://www.eitogroup.com.my/EITO-bw.png" alt="EITO" height="48" style="display:block;" />
               </td>
             </tr>
 
             <!-- Header -->
             <tr>
-              <td style="background:#0F3B5F;color:#ffffff;padding:24px 32px;">
-                <h2 style="margin:0;font-size:22px;font-weight:700;">New Booking Received</h2>
-                <p style="margin:8px 0 0;font-size:14px;color:#dbeafe;">Submitted via EITO website</p>
+              <td style="padding:0 32px 24px;">
+                <h2 style="margin:0;font-size:22px;font-weight:700;color:#0F3B5F;">New Booking Received</h2>
+                <p style="margin:8px 0 0;font-size:14px;color:#6b7280;">Submitted via EITO website</p>
               </td>
             </tr>
 
