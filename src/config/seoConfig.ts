@@ -44,7 +44,7 @@ export const defaultSEO: SEOConfig = {
     "outdoor team building activities Malaysia",
   ],
   url: BASE_URL,
-  image: `${BASE_URL}/navy-beige.webp`,
+  image: `${BASE_URL}/black.webp`,
   locale: "en_US",
   type: "website",
 };
@@ -168,7 +168,7 @@ export const organizationSchema = {
   "description": "Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance.",
   "url": BASE_URL,
   "logo": `${BASE_URL}/EITO-bw.webp`,
-  "image": `${BASE_URL}/navy-beige.webp`,
+  "image": `${BASE_URL}/black.webp`,
   "email": "info@eitogroup.com",
   "telephone": "+60163287947",
   "address": {
@@ -259,7 +259,7 @@ export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "EITO Group",
-  "image": `${BASE_URL}/navy-beige.webp`,
+  "image": `${BASE_URL}/black.webp`,
   "telephone": "+60163287947",
   "email": "info@eitogroup.com",
   "address": {

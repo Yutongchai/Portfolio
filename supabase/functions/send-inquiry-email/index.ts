@@ -70,7 +70,7 @@ const emailHtml = `
             <!-- Logo -->
             <tr>
               <td align="center" style="padding:28px 24px 12px;">
-                <img src="https://www.eitogroup.com.my/white-tr.webp" alt="EITO" height="56" style="display:block;" />
+                <img src="https://www.eitogroup.com.my/black.webp" alt="EITO" height="56" style="display:block;" />
               </td>
             </tr>
 
