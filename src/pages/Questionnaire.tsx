@@ -42,13 +42,20 @@ const Questionnaire: React.FC = () => {
 
   return (
     <div className="bg-[#fdfdfb] text-[#23242b] overflow-x-hidden">
-      <Hero background={heroBg} overlayClassName="bg-black/40" minHeightClass="min-h-[60vh]">
-        <div className="absolute left-0 top-0 z-30 p-2 rounded-xl bg-white/95 shadow-2xl border border-white/60 -translate-y-2">
+      <Hero background={heroBg} overlayClassName="bg-black/40" minHeightClass="min-h-[35vh] md:min-h-[60vh]">
+        {/* Desktop: top-left absolute logo */}
+        <div className="hidden md:block absolute left-0 top-0 z-30 p-2 rounded-xl bg-white/95 shadow-2xl border border-white/60 -translate-y-2">
           <a href="/" aria-label="EITO home">
-            <img src={`${BASE_URL}/EITO-bw.webp`} alt="EITO" className="w-28 md:w-36 block" />
+            <img src={`${BASE_URL}/EITO-bw.webp`} alt="EITO" className="w-36 block" />
           </a>
         </div>
         <div className="relative z-20 text-center text-white px-4">
+          {/* Mobile: logo centered above yellow label */}
+          <div className="md:hidden flex justify-center mb-6">
+            <a href="/" aria-label="EITO home">
+              <img src={`${BASE_URL}/EITO-bw.webp`} alt="EITO" className="w-28 block bg-white/95 p-2 rounded-xl shadow-2xl" />
+            </a>
+          </div>
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
             <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">{formKey.replace('_',' ')}</span>
