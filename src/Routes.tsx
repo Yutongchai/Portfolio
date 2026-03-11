@@ -15,6 +15,7 @@ const TrainingProgram = lazy(() => import('./pages/services/TrainingProgram'));
 const CSR = lazy(() => import('./pages/services/CSR'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Questionnaire = lazy(() => import('./pages/Questionnaire'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 // Lazy load admin pages
 const AdminLogin = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminLogin })));
@@ -64,6 +65,7 @@ const Routes: React.FC = () => {
             <Route path="/connection-hub" element={<Home />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/questionnaire" element={<Questionnaire />} />
 
             {/* Admin Login/Register/Reset - Public */}
             <Route path="/admin/login" element={<AdminLogin />} />
@@ -115,7 +117,8 @@ const RouteTracker: React.FC = () => {
 // HeaderGuard: shows AltHeader except for /admin routes
 const HeaderGuard: React.FC = () => {
   const location = useLocation();
-  if (location.pathname.startsWith('/admin')) return null;
+  // Hide global header on admin and standalone questionnaire page
+  if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/questionnaire')) return null;
   return <AltHeader />;
 };
 
