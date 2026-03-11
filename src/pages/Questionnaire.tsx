@@ -11,7 +11,17 @@ import EnvironmentImg from '../assets/csr/environment.webp';
 
 const Questionnaire: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const formKey = (searchParams.get('form') || 'team_building').toLowerCase();
+  const rawForm = (searchParams.get('form') || 'team_building');
+  const normalizeFormKey = (s: string) => {
+    const v = s.trim().toLowerCase().replace(/[-\s]+/g, '_').replace(/[^a-z0-9_]/g, '');
+    // Map common synonyms / plural forms to canonical keys
+    if (v.startsWith('team')) return 'team_building';
+    if (v.startsWith('training') || v === 'tp' || v.includes('program')) return 'training_program';
+    if (v.startsWith('corporate') || v.includes('event')) return 'corporate_event';
+    if (v === 'csr' || v.includes('csr')) return 'csr';
+    return 'team_building';
+  };
+  const formKey = normalizeFormKey(rawForm);
 
   const formTypeMap: Record<string, any> = {
     'team_building': 'team_building',
