@@ -53,12 +53,12 @@ const Questionnaire: React.FC = () => {
           {/* Mobile: logo centered above yellow label */}
           <div className="md:hidden flex justify-center mb-6">
             <a href="/" aria-label="EITO home">
-              <img src={`${BASE_URL}/EITO-bw.webp`} alt="EITO" className="w-28 block bg-white/95 p-2 rounded-xl shadow-2xl" />
+              <img src={`${BASE_URL}/EITO-bw.webp`} alt="EITO" className="w-20 block bg-white/95 p-2 rounded-xl shadow-2xl" />
             </a>
           </div>
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
-            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f]">{formKey.replace('_',' ')}</span>
+            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f] whitespace-nowrap">{formKey.replace('_',' ')}</span>
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
           </div>
 
