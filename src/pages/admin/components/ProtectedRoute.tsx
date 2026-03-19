@@ -7,16 +7,16 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading, adminCheckComplete } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && (!user || !isAdmin)) {
+    if (!loading && adminCheckComplete && (!user || !isAdmin)) {
       navigate('/admin/login');
     }
-  }, [user, isAdmin, loading, navigate]);
+  }, [user, isAdmin, loading, adminCheckComplete, navigate]);
 
-  if (loading) {
+  if (loading || !adminCheckComplete) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">

@@ -12,26 +12,23 @@ const AdminLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
-  const { signIn, user, isAdmin, loading: authLoading } = useAuth();
+  const { signIn, user, isAdmin, loading: authLoading, adminCheckComplete } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authLoading) {
+    // Only act when auth loading is done AND admin check has fully completed
+    if (!authLoading && adminCheckComplete) {
       if (user && isAdmin) {
         setLoading(false);
         navigate('/admin/dashboard');
       } else if (user && !isAdmin) {
-        // Add a small delay to let the admin check settle
-        const t = setTimeout(() => {
-          setError('You do not have admin access');
-          setLoading(false);
-        }, 1000); // wait 1s before showing error
-        return () => clearTimeout(t);
+        setError('You do not have admin access');
+        setLoading(false);
       } else if (!user) {
         setLoading(false);
       }
     }
-  }, [user, isAdmin, authLoading, navigate]);
+  }, [user, isAdmin, authLoading, adminCheckComplete, navigate]);
 
   const handleForgotPassword = async () => {
     if (!email) {
@@ -58,13 +55,11 @@ const AdminLogin: React.FC = () => {
 
     try {
       const { error: signInError } = await signIn(email, password);
-
       if (signInError) {
         setError(signInError.message);
         setLoading(false);
-        return;
       }
-      // Loading state will be handled by useEffect when admin status is confirmed
+      // useEffect handles redirect once adminCheckComplete is true
     } catch (err) {
       console.error('Login error:', err);
       setError('An unexpected error occurred');
@@ -93,10 +88,7 @@ const AdminLogin: React.FC = () => {
             )}
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email Address
               </label>
               <Input
@@ -112,10 +104,7 @@ const AdminLogin: React.FC = () => {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Password
                 </label>
                 <button
@@ -150,25 +139,9 @@ const AdminLogin: React.FC = () => {
             >
               {loading ? (
                 <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
                   Signing in...
                 </span>
