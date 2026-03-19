@@ -33,14 +33,27 @@ const Hero: React.FC<HeroProps> = ({
 
   return (
     <section className={`relative ${minHeightClass} flex items-center justify-center overflow-hidden bg-black text-white ${className}`}>
-      <motion.div className="absolute inset-0" initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }}>
-        <img src={current} alt="hero background" className="w-full h-full object-cover" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
-        <div className={`absolute inset-0 ${overlayClassName ?? 'bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35'}`} />
-      </motion.div>
 
-      <div className="relative z-10 w-full max-w-4xl px-6 text-center">
+      {/* All images rendered, opacity toggled */}
+      {images.map((src, i) => (
+        <motion.div
+          key={src}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: i === index ? 1 : 0 }}
+          transition={{ duration: 1.5, ease: 'easeInOut' }}
+        >
+          <img src={src} alt="hero background" className="w-full h-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+        </motion.div>
+      ))}
+
+      {/* Overlay sits on top of ALL images, never fades */}
+      <div className={`absolute inset-0 z-10 ${overlayClassName ?? 'bg-gradient-to-br from-black/70 via-[#0f1e38]/70 to-[#f68921]/35'}`} />
+
+      <div className="relative z-20 w-full max-w-4xl px-6 text-center">
         {children}
       </div>
+
     </section>
   );
 };
