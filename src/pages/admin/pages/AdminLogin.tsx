@@ -21,11 +21,13 @@ const AdminLogin: React.FC = () => {
         setLoading(false);
         navigate('/admin/dashboard');
       } else if (user && !isAdmin) {
-        // Auth is done, user exists but not admin
-        setError('You do not have admin access');
-        setLoading(false);  // ← this stops the spinner
+        // Add a small delay to let the admin check settle
+        const t = setTimeout(() => {
+          setError('You do not have admin access');
+          setLoading(false);
+        }, 1000); // wait 1s before showing error
+        return () => clearTimeout(t);
       } else if (!user) {
-        // Not logged in
         setLoading(false);
       }
     }

@@ -49,6 +49,7 @@ const AdminResetPassword: React.FC = () => {
       setError(updateError.message);
     } else {
       setSuccess(true);
+      await supabase.auth.signOut(); // ← add this
       setTimeout(() => navigate('/admin/login'), 3000);
     }
   };
