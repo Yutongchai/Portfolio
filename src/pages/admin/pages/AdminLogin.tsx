@@ -16,18 +16,20 @@ const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Only process redirect/error when auth is not loading
     if (!authLoading) {
       if (user && isAdmin) {
         setLoading(false);
         navigate('/admin/dashboard');
-      } else if (user && !isAdmin && !loading) {
-        // Only show error if we're not currently in the process of logging in
+      } else if (user && !isAdmin) {
+        // Auth is done, user exists but not admin
         setError('You do not have admin access');
+        setLoading(false);  // ← this stops the spinner
+      } else if (!user) {
+        // Not logged in
         setLoading(false);
       }
     }
-  }, [user, isAdmin, authLoading, navigate, loading]);
+  }, [user, isAdmin, authLoading, navigate]);
 
   const handleForgotPassword = async () => {
     if (!email) {
