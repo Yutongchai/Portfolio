@@ -121,4 +121,12 @@ Private project for EITO Group.
 
 ## 🤝 Contact
 
-EITO Group - [info@eitogroup.com.my](mailto:info@eitogroup.com.my)
+EITO Group - [info@eitogroup.com.my](mailto:info@eitogroup.com.my);
+
+## for adding a new user use
+INSERT INTO public.admin_users (user_id, email)
+SELECT id, 'newadmin@example.com'
+FROM auth.users
+WHERE email = 'newadmin@example.com';
+
+and use forget password to set the password

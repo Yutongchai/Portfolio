@@ -11,22 +11,55 @@ const AdminResetPassword: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validToken, setValidToken] = useState(false);
+  const [checking, setChecking] = useState(true); // prevent flash of error
   const navigate = useNavigate();
 
-  // Supabase puts the recovery token in the URL hash.
-  // detectSessionInUrl: true in the client handles exchanging it automatically,
-  // so we just need to check whether a session is present after mount.
   useEffect(() => {
-    const checkSession = async () => {
+    // Listen for auth state change FIRST — this fires when Supabase
+    // exchanges the URL hash token (both recovery and invite types).
+    // This avoids the race condition where getSession() runs before
+    // the token is exchanged.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          // Legitimate password reset link
+          setValidToken(true);
+          setChecking(false);
+        } else if (event === 'SIGNED_IN' && session) {
+          // Could be an invite link — redirect to register instead
+          const isInvite = window.location.hash.includes('type=invite');
+          if (isInvite) {
+            navigate('/admin/register');
+            return;
+          }
+          // Otherwise a regular session exists — allow reset
+          setValidToken(true);
+          setChecking(false);
+        } else if (event === 'SIGNED_OUT' || !session) {
+          setValidToken(false);
+          setChecking(false);
+          setError('Invalid or expired reset link. Please request a new one.');
+        }
+      }
+    );
+
+    // Fallback: if no auth state change fires within 3s,
+    // check session manually (handles page refreshes)
+    const fallbackTimer = setTimeout(async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setValidToken(true);
       } else {
         setError('Invalid or expired reset link. Please request a new one.');
       }
+      setChecking(false);
+    }, 3000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(fallbackTimer);
     };
-    checkSession();
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +82,7 @@ const AdminResetPassword: React.FC = () => {
       setError(updateError.message);
     } else {
       setSuccess(true);
-      await supabase.auth.signOut(); // ← add this
+      await supabase.auth.signOut();
       setTimeout(() => navigate('/admin/login'), 3000);
     }
   };
@@ -67,10 +100,16 @@ const AdminResetPassword: React.FC = () => {
         </div>
 
         <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8">
-          {success ? (
+          {/* Checking token validity */}
+          {checking ? (
+            <div className="flex flex-col items-center justify-center py-8 gap-3">
+              <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-gray-500 dark:text-gray-400">Verifying reset link...</p>
+            </div>
+          ) : success ? (
             <div className="text-center space-y-4">
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg">
-                Password updated successfully! Redirecting to login…
+                ✅ Password updated successfully! Redirecting to login…
               </div>
             </div>
           ) : (
@@ -78,6 +117,17 @@ const AdminResetPassword: React.FC = () => {
               {error && (
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg">
                   {error}
+                  {!validToken && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/admin/login')}
+                        className="text-sm underline text-red-600 dark:text-red-400"
+                      >
+                        Request a new reset link →
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 

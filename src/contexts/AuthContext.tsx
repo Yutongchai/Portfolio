@@ -21,10 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminCheckComplete, setAdminCheckComplete] = useState(false);
-  const [adminCheckCache, setAdminCheckCache] = useState<{ email: string; isAdmin: boolean; timestamp: number } | null>(null);
 
-  const checkInProgressRef = useRef(false);
-  const currentRequestIdRef = useRef(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -41,8 +38,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!mounted) return;
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
-        if (currentSession?.user?.email) {
-          await checkAdminStatus(currentSession.user.email);
+        if (currentSession?.user) {
+          await checkAdminStatus(currentSession.user);
         } else {
           setAdminCheckComplete(true);
         }
@@ -67,8 +64,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(currentSession?.user ?? null);
           setAdminCheckComplete(false); // reset on auth change
 
-          if (currentSession?.user?.email) {
-            await checkAdminStatus(currentSession.user.email);
+          if (currentSession?.user) {
+            await checkAdminStatus(currentSession.user);
             setLoading(false);
           } else {
             setIsAdmin(false);
@@ -86,117 +83,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const checkAdminStatus = async (userEmail: string, forceCheck: boolean = false) => {
-    const requestId = ++currentRequestIdRef.current;
-
-    if (checkInProgressRef.current && !forceCheck) {
-      console.log(`Admin check already in progress, skipping for ${userEmail}`);
-      return;
-    }
-
+  const checkAdminStatus = async (user: User) => {
     try {
-      checkInProgressRef.current = true;
-      console.log(`[Request ${requestId}] Starting admin check for: ${userEmail}`);
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
 
-      if (!userEmail) {
-        setIsAdmin(false);
-        setAdminCheckComplete(true);
-        return;
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 = no rows found, which just means not an admin
+        console.error('Admin check error:', error);
       }
 
-      const now = Date.now();
-      if (!forceCheck && adminCheckCache &&
-        adminCheckCache.email === userEmail &&
-        now - adminCheckCache.timestamp < 5 * 60 * 1000) {
-        console.log(`[Request ${requestId}] Admin check (cached) for ${userEmail}: ${adminCheckCache.isAdmin}`);
-        if (requestId === currentRequestIdRef.current && mountedRef.current) {
-          setIsAdmin(adminCheckCache.isAdmin);
-          setAdminCheckComplete(true);
-        }
-        return;
-      }
-
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => {
-          if (requestId === currentRequestIdRef.current) {
-            reject(new Error('Admin check timeout'));
-          }
-        }, 10000);
-      });
-
-      const queryPromise = supabase
-        .from('site_settings')
-        .select('setting_value')
-        .eq('setting_key', 'admin_emails')
-        .maybeSingle();
-
-      const result = await Promise.race([queryPromise, timeoutPromise]) as any;
-
-      if (requestId !== currentRequestIdRef.current) {
-        console.log(`[Request ${requestId}] Stale request, ignoring result`);
-        return;
-      }
-
-      if (result.error) {
-        console.error(`[Request ${requestId}] Error fetching admin emails:`, result.error);
-        if (adminCheckCache && adminCheckCache.email === userEmail) {
-          if (mountedRef.current) {
-            setIsAdmin(adminCheckCache.isAdmin);
-            setAdminCheckComplete(true);
-          }
-          return;
-        }
-        if (mountedRef.current) {
-          setIsAdmin(false);
-          setAdminCheckComplete(true);
-        }
-        return;
-      }
-
-      if (!result.data) {
-        console.warn(`[Request ${requestId}] No admin_emails setting found in site_settings`);
-        if (mountedRef.current) {
-          setIsAdmin(false);
-          setAdminCheckComplete(true);
-        }
-        return;
-      }
-
-      const adminEmails = JSON.parse(result.data.setting_value || '[]');
-      const isUserAdmin = adminEmails.includes(userEmail);
-
-      setAdminCheckCache({ email: userEmail, isAdmin: isUserAdmin, timestamp: now });
-
-      console.log(`[Request ${requestId}] Admin check completed for ${userEmail}: ${isUserAdmin}`);
-
-      if (mountedRef.current) {
-        setIsAdmin(isUserAdmin);
-        setAdminCheckComplete(true); // ← mark as done
-      }
-
-    } catch (error: any) {
-      if (requestId !== currentRequestIdRef.current) return;
-      console.error(`[Request ${requestId}] Admin check error for ${userEmail}:`, error.message || error);
-      if (adminCheckCache && adminCheckCache.email === userEmail) {
-        if (mountedRef.current) {
-          setIsAdmin(adminCheckCache.isAdmin);
-          setAdminCheckComplete(true);
-        }
-      } else if (mountedRef.current) {
-        setIsAdmin(false);
-        setAdminCheckComplete(true);
-      }
+      setIsAdmin(!!data);
+    } catch (error) {
+      console.error('Admin check failed:', error);
+      setIsAdmin(false);
     } finally {
-      if (requestId === currentRequestIdRef.current) {
-        checkInProgressRef.current = false;
-      }
+      setAdminCheckComplete(true);
     }
   };
-
   const refreshAdminStatus = async () => {
     if (user?.email) {
       setAdminCheckComplete(false);
-      await checkAdminStatus(user.email, true);
+      await checkAdminStatus(user);
     }
   };
 
@@ -214,7 +125,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (mountedRef.current) {
       setIsAdmin(false);
       setAdminCheckComplete(false);
-      setAdminCheckCache(null);
     }
   };
 

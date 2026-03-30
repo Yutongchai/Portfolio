@@ -33,6 +33,27 @@ export interface Database {
         };
         Relationships: [];
       };
+      admin_users: {
+        Row: {
+          id: string;         
+          user_id: string;
+          email: string;       
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          email: string;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          email?: string;
+          created_at?: string | null;
+        };
+        Relationships: [];
+      };
       training_program_inquiries: {
         Row: {
           id: string;

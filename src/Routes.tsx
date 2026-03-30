@@ -19,7 +19,7 @@ const Questionnaire = lazy(() => import('./pages/Questionnaire'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 // Lazy load admin pages
 const AdminLogin = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminLogin })));
-const AdminRegister = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminRegister })));
+// const AdminRegister = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminRegister })));
 const AdminResetPassword = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminResetPassword })));
 const AdminDashboard = lazy(() => import('./pages/admin').then(mod => ({ default: mod.AdminDashboard })));
 const HeroImagesManager = lazy(() => import('./pages/admin').then(mod => ({ default: mod.HeroImagesManager })));
@@ -69,7 +69,7 @@ const Routes: React.FC = () => {
 
             {/* Admin Login/Register/Reset - Public */}
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/register" element={<AdminRegister />} />
+              {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
             <Route path="/admin/reset-password" element={<AdminResetPassword />} />
 
             {/* All other /admin/* routes require authentication */}
