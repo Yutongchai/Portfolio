@@ -69,7 +69,7 @@ const Routes: React.FC = () => {
 
             {/* Admin Login/Register/Reset - Public */}
             <Route path="/admin/login" element={<AdminLogin />} />
-              {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
+            {/* <Route path="/admin/register" element={<AdminRegister />} /> */}
             <Route path="/admin/reset-password" element={<AdminResetPassword />} />
 
             {/* All other /admin/* routes require authentication */}
@@ -102,18 +102,39 @@ const Routes: React.FC = () => {
 // RouteTracker: initialize GA and send pageviews on route change
 const RouteTracker: React.FC = () => {
   const location = useLocation();
+
   useEffect(() => {
-    // Initialize once
     ReactGA.initialize('G-CP9NYZR2TH');
   }, []);
 
   useEffect(() => {
-    ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search });
+    const fullPath = location.pathname + location.search;
+
+    // GA4 pageview
+    ReactGA.send({ hitType: 'pageview', page: fullPath });
+
+    // Umami: track questionnaire form visits by type
+    if (location.pathname === '/questionnaire') {
+      const params = new URLSearchParams(location.search);
+      const formType = params.get('form');
+
+      const formLabels: Record<string, string> = {
+        csr: 'Questionnaire - CSR',
+        training_program: 'Questionnaire - Training Program',
+        team_building: 'Questionnaire - Team Building',
+        corporate_events: 'Questionnaire - Corporate Events',
+      };
+
+      const eventName = formType && formLabels[formType]
+        ? formLabels[formType]
+        : 'Questionnaire - Unknown';
+
+      window.umami?.track(eventName, { form: formType ?? 'unknown', path: fullPath });
+    }
   }, [location]);
 
   return null;
 };
-
 // HeaderGuard: shows AltHeader except for /admin routes
 const HeaderGuard: React.FC = () => {
   const location = useLocation();

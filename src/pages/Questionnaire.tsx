@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Hero from '../components/ui/Hero';
 import { BASE_URL } from '../config/seoConfig';
@@ -39,7 +39,18 @@ const Questionnaire: React.FC = () => {
 
   const heroBg = heroMap[formKey] || TeamWorkshopImg;
   const formType = (formTypeMap[formKey] || 'team_building') as 'csr' | 'team_building' | 'corporate_event';
+  useEffect(() => {
+    const labelMap: Record<string, string> = {
+      team_building: 'Questionnaire View - Team Building',
+      training_program: 'Questionnaire View - Training Program',
+      corporate_event: 'Questionnaire View - Corporate Event',
+      csr: 'Questionnaire View - CSR',
+    };
 
+    window.umami?.track(labelMap[formKey] ?? 'Questionnaire View - Unknown', {
+      form: formKey,
+    });
+  }, [formKey]);
   return (
     <div className="bg-[#fdfdfb] text-[#23242b] overflow-x-hidden">
       <Hero background={heroBg} overlayClassName="bg-black/40" minHeightClass="min-h-[35vh] md:min-h-[60vh]">
@@ -58,7 +69,7 @@ const Questionnaire: React.FC = () => {
           </div>
           <div className="flex items-center justify-center gap-6 mb-6">
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
-            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f] whitespace-nowrap">{formKey.replace('_',' ')}</span>
+            <span className="uppercase tracking-[0.6em] text-xs font-black text-[#fcb22f] whitespace-nowrap">{formKey.replace('_', ' ')}</span>
             <div className="h-[2px] w-20 bg-[#fcb22f]" />
           </div>
 
@@ -77,7 +88,7 @@ const Questionnaire: React.FC = () => {
         </div>
       </main>
 
-      
+
     </div>
   );
 };

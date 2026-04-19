@@ -15,6 +15,14 @@ const AdminLogin: React.FC = () => {
   const { signIn, user, isAdmin, loading: authLoading, adminCheckComplete } = useAuth();
   const navigate = useNavigate();
 
+  // If Supabase appended a recovery hash to the URL but did not
+  // redirect to the reset page, navigate there and preserve the hash.
+  useEffect(() => {
+    if (window.location.hash && window.location.hash.includes('type=recovery')) {
+      navigate(`/admin/reset-password${window.location.hash}`);
+    }
+  }, [navigate]);
+
   useEffect(() => {
     // Only act when auth loading is done AND admin check has fully completed
     if (!authLoading && adminCheckComplete) {
