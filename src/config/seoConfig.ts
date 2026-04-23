@@ -170,7 +170,7 @@ export const organizationSchema = {
   "logo": `${BASE_URL}/EITO-bw.webp`,
   "image": `${BASE_URL}/black.webp`,
   "email": "info@eitogroup.com",
-  "telephone": "+60163287947",
+  "telephone": "+60179761397",
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "MY",
@@ -179,7 +179,7 @@ export const organizationSchema = {
   },
   "sameAs": [
     "https://www.instagram.com/eitogroup/",
-    "https://wa.me/60163287947",
+    "https://wa.me/60179761397",
   ],
   "founder": {
     "@type": "Person",
@@ -260,7 +260,7 @@ export const localBusinessSchema = {
   "@type": "LocalBusiness",
   "name": "EITO Group",
   "image": `${BASE_URL}/black.webp`,
-  "telephone": "+60163287947",
+  "telephone": "+60179761397",
   "email": "info@eitogroup.com",
   "address": {
     "@type": "PostalAddress",

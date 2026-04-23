@@ -134,7 +134,7 @@ const PrivacyPolicy = () => {
                   <strong>Email:</strong> <a href="mailto:info@eitogroup.com.my" className="text-[#f68921] hover:underline">info@eitogroup.com.my</a>
                 </p>
                 <p className="text-gray-700">
-                  <strong>WhatsApp:</strong> <a href="https://wa.me/60163287947" target="_blank" rel="noopener noreferrer" className="text-[#f68921] hover:underline">+6016-328 7947</a>
+                  <strong>WhatsApp:</strong> <a href="https://wa.me/60179761397" target="_blank" rel="noopener noreferrer" className="text-[#f68921] hover:underline">+6016-328 7947</a>
                 </p>
                 <p className="text-gray-700">
                   <strong>Location:</strong> Malaysia

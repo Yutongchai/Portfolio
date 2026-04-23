@@ -76,13 +76,13 @@ const ConnectionHub = () => {
       id: "3",
       type: "whatsapp",
       label: "Coach Chat",
-      value: "60163287947",
+      value: "60179761397",
       icon: <Phone size={28} />,
       color: COLORS.TEAL,
       description: "Instant access to a certified team building coach.",
       actionLabel: "WhatsApp Us",
       action: () => {
-        window.open("https://wa.me/60163287947?text=I%20have%20a%20query", "_blank");
+        window.open("https://wa.me/60179761397?text=I%20have%20a%20query", "_blank");
       }
     },
     {

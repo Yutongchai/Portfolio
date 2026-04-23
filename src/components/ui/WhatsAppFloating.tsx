@@ -4,7 +4,7 @@ const WhatsAppFloating: React.FC<{
     phone?: string;
     message?: string;
 }> = ({
-    phone = '60163287947',
+    phone = '60179761397',
     message = 'Hi, I am interested in your service!',
 }) => {
         const pathname =

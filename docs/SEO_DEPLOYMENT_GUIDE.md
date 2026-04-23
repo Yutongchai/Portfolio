@@ -220,7 +220,7 @@ Similar steps, but:
    - Business name: EITO Group
    - Category: Corporate Training Service / Team Building Service
    - Address: Your office address in Kuala Lumpur
-   - Phone: +60163287947
+   - Phone: +60179761397
    - Website: https://eitogroup.com
    - Hours: Monday-Friday 9:00 AM - 6:00 PM
 4. Upload photos of your events
