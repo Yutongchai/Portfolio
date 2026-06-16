@@ -1,3 +1,6 @@
+// src/pages/admin/AdminDashboard.tsx
+// Updated to include Blog Manager card + blog post count in Quick Stats
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -13,6 +16,7 @@ const AdminDashboard: React.FC = () => {
     projects: 0,
     inquiries: 0,
     bookings: 0,
+    blogPosts: 0,
   });
 
   useEffect(() => {
@@ -21,13 +25,11 @@ const AdminDashboard: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      // Fetch hero images count (only active)
       const { count: heroCount } = await supabase
         .from('hero_images')
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
 
-      // Fetch client logos count (only active)
       const { count: logosCount } = await supabase
         .from('client_logos')
         .select('*', { count: 'exact', head: true })
@@ -38,7 +40,6 @@ const AdminDashboard: React.FC = () => {
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true);
 
-      // Fetch total inquiries from all inquiry tables
       const inquiryTables = [
         'corporate_event_inquiries',
         'team_building_inquiries',
@@ -54,10 +55,21 @@ const AdminDashboard: React.FC = () => {
         totalInquiries += count || 0;
       }
 
-      // Fetch bookings count
       const { count: bookingsCount } = await (supabase as any)
         .from('bookings')
         .select('*', { count: 'exact', head: true });
+
+      // Blog posts (table may not exist yet — fail silently)
+      let blogCount = 0;
+      try {
+        const { count } = await (supabase as any)
+          .from('blog_posts')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_published', true);
+        blogCount = count || 0;
+      } catch (_) {
+        blogCount = 0;
+      }
 
       setStats({
         heroImages: heroCount || 0,
@@ -65,6 +77,7 @@ const AdminDashboard: React.FC = () => {
         projects: projectsCount || 0,
         inquiries: totalInquiries,
         bookings: bookingsCount || 0,
+        blogPosts: blogCount,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -90,21 +103,12 @@ const AdminDashboard: React.FC = () => {
                 Welcome back, {user?.email}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              {/* <Button
-                onClick={() => navigate('/')}
-                className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600"
-                disabled
-              >
-                View Site
-              </Button> */}
-              <Button
-                onClick={handleSignOut}
-                className="bg-red-600 hover:bg-red-700 text-white"
-              >
-                Sign Out
-              </Button>
-            </div>
+            <Button
+              onClick={handleSignOut}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Sign Out
+            </Button>
           </div>
         </div>
       </header>
@@ -112,12 +116,10 @@ const AdminDashboard: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Hero Images Card */}
+          {/* Hero Images */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Hero Images
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Hero Images</h2>
               <span className="text-2xl">🖼️</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
@@ -131,12 +133,10 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Client Logos Card */}
+          {/* Client Logos */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Client Logos
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Client Logos</h2>
               <span className="text-2xl">🏢</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
@@ -150,31 +150,10 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Projects Card */}
-          {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Projects
-              </h2>
-              <span className="text-2xl">💼</span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
-              Create and manage portfolio project showcase cards
-            </p>
-            <Button
-              onClick={() => navigate('/admin/projects')}
-              className="w-full bg-green-600 hover:bg-green-700 text-white mt-auto"
-            >
-              Manage Projects
-            </Button>
-          </div> */}
-
-          {/* Inquiries Card */}
+          {/* Inquiries */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Inquiries
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Inquiries</h2>
               <span className="text-2xl">📨</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
@@ -188,12 +167,10 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Bookings Card */}
+          {/* Bookings */}
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Bookings
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Bookings</h2>
               <span className="text-2xl">📅</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
@@ -207,29 +184,29 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* Media Library Card */}
-          {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
+          {/* ── Blog Manager (new) ── */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Media Library
-              </h2>
-              <span className="text-2xl">📁</span>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Blog</h2>
+              <span className="text-2xl">✍️</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
-              Browse and manage all uploaded media files
+              Write, schedule, and publish blog articles. Each article gets its own SEO-friendly URL.
             </p>
-            <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white mt-auto">
-              Open Media Library
+            <Button
+              onClick={() => navigate('/admin/blog')}
+              className="w-full text-white mt-auto"
+              style={{ background: '#153462' }}
+            >
+              Manage Blog
             </Button>
-          </div> */}
+          </div>
         </div>
 
         {/* Quick Stats */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Quick Stats
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Stats</h2>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.heroImages}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Hero Images</div>
@@ -250,15 +227,17 @@ const AdminDashboard: React.FC = () => {
               <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">{stats.bookings}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Bookings</div>
             </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold" style={{ color: '#153462' }}>{stats.blogPosts}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Blog Posts</div>
+            </div>
           </div>
         </div>
 
         {/* Umami Analytics */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Website Analytics
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Website Analytics</h2>
             <a
               href="https://cloud.umami.is/share/rVA1TljKrtqzMcyA"
               target="_blank"
