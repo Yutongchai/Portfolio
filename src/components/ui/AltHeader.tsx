@@ -72,10 +72,10 @@ const AltHeader: React.FC = () => {
     const isShrunk = isScrolled && !isHovered && window.innerWidth > 768;
 
     function navigateTo(path: string) {
-        navigate(path);
         setMobileMenuOpen(false);
         setServicesOpen(false);
         setConnectOpen(false);
+        navigate(path);
         const hashIndex = path.indexOf('#');
         if (hashIndex !== -1) {
             const hash = path.slice(hashIndex + 1);
