@@ -32,6 +32,17 @@
   <meta name="twitter:description" content="Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance." />
   <meta name="twitter:image" content="https://eitogroup.com.my/black.webp" />
 
+  <!-- GitHub Pages SPA: restore path from redirect query param -->
+  <script>
+    (function() {
+      var p = new URLSearchParams(window.location.search).get('p');
+      if (p) {
+        var base = '/Portfolio';
+        window.history.replaceState(null, null, base + '/' + p);
+      }
+    })();
+  </script>
+
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="EITO Group" />
