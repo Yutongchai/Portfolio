@@ -32,13 +32,14 @@
   <meta name="twitter:description" content="Corporate team building and HRDC claimable training in Malaysia designed to improve communication, leadership and workplace performance." />
   <meta name="twitter:image" content="https://eitogroup.com.my/black.webp" />
 
-  <!-- GitHub Pages SPA: restore path from redirect query param -->
+  <!-- GitHub Pages SPA: restore path from 404.html redirect -->
   <script>
     (function() {
-      var p = new URLSearchParams(window.location.search).get('p');
+      var params = new URLSearchParams(window.location.search);
+      var p = params.get('p');
       if (p) {
-        var base = '/Portfolio';
-        window.history.replaceState(null, null, base + '/' + p);
+        var hash = params.get('hash') || '';
+        window.history.replaceState(null, null, '/Portfolio' + p + hash);
       }
     })();
   </script>

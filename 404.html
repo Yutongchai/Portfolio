@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <script>
-    // GitHub Pages SPA redirect: encode the path as a query param and send to index.html
+    // When GitHub Pages 404s on a deep path like /Portfolio/admin,
+    // redirect to /Portfolio/?p=/admin so index.html can restore it.
     var l = window.location;
+    var pathParts = l.pathname.slice(1).split('/');
+    var basePath = '/' + pathParts[0]; // e.g. /Portfolio
+    var restPath = '/' + pathParts.slice(1).join('/'); // e.g. /admin
     l.replace(
-      l.protocol + '//' + l.host + l.pathname.split('/').slice(0, 2).join('/') +
-      '/?p=' + encodeURIComponent(l.pathname.slice(1) + (l.search ? '&' + l.search.slice(1) : '') + l.hash)
+      l.protocol + '//' + l.host + basePath +
+      '/?p=' + encodeURIComponent(restPath) +
+      (l.hash ? '&hash=' + encodeURIComponent(l.hash) : '')
     );
   </script>
 </head>
