@@ -1,10 +1,12 @@
 // src/pages/blog/BlogIndex.tsx
-import React, { useMemo, useState } from 'react';
+// Fetches published posts directly from Supabase blog_posts table.
+
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Calendar, Clock, ArrowRight, Tag } from 'lucide-react';
 import Footer from '../../components/ui/Footer';
-import { getAllPosts, BlogPost } from '../../data/blogData';
+import { supabase } from '../../config/supabaseClient';
 
 const COLORS = {
     NAVY: '#153462',
@@ -16,13 +18,44 @@ const COLORS = {
 
 const CATEGORIES = ['All', 'Team Building', 'Corporate Events', 'Training', 'CSR'];
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface BlogPostRow {
+    id: string;
+    slug: string;
+    title: string;
+    excerpt: string;
+    cover_image_url: string | null;
+    category: string;
+    tags: string | string[];   // Supabase may return a JSON string or array
+    author_name: string;
+    content_json: string;
+    is_published: boolean;
+    published_at: string | null;
+    scheduled_at: string | null;
+    read_time_minutes: number;
+    seo_title: string | null;
+    seo_description: string | null;
+    seo_keywords: string | null;
+}
+
+// Safely parse tags regardless of whether Supabase returns a string or array
+const parseTags = (raw: string | string[] | null | undefined): string[] => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    try { return JSON.parse(raw); } catch { return []; }
+};
+
 // ─── Card ───────────────────────────────────────────────────────────────────
-const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, featured }) => {
-    const date = new Date(post.published_at).toLocaleDateString('en-MY', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
+const BlogCard: React.FC<{ post: BlogPostRow; featured?: boolean }> = ({ post, featured }) => {
+    const date = post.published_at
+        ? new Date(post.published_at).toLocaleDateString('en-MY', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        })
+        : '';
+
+    const tags = parseTags(post.tags);
 
     return (
         <Link
@@ -33,13 +66,21 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
         >
             {/* Cover image */}
             <div className={`relative overflow-hidden ${featured ? 'h-72 md:h-96' : 'h-52'}`}>
-                <img
-                    src={post.cover_image}
-                    alt={post.cover_image_alt}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                />
-                {/* Category pill */}
+                {post.cover_image_url ? (
+                    <img
+                        src={post.cover_image_url}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div
+                        className="w-full h-full flex items-center justify-center text-white font-bold text-sm"
+                        style={{ background: COLORS.NAVY }}
+                    >
+                        {post.category}
+                    </div>
+                )}
                 <span
                     className="absolute top-4 left-4 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white"
                     style={{ background: COLORS.NAVY }}
@@ -50,7 +91,6 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
 
             {/* Content */}
             <div className="p-6">
-                {/* Meta row */}
                 <div className="flex items-center gap-4 text-xs mb-3" style={{ color: COLORS.TEAL }}>
                     <span className="flex items-center gap-1.5">
                         <Calendar size={13} />
@@ -62,7 +102,6 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
                     </span>
                 </div>
 
-                {/* Title */}
                 <h2
                     className={`font-black leading-tight mb-3 group-hover:opacity-80 transition-opacity ${featured ? 'text-xl md:text-2xl' : 'text-lg'
                         }`}
@@ -71,14 +110,12 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
                     {post.title}
                 </h2>
 
-                {/* Excerpt */}
                 <p className="text-sm leading-relaxed mb-5 line-clamp-3" style={{ color: '#5a6a7a' }}>
                     {post.excerpt}
                 </p>
 
-                {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-5">
-                    {post.tags.slice(0, 3).map(tag => (
+                    {tags.slice(0, 3).map(tag => (
                         <span
                             key={tag}
                             className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
@@ -90,7 +127,6 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
                     ))}
                 </div>
 
-                {/* CTA */}
                 <div
                     className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest group-hover:gap-3 transition-all"
                     style={{ color: COLORS.ORANGE }}
@@ -105,7 +141,32 @@ const BlogCard: React.FC<{ post: BlogPost; featured?: boolean }> = ({ post, feat
 // ─── Page ────────────────────────────────────────────────────────────────────
 const BlogIndex: React.FC = () => {
     const [activeCategory, setActiveCategory] = useState('All');
-    const allPosts = useMemo(() => getAllPosts(), []);
+    const [allPosts, setAllPosts] = useState<BlogPostRow[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                setLoading(true);
+                const { data, error } = await (supabase as any)
+                    .from('blog_posts')
+                    .select('*')
+                    .eq('is_published', true)
+                    .order('published_at', { ascending: false });
+
+                if (error) throw error;
+                setAllPosts(data || []);
+            } catch (err: any) {
+                setError('Could not load articles. Please try again later.');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     const filtered = useMemo(
         () =>
@@ -141,7 +202,6 @@ const BlogIndex: React.FC = () => {
                     className="relative pt-32 pb-20 overflow-hidden"
                     style={{ background: COLORS.NAVY }}
                 >
-                    {/* Decorative blobs */}
                     <div
                         className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10 blur-3xl pointer-events-none"
                         style={{ background: COLORS.GOLD, transform: 'translate(30%, -30%)' }}
@@ -190,7 +250,19 @@ const BlogIndex: React.FC = () => {
 
                 {/* ── Article Grid ─────────────────────────────────────────── */}
                 <div className="max-w-5xl mx-auto px-6 pb-24">
-                    {filtered.length === 0 ? (
+                    {loading ? (
+                        <div className="text-center py-24">
+                            <div
+                                className="inline-block w-8 h-8 rounded-full border-4 border-t-transparent animate-spin mb-4"
+                                style={{ borderColor: `${COLORS.NAVY} transparent ${COLORS.NAVY} ${COLORS.NAVY}` }}
+                            />
+                            <p className="text-gray-400 text-sm">Loading articles…</p>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center py-24">
+                            <p className="text-red-500 text-sm">{error}</p>
+                        </div>
+                    ) : filtered.length === 0 ? (
                         <div className="text-center py-24">
                             <p className="text-lg font-semibold" style={{ color: COLORS.NAVY }}>
                                 No articles in this category yet.
