@@ -73,59 +73,47 @@ const blankForm = (): Partial<BlogPostRow> => ({
 
 const CATEGORIES = ['Team Building', 'Corporate Events', 'Training', 'CSR', 'General'];
 
+// ─── Date helpers — NO timezone conversion ────────────────────────────────────
+// Store datetime-local strings as-is (e.g. "2026-06-29T20:00").
+// Never pass through new Date() — that would apply UTC offset and shift the date.
+
+// Format a stored datetime string for display (e.g. "29 June 2026")
+const displayLocalDate = (stored: string | null): string => {
+    if (!stored) return '';
+    // Parse the date part directly from the string — avoids any timezone shift
+    const datePart = stored.slice(0, 10); // "YYYY-MM-DD"
+    const [year, month, day] = datePart.split('-').map(Number);
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${day} ${months[month - 1]} ${year}`;
+};
+
+// Format for the locale date in the Scheduled badge (e.g. "29/06/2026")
+const displayLocalDateShort = (stored: string | null): string => {
+    if (!stored) return '';
+    const datePart = stored.slice(0, 10);
+    const [year, month, day] = datePart.split('-').map(Number);
+    return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+};
+
+// Convert a stored datetime-local string to the input value format (slice to 16 chars)
+const toInputValue = (stored: string | null): string => {
+    if (!stored) return '';
+    // If it's already in datetime-local format ("YYYY-MM-DDTHH:mm"), use directly
+    return stored.slice(0, 16);
+};
+
 // ─── Snippet templates ────────────────────────────────────────────────────────
 const SNIPPETS = [
-    {
-        label: 'Paragraph',
-        icon: '¶',
-        color: '#6366f1',
-        json: { type: 'paragraph', text: 'Your paragraph text here.' },
-    },
-    {
-        label: 'Heading H2',
-        icon: 'H2',
-        color: COLORS.NAVY,
-        json: { type: 'heading', level: 2, text: 'Section Title' },
-    },
-    {
-        label: 'Heading H3',
-        icon: 'H3',
-        color: COLORS.NAVY,
-        json: { type: 'heading', level: 3, text: 'Sub-heading' },
-    },
-    {
-        label: 'Quote',
-        icon: '"',
-        color: COLORS.GOLD,
-        json: { type: 'quote', text: 'An inspiring quote goes here.' },
-    },
-    {
-        label: 'Numbered List',
-        icon: '1.',
-        color: COLORS.ORANGE,
-        json: { type: 'list', items: ['First point', 'Second point', 'Third point'] },
-    },
-    {
-        label: 'Image',
-        icon: '🖼',
-        color: COLORS.TEAL,
-        json: { type: 'image', src: 'https://YOUR-IMAGE-URL.jpg', alt: 'Description', caption: 'Optional caption' },
-    },
-    {
-        label: 'Callout Box',
-        icon: '💡',
-        color: '#16a34a',
-        json: { type: 'callout', text: 'Key insight or takeaway to highlight.' },
-    },
-    {
-        label: 'Clickable Link',
-        icon: '🔗',
-        color: COLORS.ORANGE,
-        json: { type: 'link', href: 'https://example.com', label: 'Click here to learn more' },
-    },
+    { label: 'Paragraph', icon: '¶', color: '#6366f1', json: { type: 'paragraph', text: 'Your paragraph text here.' } },
+    { label: 'Heading H2', icon: 'H2', color: COLORS.NAVY, json: { type: 'heading', level: 2, text: 'Section Title' } },
+    { label: 'Heading H3', icon: 'H3', color: COLORS.NAVY, json: { type: 'heading', level: 3, text: 'Sub-heading' } },
+    { label: 'Quote', icon: '"', color: COLORS.GOLD, json: { type: 'quote', text: 'An inspiring quote goes here.' } },
+    { label: 'Numbered List', icon: '1.', color: COLORS.ORANGE, json: { type: 'list', items: ['First point', 'Second point', 'Third point'] } },
+    { label: 'Image', icon: '🖼', color: COLORS.TEAL, json: { type: 'image', src: '', alt: 'Description', caption: '' } },
+    { label: 'Callout Box', icon: '💡', color: '#16a34a', json: { type: 'callout', text: 'Key insight or takeaway to highlight.' } },
+    { label: 'Clickable Link', icon: '🔗', color: COLORS.ORANGE, json: { type: 'link', href: 'https://example.com', label: 'Click here to learn more' } },
 ];
 
-// ─── Rich Text Editor Component ──────────────────────────────────────────────
 // ─── Rich Text Editor Component ──────────────────────────────────────────────
 interface RichTextEditorProps {
     value: string;
@@ -143,77 +131,48 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
     const [isFocused, setIsFocused] = useState(false);
     const isInternalChange = useRef(false);
 
-    // Initialize and update content - ONLY when external value changes
     useEffect(() => {
         if (editorRef.current && !isInternalChange.current) {
             const currentHtml = editorRef.current.innerHTML;
             const newHtml = value || '';
             if (currentHtml !== newHtml) {
-                // Save selection
                 const sel = window.getSelection();
-                let savedRange: Range | null = null;
                 let savedOffset = 0;
-                let savedNode: Node | null = null;
 
                 if (sel && sel.rangeCount > 0) {
                     const range = sel.getRangeAt(0);
                     if (editorRef.current.contains(range.commonAncestorContainer)) {
-                        savedRange = range.cloneRange();
-                        savedNode = range.startContainer;
                         savedOffset = range.startOffset;
                     }
                 }
 
                 editorRef.current.innerHTML = newHtml;
 
-                // Try to restore cursor position
-                if (savedRange) {
-                    try {
-                        // Try to find the text node at the saved position
-                        const walker = document.createTreeWalker(
-                            editorRef.current,
-                            NodeFilter.SHOW_TEXT,
-                            null,
-                        );
-
-                        let textNode: Node | null = null;
-                        let found = false;
-
-                        while (walker.nextNode()) {
-                            const node = walker.currentNode;
-                            if (node.textContent && node.textContent.length > 0) {
-                                // If we can find a reasonable position, restore it
-                                const range = document.createRange();
-                                try {
-                                    range.setStart(node, Math.min(savedOffset, node.textContent.length));
-                                    range.collapse(true);
-                                    sel?.removeAllRanges();
-                                    sel?.addRange(range);
-                                    found = true;
-                                    break;
-                                } catch (e) {
-                                    continue;
-                                }
-                            }
-                        }
-
-                        if (!found) {
-                            // Fallback: put cursor at end
+                try {
+                    const walker = document.createTreeWalker(editorRef.current, NodeFilter.SHOW_TEXT, null);
+                    let found = false;
+                    while (walker.nextNode()) {
+                        const node = walker.currentNode;
+                        if (node.textContent && node.textContent.length > 0) {
                             const range = document.createRange();
-                            range.selectNodeContents(editorRef.current);
-                            range.collapse(false);
-                            sel?.removeAllRanges();
-                            sel?.addRange(range);
+                            try {
+                                range.setStart(node, Math.min(savedOffset, node.textContent.length));
+                                range.collapse(true);
+                                sel?.removeAllRanges();
+                                sel?.addRange(range);
+                                found = true;
+                                break;
+                            } catch (e) { continue; }
                         }
-                    } catch (e) {
-                        // Fallback: put cursor at end
+                    }
+                    if (!found) {
                         const range = document.createRange();
                         range.selectNodeContents(editorRef.current);
                         range.collapse(false);
                         sel?.removeAllRanges();
                         sel?.addRange(range);
                     }
-                }
+                } catch (e) { /* ignore */ }
             }
         }
         isInternalChange.current = false;
@@ -222,7 +181,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
     const handleInput = () => {
         if (editorRef.current) {
             const html = editorRef.current.innerHTML;
-            // Only trigger onChange if content actually changed
             if (html !== value) {
                 isInternalChange.current = true;
                 onChange(html);
@@ -230,186 +188,94 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
         }
     };
 
-    const execCommand = (command: string, value?: string) => {
-        document.execCommand(command, false, value || '');
+    const execCommand = (command: string, val?: string) => {
+        document.execCommand(command, false, val || '');
         if (editorRef.current) {
-            const html = editorRef.current.innerHTML;
             isInternalChange.current = true;
-            onChange(html);
+            onChange(editorRef.current.innerHTML);
         }
         editorRef.current?.focus();
     };
 
-    const handleBold = () => execCommand('bold');
-    const handleItalic = () => execCommand('italic');
-    const handleUnderline = () => execCommand('underline');
-    const handleStrikethrough = () => execCommand('strikeThrough');
-
     const handleLink = () => {
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed) {
-            setLinkText('');
-            setLinkUrl('');
-            setShowLinkModal(true);
-            return;
+            setLinkText(''); setLinkUrl(''); setShowLinkModal(true); return;
         }
-
         const range = selection.getRangeAt(0);
         const parentLink = range.commonAncestorContainer.parentElement?.closest?.('a');
         if (parentLink) {
             const text = parentLink.textContent || '';
             const parent = parentLink.parentNode;
             if (parent) {
-                const textNode = document.createTextNode(text);
-                parent.replaceChild(textNode, parentLink);
-                selection.removeAllRanges();
-                const newRange = document.createRange();
-                newRange.selectNodeContents(parent);
-                selection.addRange(newRange);
-                if (editorRef.current) {
-                    const html = editorRef.current.innerHTML;
-                    isInternalChange.current = true;
-                    onChange(html);
-                }
+                parent.replaceChild(document.createTextNode(text), parentLink);
+                if (editorRef.current) { isInternalChange.current = true; onChange(editorRef.current.innerHTML); }
             }
             return;
         }
-
         const selectedText = selection.toString();
         if (selectedText) {
-            setLinkText(selectedText);
-            setLinkUrl('');
-            setSelectionRange(range.cloneRange());
-            setShowLinkModal(true);
+            setLinkText(selectedText); setLinkUrl(''); setSelectionRange(range.cloneRange()); setShowLinkModal(true);
         }
     };
 
     const insertLink = () => {
         if (!linkUrl) return;
-
-        const url = linkUrl.startsWith('http://') || linkUrl.startsWith('https://')
-            ? linkUrl
-            : `https://${linkUrl}`;
+        const url = linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`;
+        const linkNode = document.createElement('a');
+        linkNode.href = url; linkNode.target = '_blank'; linkNode.rel = 'noopener noreferrer';
+        linkNode.textContent = linkText || url;
 
         if (selectionRange) {
             selectionRange.deleteContents();
-            const linkNode = document.createElement('a');
-            linkNode.href = url;
-            linkNode.target = '_blank';
-            linkNode.rel = 'noopener noreferrer';
-            linkNode.textContent = linkText || url;
-
             selectionRange.insertNode(linkNode);
-
-            const range = document.createRange();
-            range.setStartAfter(linkNode);
-            range.collapse(true);
-            const sel = window.getSelection();
-            sel?.removeAllRanges();
-            sel?.addRange(range);
         } else {
             const sel = window.getSelection();
-            if (sel) {
-                const range = sel.getRangeAt(0);
-                const linkNode = document.createElement('a');
-                linkNode.href = url;
-                linkNode.target = '_blank';
-                linkNode.rel = 'noopener noreferrer';
-                linkNode.textContent = linkText || url;
-                range.insertNode(linkNode);
-
-                const newRange = document.createRange();
-                newRange.setStartAfter(linkNode);
-                newRange.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(newRange);
-            }
+            if (sel) { const range = sel.getRangeAt(0); range.insertNode(linkNode); }
         }
-
-        if (editorRef.current) {
-            const html = editorRef.current.innerHTML;
-            isInternalChange.current = true;
-            onChange(html);
-        }
-        setShowLinkModal(false);
-        setLinkUrl('');
-        setLinkText('');
-        setSelectionRange(null);
+        const range = document.createRange();
+        range.setStartAfter(linkNode); range.collapse(true);
+        window.getSelection()?.removeAllRanges(); window.getSelection()?.addRange(range);
+        if (editorRef.current) { isInternalChange.current = true; onChange(editorRef.current.innerHTML); }
+        setShowLinkModal(false); setLinkUrl(''); setLinkText(''); setSelectionRange(null);
         editorRef.current?.focus();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            document.execCommand('insertParagraph');
-        }
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.execCommand('insertParagraph'); }
     };
 
     const handlePaste = (e: React.ClipboardEvent) => {
         e.preventDefault();
-
         const html = e.clipboardData.getData('text/html');
         const text = e.clipboardData.getData('text/plain');
-
-        if (html) {
-            document.execCommand('insertHTML', false, html);
-        } else if (text) {
-            document.execCommand('insertText', false, text);
-        }
+        if (html) { document.execCommand('insertHTML', false, html); }
+        else if (text) { document.execCommand('insertText', false, text); }
     };
 
     return (
         <div className="rich-text-editor">
-            {/* Toolbar */}
             <div className="flex items-center gap-1 flex-wrap mb-2 p-1.5 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                <button
-                    type="button"
-                    onClick={handleBold}
-                    className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    title="Bold (Ctrl+B)"
-                >
+                <button type="button" onClick={() => execCommand('bold')} className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" title="Bold (Ctrl+B)">
                     <Bold size={16} className="text-gray-700 dark:text-gray-300" />
                 </button>
-                <button
-                    type="button"
-                    onClick={handleItalic}
-                    className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    title="Italic (Ctrl+I)"
-                >
+                <button type="button" onClick={() => execCommand('italic')} className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" title="Italic (Ctrl+I)">
                     <Italic size={16} className="text-gray-700 dark:text-gray-300" />
                 </button>
-                <button
-                    type="button"
-                    onClick={handleUnderline}
-                    className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    title="Underline (Ctrl+U)"
-                >
+                <button type="button" onClick={() => execCommand('underline')} className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" title="Underline (Ctrl+U)">
                     <Underline size={16} className="text-gray-700 dark:text-gray-300" />
                 </button>
-                <button
-                    type="button"
-                    onClick={handleStrikethrough}
-                    className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    title="Strikethrough"
-                >
+                <button type="button" onClick={() => execCommand('strikeThrough')} className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" title="Strikethrough">
                     <Strikethrough size={16} className="text-gray-700 dark:text-gray-300" />
                 </button>
                 <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-                <button
-                    type="button"
-                    onClick={handleLink}
-                    className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    title="Insert Link (Ctrl+K)"
-                >
+                <button type="button" onClick={handleLink} className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" title="Insert Link">
                     <LinkIcon size={16} className="text-gray-700 dark:text-gray-300" />
                 </button>
                 <div className="flex-1" />
-                <span className="text-xs text-gray-400">
-                    {isFocused ? 'Editing...' : 'Click to edit'}
-                </span>
+                <span className="text-xs text-gray-400">{isFocused ? 'Editing...' : 'Click to edit'}</span>
             </div>
 
-            {/* Editor - NO dangerouslySetInnerHTML, just render the ref */}
             <div
                 ref={editorRef}
                 contentEditable
@@ -419,13 +285,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
                 onPaste={handlePaste}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                style={{
-                    lineHeight: '1.7',
-                    fontSize: '15px',
-                }}
+                style={{ lineHeight: '1.7', fontSize: '15px' }}
             />
 
-            {/* Link Modal */}
             {showLinkModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6" style={{ border: '1px solid #e8edf2' }}>
@@ -433,88 +295,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Link Text</label>
-                                <input
-                                    type="text"
-                                    className="w-full border rounded-xl px-4 py-2.5 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="Text to display"
-                                    value={linkText}
-                                    onChange={e => setLinkText(e.target.value)}
-                                />
+                                <input type="text" className="w-full border rounded-xl px-4 py-2.5 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Text to display" value={linkText} onChange={e => setLinkText(e.target.value)} />
                             </div>
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">URL</label>
-                                <input
-                                    type="url"
-                                    className="w-full border rounded-xl px-4 py-2.5 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                    placeholder="https://example.com"
-                                    value={linkUrl}
-                                    onChange={e => setLinkUrl(e.target.value)}
-                                    onKeyDown={e => e.key === 'Enter' && insertLink()}
-                                    autoFocus
-                                />
+                                <input type="url" className="w-full border rounded-xl px-4 py-2.5 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="https://example.com" value={linkUrl} onChange={e => setLinkUrl(e.target.value)} onKeyDown={e => e.key === 'Enter' && insertLink()} autoFocus />
                             </div>
                         </div>
                         <div className="flex justify-end gap-3 mt-6">
-                            <button
-                                onClick={() => {
-                                    setShowLinkModal(false);
-                                    setLinkUrl('');
-                                    setLinkText('');
-                                    setSelectionRange(null);
-                                }}
-                                className="text-sm text-gray-500 hover:text-gray-700"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={insertLink}
-                                className="text-sm font-bold px-4 py-2 rounded-xl text-white"
-                                style={{ background: COLORS.NAVY }}
-                                disabled={!linkUrl}
-                            >
-                                Insert Link
-                            </button>
+                            <button onClick={() => { setShowLinkModal(false); setLinkUrl(''); setLinkText(''); setSelectionRange(null); }} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
+                            <button onClick={insertLink} className="text-sm font-bold px-4 py-2 rounded-xl text-white" style={{ background: COLORS.NAVY }} disabled={!linkUrl}>Insert Link</button>
                         </div>
                     </div>
                 </div>
             )}
 
             <style>{`
-                .rich-text-content a {
-                    color: #2563eb;
-                    text-decoration: underline;
-                    cursor: pointer;
-                }
-                .rich-text-content a:hover {
-                    color: #1d4ed8;
-                }
-                .rich-text-content strong {
-                    font-weight: 700;
-                }
-                .rich-text-content em {
-                    font-style: italic;
-                }
-                .rich-text-content u {
-                    text-decoration: underline;
-                }
-                .rich-text-content del {
-                    text-decoration: line-through;
-                }
-                .rich-text-content p {
-                    margin-bottom: 0.75rem;
-                    min-height: 1.2em;
-                }
-                .rich-text-content p:last-child {
-                    margin-bottom: 0;
-                }
-                .rich-text-content div {
-                    min-height: 1.2em;
-                }
-                .rich-text-content br {
-                    display: block;
-                    content: "";
-                    margin: 0.5rem 0;
-                }
+                .rich-text-content a { color: #2563eb; text-decoration: underline; cursor: pointer; }
+                .rich-text-content a:hover { color: #1d4ed8; }
+                .rich-text-content strong { font-weight: 700; }
+                .rich-text-content em { font-style: italic; }
+                .rich-text-content u { text-decoration: underline; }
+                .rich-text-content del { text-decoration: line-through; }
+                .rich-text-content p { margin-bottom: 0.75rem; min-height: 1.2em; }
+                .rich-text-content p:last-child { margin-bottom: 0; }
+                .rich-text-content div { min-height: 1.2em; }
             `}</style>
         </div>
     );
@@ -524,21 +329,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, placeh
 const LockedView: React.FC<{ onBack: () => void }> = ({ onBack }) => (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-6">
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-10 max-w-sm w-full text-center shadow-sm" style={{ border: '1px solid #e8edf2' }}>
-            <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: `${COLORS.NAVY}15` }}
-            >
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: `${COLORS.NAVY}15` }}>
                 <Lock size={28} style={{ color: COLORS.NAVY }} />
             </div>
             <h2 className="text-xl font-black mb-2" style={{ color: COLORS.NAVY }}>Blog Manager</h2>
-            <p className="text-sm text-gray-500 mb-6">
-                This section is managed by the developer. Contact your developer to publish or update articles.
-            </p>
-            <button
-                onClick={onBack}
-                className="text-sm font-semibold flex items-center gap-2 mx-auto"
-                style={{ color: COLORS.NAVY }}
-            >
+            <p className="text-sm text-gray-500 mb-6">This section is managed by the developer. Contact your developer to publish or update articles.</p>
+            <button onClick={onBack} className="text-sm font-semibold flex items-center gap-2 mx-auto" style={{ color: COLORS.NAVY }}>
                 <ArrowLeft size={15} /> Back to Dashboard
             </button>
         </div>
@@ -565,7 +361,6 @@ const PreDeployChecklist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [checked, setChecked] = useState<Record<string, boolean>>({});
     const toggle = (id: string) => setChecked(prev => ({ ...prev, [id]: !prev[id] }));
     const doneCount = Object.values(checked).filter(Boolean).length;
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col" style={{ border: '1px solid #e8edf2' }}>
@@ -576,46 +371,27 @@ const PreDeployChecklist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     </div>
                     <button onClick={onClose}><X size={18} className="text-gray-400 hover:text-gray-700" /></button>
                 </div>
-
                 <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700/40">
                     <div className="flex items-center justify-between text-xs font-bold mb-1.5">
                         <span style={{ color: COLORS.NAVY }}>{doneCount} / {CHECKLIST_ITEMS.length} done</span>
-                        {doneCount === CHECKLIST_ITEMS.length && (
-                            <span className="text-green-600 flex items-center gap-1"><Check size={12} /> All clear — ready to deploy!</span>
-                        )}
+                        {doneCount === CHECKLIST_ITEMS.length && <span className="text-green-600 flex items-center gap-1"><Check size={12} /> All clear — ready to deploy!</span>}
                     </div>
                     <div className="w-full h-2 rounded-full bg-gray-200">
-                        <div
-                            className="h-2 rounded-full transition-all"
-                            style={{ width: `${(doneCount / CHECKLIST_ITEMS.length) * 100}%`, background: doneCount === CHECKLIST_ITEMS.length ? '#16a34a' : COLORS.ORANGE }}
-                        />
+                        <div className="h-2 rounded-full transition-all" style={{ width: `${(doneCount / CHECKLIST_ITEMS.length) * 100}%`, background: doneCount === CHECKLIST_ITEMS.length ? '#16a34a' : COLORS.ORANGE }} />
                     </div>
                 </div>
-
                 <div className="overflow-y-auto flex-1 px-6 py-4 space-y-3">
                     {CHECKLIST_ITEMS.map(item => (
                         <label key={item.id} className="flex items-start gap-3 cursor-pointer group">
-                            <div
-                                className="w-5 h-5 mt-0.5 rounded flex items-center justify-center flex-shrink-0 border-2 transition-all"
-                                style={{
-                                    background: checked[item.id] ? '#16a34a' : 'transparent',
-                                    borderColor: checked[item.id] ? '#16a34a' : '#d1d5db',
-                                }}
-                                onClick={() => toggle(item.id)}
-                            >
+                            <div className="w-5 h-5 mt-0.5 rounded flex items-center justify-center flex-shrink-0 border-2 transition-all" style={{ background: checked[item.id] ? '#16a34a' : 'transparent', borderColor: checked[item.id] ? '#16a34a' : '#d1d5db' }} onClick={() => toggle(item.id)}>
                                 {checked[item.id] && <Check size={12} className="text-white" />}
                             </div>
-                            <span
-                                className="text-sm leading-snug transition-colors"
-                                style={{ color: checked[item.id] ? '#9ca3af' : '#374151', textDecoration: checked[item.id] ? 'line-through' : 'none' }}
-                                onClick={() => toggle(item.id)}
-                            >
+                            <span className="text-sm leading-snug transition-colors" style={{ color: checked[item.id] ? '#9ca3af' : '#374151', textDecoration: checked[item.id] ? 'line-through' : 'none' }} onClick={() => toggle(item.id)}>
                                 {item.label}
                             </span>
                         </label>
                     ))}
                 </div>
-
                 <div className="px-6 py-4 border-t flex justify-end" style={{ borderColor: '#e8edf2' }}>
                     <Button onClick={onClose} className="text-sm">Done</Button>
                 </div>
@@ -624,12 +400,51 @@ const PreDeployChecklist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     );
 };
 
+// ─── Smart Paste Converter ────────────────────────────────────────────────────
+// Blank lines = separate paragraph blocks. Preserves your structure exactly.
+const convertPasteToBlocks = (text: string): any[] => {
+    const chunks = text.split(/\n{2,}/).map(c => c.trim()).filter(Boolean);
+    const blocks: any[] = [];
+
+    for (const chunk of chunks) {
+        const lines = chunk.split('\n').map(l => l.trim());
+
+        // All list items
+        const allList = lines.every(l => /^[-•*]\s/.test(l) || /^\d+[.)]\s/.test(l));
+        if (allList) {
+            blocks.push({ type: 'list', items: lines.map(l => l.replace(/^[-•*\d.):]+\s*/, '').trim()) });
+            continue;
+        }
+
+        if (lines.length === 1) {
+            const line = lines[0];
+            if (/^###\s/.test(line)) { blocks.push({ type: 'heading', level: 3, text: line.replace(/^###\s*/, '') }); continue; }
+            if (/^##\s/.test(line)) { blocks.push({ type: 'heading', level: 2, text: line.replace(/^##\s*/, '') }); continue; }
+            if (/^#\s/.test(line)) { blocks.push({ type: 'heading', level: 2, text: line.replace(/^#\s*/, '') }); continue; }
+            // ALL CAPS short line = heading
+            if (line.length >= 3 && line.length <= 80 && line === line.toUpperCase() && /[A-Z]/.test(line) && !line.endsWith('.') && !line.endsWith(',')) {
+                blocks.push({ type: 'heading', level: 2, text: line }); continue;
+            }
+            if (/^>\s/.test(line)) { blocks.push({ type: 'quote', text: line.replace(/^>\s*/, '') }); continue; }
+            if (line.startsWith('"') && line.endsWith('"') && line.length > 2) { blocks.push({ type: 'quote', text: line.slice(1, -1) }); continue; }
+            if (/^💡/.test(line) || /^(note|tip|important):/i.test(line)) { blocks.push({ type: 'callout', text: line.replace(/^💡\s*|^(note|tip|important):\s*/i, '').trim() }); continue; }
+            if (/^[-•*]\s/.test(line) || /^\d+[.)]\s/.test(line)) { blocks.push({ type: 'list', items: [line.replace(/^[-•*\d.):]+\s*/, '').trim()] }); continue; }
+            blocks.push({ type: 'paragraph', text: line });
+            continue;
+        }
+
+        // Multi-line chunk = paragraph (soft-wrapped lines joined with space)
+        blocks.push({ type: 'paragraph', text: lines.join(' ') });
+    }
+
+    return blocks;
+};
+
 // ─── Component ────────────────────────────────────────────────────────────────
 const BlogManager: React.FC = () => {
     const { user, signOut } = useAuth();
     const navigate = useNavigate();
 
-    // ── Access gate ──
     const isDevUser = user?.email === DEV_EMAIL;
 
     const [posts, setPosts] = useState<BlogPostRow[]>([]);
@@ -657,7 +472,6 @@ const BlogManager: React.FC = () => {
 
     const DRAFT_KEY = 'blog_manager_draft';
 
-    // ── Restore draft from localStorage on mount ──
     useEffect(() => {
         if (!isDevUser) return;
         try {
@@ -665,33 +479,25 @@ const BlogManager: React.FC = () => {
             if (saved) {
                 const { form: savedForm, editingId: savedEditingId, mode: savedMode } = JSON.parse(saved);
                 if (savedForm && savedForm.title?.trim()) {
-                    setForm(savedForm);
-                    setEditingId(savedEditingId ?? null);
-                    setMode(savedMode ?? 'create');
-                    setDraftRestored(true);
+                    setForm(savedForm); setEditingId(savedEditingId ?? null);
+                    setMode(savedMode ?? 'create'); setDraftRestored(true);
                 }
             }
-        } catch { /* ignore corrupt drafts */ }
+        } catch { }
         fetchPosts();
     }, [isDevUser]);
 
-    // ── Auto-save form to localStorage whenever it changes ──
     useEffect(() => {
         if (mode === 'list') return;
-        try {
-            localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, editingId, mode }));
-        } catch { /* ignore quota errors */ }
+        try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, editingId, mode })); } catch { }
     }, [form, editingId, mode]);
 
     const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY); } catch { } };
 
-    // ── Sync editorBlocks ↔ form.content_json ──
     const blocksToJson = (blocks: any[]) => JSON.stringify(blocks, null, 2);
     const jsonToBlocks = (json: string): any[] => { try { return JSON.parse(json) || []; } catch { return []; } };
 
-    useEffect(() => {
-        setEditorBlocks(jsonToBlocks(form.content_json ?? '[]'));
-    }, [mode]);
+    useEffect(() => { setEditorBlocks(jsonToBlocks(form.content_json ?? '[]')); }, [mode]);
 
     const updateBlocks = (blocks: any[]) => {
         setEditorBlocks(blocks);
@@ -701,16 +507,9 @@ const BlogManager: React.FC = () => {
     };
 
     const updateBlock = (index: number, updated: any) => {
-        const blocks = [...editorBlocks];
-        blocks[index] = updated;
-        updateBlocks(blocks);
+        const blocks = [...editorBlocks]; blocks[index] = updated; updateBlocks(blocks);
     };
-
-    const deleteBlock = (index: number) => {
-        const blocks = editorBlocks.filter((_, i) => i !== index);
-        updateBlocks(blocks);
-    };
-
+    const deleteBlock = (index: number) => updateBlocks(editorBlocks.filter((_, i) => i !== index));
     const moveBlock = (index: number, dir: 'up' | 'down') => {
         const blocks = [...editorBlocks];
         const swap = dir === 'up' ? index - 1 : index + 1;
@@ -718,209 +517,101 @@ const BlogManager: React.FC = () => {
         [blocks[index], blocks[swap]] = [blocks[swap], blocks[index]];
         updateBlocks(blocks);
     };
-
     const insertBlockAt = (index: number, block: any) => {
-        const blocks = [...editorBlocks];
-        blocks.splice(index + 1, 0, block);
-        updateBlocks(blocks);
+        const blocks = [...editorBlocks]; blocks.splice(index + 1, 0, { ...block }); updateBlocks(blocks);
     };
 
-    // ── Paste text → JSON converter ──
-    const convertPasteToBlocks = (text: string): any[] => {
-        const sections = text.split(/\n\s*\n/).filter(s => s.trim());
-        const blocks: any[] = [];
-
-        for (const section of sections) {
-            const lines = section.split('\n').map(l => l.trim()).filter(Boolean);
-            if (lines.length === 0) continue;
-
-            const firstLine = lines[0];
-
-            if (lines.length === 1) {
-                const line = lines[0];
-                if (/^#{1,3}\s/.test(line)) {
-                    const level = line.startsWith('##') ? 3 : 2;
-                    blocks.push({ type: 'heading', level, text: line.replace(/^#+\s*/, '') });
-                    continue;
-                }
-                if (line.length < 80 && line === line.toUpperCase() && /[A-Z]/.test(line) && !line.endsWith('.')) {
-                    blocks.push({ type: 'heading', level: 2, text: line });
-                    continue;
-                }
-                if (line.startsWith('> ') || (line.startsWith('"') && line.endsWith('"'))) {
-                    blocks.push({ type: 'quote', text: line.replace(/^>\s*/, '').replace(/^"|"$/g, '') });
-                    continue;
-                }
-                if (line.startsWith('💡') || line.toLowerCase().startsWith('note:') || line.toLowerCase().startsWith('tip:')) {
-                    blocks.push({ type: 'callout', text: line.replace(/^💡|^note:|^tip:/i, '').trim() });
-                    continue;
-                }
-                if (/^[-•*]\s/.test(line) || /^\d+\.\s/.test(line)) {
-                    blocks.push({ type: 'list', items: [line.replace(/^[-•*\d.]+\s*/, '')] });
-                    continue;
-                }
-                blocks.push({ type: 'paragraph', text: line });
-                continue;
-            }
-
-            const isList = lines.every(l => /^[-•*]\s/.test(l) || /^\d+\.\s/.test(l));
-            if (isList) {
-                const items = lines.map(l => l.replace(/^[-•*\d.]+\s*/, ''));
-                blocks.push({ type: 'list', items });
-                continue;
-            }
-
-            const isQuoteBlock = lines.every(l => l.startsWith('> '));
-            if (isQuoteBlock) {
-                const text = lines.map(l => l.replace(/^>\s*/, '')).join(' ');
-                blocks.push({ type: 'quote', text });
-                continue;
-            }
-
-            const firstIsHeading = /^#{1,3}\s/.test(firstLine) ||
-                (firstLine.length < 80 && firstLine === firstLine.toUpperCase() && /[A-Z]/.test(firstLine) && !firstLine.endsWith('.'));
-
-            if (firstIsHeading) {
-                let headingText = firstLine;
-                if (/^#{1,3}\s/.test(firstLine)) {
-                    const level = firstLine.startsWith('##') ? 3 : 2;
-                    headingText = firstLine.replace(/^#+\s*/, '');
-                    blocks.push({ type: 'heading', level, text: headingText });
-                } else {
-                    blocks.push({ type: 'heading', level: 2, text: firstLine });
-                }
-                const remaining = lines.slice(1);
-                if (remaining.length > 0) {
-                    blocks.push({ type: 'paragraph', text: remaining.join(' ') });
-                }
-                continue;
-            }
-
-            blocks.push({ type: 'paragraph', text: lines.join(' ') });
-        }
-
-        return blocks;
-    };
-
-    const handlePasteConvert = () => {
+    const handlePasteConvert = (pasteMode: 'replace' | 'append') => {
         if (!pasteText.trim()) return;
         const newBlocks = convertPasteToBlocks(pasteText);
-        const existing = editorBlocks.filter(b => b.type !== 'paragraph' || b.text !== 'Start writing your article here...');
-        updateBlocks([...existing, ...newBlocks]);
-        setPasteText('');
-        setShowPasteModal(false);
-        setEditorMode('visual');
+        if (pasteMode === 'replace') {
+            updateBlocks(newBlocks);
+        } else {
+            const existing = editorBlocks.filter(b => !(b.type === 'paragraph' && b.text === 'Start writing your article here...'));
+            updateBlocks([...existing, ...newBlocks]);
+        }
+        setPasteText(''); setShowPasteModal(false); setEditorMode('visual');
     };
 
-    // ── Fetch posts ──
     const fetchPosts = async () => {
         try {
             setLoading(true);
-            const { data, error } = await (supabase as any)
-                .from('blog_posts').select('*').order('created_at', { ascending: false });
+            const { data, error } = await (supabase as any).from('blog_posts').select('*').order('created_at', { ascending: false });
             if (error) throw error;
             setPosts(data || []);
         } catch (err: any) {
             setErrorMsg('Could not load posts. Make sure the blog_posts table exists in Supabase.');
-        } finally {
-            setLoading(false);
-        }
+        } finally { setLoading(false); }
     };
 
-    // ── Non-dev users see locked screen ──
     if (!isDevUser) return <LockedView onBack={() => navigate('/admin/dashboard')} />;
 
-    // ── Title → slug ──
     const handleTitleChange = (value: string) => {
-        setForm(prev => ({
-            ...prev,
-            title: value,
-            ...(editingId === null ? { slug: toSlug(value) } : {}),
-        }));
+        setForm(prev => ({ ...prev, title: value, ...(editingId === null ? { slug: toSlug(value) } : {}) }));
     };
 
-    // ── Validate JSON on change ──
     const handleContentChange = (value: string) => {
         setForm(prev => ({ ...prev, content_json: value }));
         try { JSON.parse(value); setJsonError(''); } catch { setJsonError('⚠️ JSON is invalid — fix before saving.'); }
     };
 
-    // ── Insert snippet into content ──
-    const insertSnippet = (snippet: typeof SNIPPETS[0]) => {
-        updateBlocks([...editorBlocks, { ...snippet.json }]);
-    };
+    const insertSnippet = (snippet: typeof SNIPPETS[0]) => updateBlocks([...editorBlocks, { ...snippet.json }]);
 
-    // ── Cover image upload ──
     const handleCoverUpload = async (file: File) => {
         try {
             setUploadingImage(true);
             const ext = file.name.split('.').pop();
             const path = `blog-covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-            const { error: uploadError } = await supabase.storage
-                .from('blog-images').upload(path, file, { cacheControl: '3600', upsert: false });
+            const { error: uploadError } = await supabase.storage.from('blog-images').upload(path, file, { cacheControl: '3600', upsert: false });
             if (uploadError) throw uploadError;
             const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(path);
             setForm(prev => ({ ...prev, cover_image_url: urlData.publicUrl }));
-        } catch (err: any) {
-            setErrorMsg('Cover upload failed: ' + err.message);
-        } finally {
-            setUploadingImage(false);
-        }
+        } catch (err: any) { setErrorMsg('Cover upload failed: ' + err.message); }
+        finally { setUploadingImage(false); }
     };
 
-    // ── Content image upload ──
     const handleContentImageUpload = async (file: File) => {
         try {
             setUploadingContentImage(true);
             const ext = file.name.split('.').pop();
             const path = `blog-content/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-            const { error: uploadError } = await supabase.storage
-                .from('blog-images').upload(path, file, { cacheControl: '3600', upsert: false });
+            const { error: uploadError } = await supabase.storage.from('blog-images').upload(path, file, { cacheControl: '3600', upsert: false });
             if (uploadError) throw uploadError;
             const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(path);
             updateBlocks([...editorBlocks, { type: 'image', src: urlData.publicUrl, alt: file.name.replace(/\.[^/.]+$/, ''), caption: '' }]);
-            setJsonError('');
-            setSuccessMsg('Image uploaded and added to content!');
-            setTimeout(() => setSuccessMsg(''), 3000);
-        } catch (err: any) {
-            setErrorMsg('Content image upload failed: ' + err.message);
-        } finally {
-            setUploadingContentImage(false);
-        }
+            setSuccessMsg('Image uploaded and added!'); setTimeout(() => setSuccessMsg(''), 3000);
+        } catch (err: any) { setErrorMsg('Content image upload failed: ' + err.message); }
+        finally { setUploadingContentImage(false); }
     };
 
-    // ── Save ──
     const handleSave = async (publishNow = false) => {
         if (!form.title?.trim()) { setErrorMsg('Title is required.'); return; }
         if (!form.slug?.trim()) { setErrorMsg('Slug is required.'); return; }
         if (jsonError) { setErrorMsg('Fix the JSON error before saving.'); return; }
         setSaving(true); setErrorMsg('');
         try {
+            const now = new Date().toISOString();
             const payload: Partial<BlogPostRow> = {
                 ...form,
                 tags: Array.isArray(form.tags) ? form.tags : [],
                 is_published: publishNow || form.is_published,
-                published_at: publishNow ? new Date().toISOString() : form.published_at,
-                updated_at: new Date().toISOString(),
+                published_at: publishNow ? now : form.published_at,
+                updated_at: now,
             };
             if (editingId) {
                 const { error } = await (supabase as any).from('blog_posts').update(payload).eq('id', editingId);
                 if (error) throw error;
                 setSuccessMsg('Article updated successfully.');
             } else {
-                const { error } = await (supabase as any).from('blog_posts').insert({ ...payload, created_at: new Date().toISOString() });
+                const { error } = await (supabase as any).from('blog_posts').insert({ ...payload, created_at: now });
                 if (error) throw error;
                 setSuccessMsg('Article created successfully.');
             }
-            await fetchPosts();
-            clearDraft();
+            await fetchPosts(); clearDraft();
             setMode('list'); setForm(blankForm()); setEditingId(null);
             setTimeout(() => setSuccessMsg(''), 4000);
-        } catch (err: any) {
-            setErrorMsg(err.message || 'Failed to save article.');
-        } finally {
-            setSaving(false);
-        }
+        } catch (err: any) { setErrorMsg(err.message || 'Failed to save article.'); }
+        finally { setSaving(false); }
     };
 
     const handleDelete = async (id: string) => {
@@ -928,9 +619,7 @@ const BlogManager: React.FC = () => {
             const { error } = await (supabase as any).from('blog_posts').delete().eq('id', id);
             if (error) throw error;
             setPosts(prev => prev.filter(p => p.id !== id));
-            setDeleteConfirm(null);
-            setSuccessMsg('Article deleted.');
-            setTimeout(() => setSuccessMsg(''), 3000);
+            setDeleteConfirm(null); setSuccessMsg('Article deleted.'); setTimeout(() => setSuccessMsg(''), 3000);
         } catch (err: any) { setErrorMsg(err.message); }
     };
 
@@ -944,13 +633,8 @@ const BlogManager: React.FC = () => {
     };
 
     const openEdit = (post: BlogPostRow) => {
-        setForm({ ...post });
-        setEditingId(post.id);
-        setTagInput('');
-        setMode('edit');
-        setJsonError('');
-        setDraftRestored(false);
-        clearDraft();
+        setForm({ ...post }); setEditingId(post.id); setTagInput('');
+        setMode('edit'); setJsonError(''); setDraftRestored(false); clearDraft();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -961,9 +645,7 @@ const BlogManager: React.FC = () => {
     };
     const removeTag = (tag: string) => setForm(prev => ({ ...prev, tags: (prev.tags ?? []).filter(t => t !== tag) }));
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // ── LIST VIEW ──
-    // ─────────────────────────────────────────────────────────────────────────────
+    // ─── LIST VIEW ───────────────────────────────────────────────────────────────
     if (mode === 'list') {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -977,11 +659,7 @@ const BlogManager: React.FC = () => {
                         <span className="text-xs px-2 py-0.5 rounded-full font-bold text-white" style={{ background: COLORS.TEAL }}>Dev Only</span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button
-                            onClick={() => setShowChecklist(true)}
-                            className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition-colors hover:bg-gray-50"
-                            style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}
-                        >
+                        <button onClick={() => setShowChecklist(true)} className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition-colors hover:bg-gray-50" style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}>
                             <ClipboardList size={14} /> Pre-Deploy Checklist
                         </button>
                         <Button onClick={() => { setForm(blankForm()); setEditingId(null); setTagInput(''); setMode('create'); }} className="flex items-center gap-2 text-sm">
@@ -1005,7 +683,11 @@ const BlogManager: React.FC = () => {
                     ) : (
                         <div className="space-y-4">
                             {posts.map(post => {
-                                const isScheduled = !post.is_published && post.scheduled_at && new Date(post.scheduled_at) > new Date();
+                                // ── Use string-based date comparison to avoid timezone shift ──
+                                const now = new Date().toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
+                                const scheduledStr = post.scheduled_at ? post.scheduled_at.slice(0, 16) : null;
+                                const isScheduled = !post.is_published && scheduledStr && scheduledStr > now;
+
                                 return (
                                     <div key={post.id} className="bg-white dark:bg-gray-800 rounded-2xl p-5 flex gap-5 items-start" style={{ border: '1px solid #e8edf2' }}>
                                         {post.cover_image_url ? (
@@ -1019,7 +701,10 @@ const BlogManager: React.FC = () => {
                                                 {post.is_published ? (
                                                     <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold">Published</span>
                                                 ) : isScheduled ? (
-                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-bold">Scheduled · {new Date(post.scheduled_at!).toLocaleDateString('en-MY')}</span>
+                                                    // displayLocalDateShort parses the string directly — no timezone shift
+                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-bold">
+                                                        Scheduled · {displayLocalDateShort(post.scheduled_at)}
+                                                    </span>
                                                 ) : (
                                                     <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-bold">Draft</span>
                                                 )}
@@ -1027,8 +712,9 @@ const BlogManager: React.FC = () => {
                                             <h3 className="font-black text-base leading-snug truncate" style={{ color: COLORS.NAVY }}>{post.title}</h3>
                                             <p className="text-xs text-gray-500 mt-1">/blog/{post.slug} &nbsp;·&nbsp; {post.read_time_minutes} min read</p>
                                             {post.published_at && (
+                                                // displayLocalDate parses the string directly — no timezone shift
                                                 <p className="text-xs text-gray-400 mt-0.5">
-                                                    Published: {new Date(post.published_at).toLocaleDateString('en-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                    Published: {displayLocalDate(post.published_at)}
                                                 </p>
                                             )}
                                         </div>
@@ -1065,13 +751,10 @@ const BlogManager: React.FC = () => {
         );
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // ── CREATE / EDIT FORM ──
-    // ─────────────────────────────────────────────────────────────────────────────
+    // ─── CREATE / EDIT FORM ──────────────────────────────────────────────────────
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {showChecklist && <PreDeployChecklist onClose={() => setShowChecklist(false)} />}
-
             <input type="file" accept="image/*" ref={fileRef} className="hidden" onChange={e => { if (e.target.files?.[0]) handleCoverUpload(e.target.files[0]); }} />
             <input type="file" accept="image/*" ref={contentImageRef} className="hidden" onChange={e => { if (e.target.files?.[0]) handleContentImageUpload(e.target.files[0]); }} />
 
@@ -1083,11 +766,7 @@ const BlogManager: React.FC = () => {
                     <h1 className="text-xl font-black" style={{ color: COLORS.NAVY }}>{editingId ? 'Edit Article' : 'New Article'}</h1>
                 </div>
                 <div className="flex gap-2">
-                    <button
-                        onClick={() => setShowChecklist(true)}
-                        className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition-colors hover:bg-gray-50"
-                        style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}
-                    >
+                    <button onClick={() => setShowChecklist(true)} className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl border transition-colors hover:bg-gray-50" style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}>
                         <ClipboardList size={13} /> Checklist
                     </button>
                     <Button onClick={() => handleSave(false)} disabled={saving} className="text-sm bg-gray-200 text-gray-800 hover:bg-gray-300">
@@ -1104,21 +783,15 @@ const BlogManager: React.FC = () => {
                     <div className="p-3 rounded-xl text-sm flex items-center gap-2" style={{ background: `${COLORS.GOLD}20`, border: `1px solid ${COLORS.GOLD}` }}>
                         <span>📋</span>
                         <span className="font-semibold" style={{ color: COLORS.NAVY }}>Draft restored — your unsaved work is back.</span>
-                        <button
-                            className="ml-auto text-xs font-bold px-2.5 py-1 rounded-lg"
-                            style={{ background: COLORS.NAVY, color: '#fff' }}
-                            onClick={() => { setForm(blankForm()); setEditingId(null); clearDraft(); setDraftRestored(false); }}
-                        >
+                        <button className="ml-auto text-xs font-bold px-2.5 py-1 rounded-lg" style={{ background: COLORS.NAVY, color: '#fff' }} onClick={() => { setForm(blankForm()); setEditingId(null); clearDraft(); setDraftRestored(false); }}>
                             Discard draft
                         </button>
                         <button onClick={() => setDraftRestored(false)} className="text-gray-400 hover:text-gray-700"><X size={14} /></button>
                     </div>
                 )}
-
                 {errorMsg && (
                     <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm flex items-center gap-2">
-                        <X size={16} /> {errorMsg}
-                        <button className="ml-auto" onClick={() => setErrorMsg('')}><X size={14} /></button>
+                        <X size={16} /> {errorMsg} <button className="ml-auto" onClick={() => setErrorMsg('')}><X size={14} /></button>
                     </div>
                 )}
                 {successMsg && (
@@ -1127,15 +800,13 @@ const BlogManager: React.FC = () => {
                     </div>
                 )}
 
-                {/* ── Basic Info ─── */}
+                {/* ── Basic Info ── */}
                 <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-5" style={{ border: '1px solid #e8edf2' }}>
                     <h2 className="font-black text-base" style={{ color: COLORS.NAVY }}>Basic Info</h2>
-
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Title *</label>
                         <input className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Your compelling article title" value={form.title ?? ''} onChange={e => handleTitleChange(e.target.value)} />
                     </div>
-
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">URL Slug *</label>
                         <div className="flex items-center rounded-xl border overflow-hidden dark:border-gray-600">
@@ -1144,12 +815,10 @@ const BlogManager: React.FC = () => {
                         </div>
                         <p className="text-xs text-gray-400 mt-1">Auto-generated from title. Edit if needed. This becomes the live URL.</p>
                     </div>
-
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Excerpt <span className="normal-case font-normal text-gray-400">(shown on blog listing page)</span></label>
-                        <textarea rows={3} className="w-full border rounded-xl px-4 py-3 text-sm resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="1–2 sentences that hook the reader. Also shown under the article title on the blog card." value={form.excerpt ?? ''} onChange={e => setForm(prev => ({ ...prev, excerpt: e.target.value }))} />
+                        <textarea rows={3} className="w-full border rounded-xl px-4 py-3 text-sm resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="1–2 sentences that hook the reader." value={form.excerpt ?? ''} onChange={e => setForm(prev => ({ ...prev, excerpt: e.target.value }))} />
                     </div>
-
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Category</label>
@@ -1162,7 +831,6 @@ const BlogManager: React.FC = () => {
                             <input type="number" min={1} max={60} className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" value={form.read_time_minutes ?? 5} onChange={e => setForm(prev => ({ ...prev, read_time_minutes: Number(e.target.value) }))} />
                         </div>
                     </div>
-
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Tags</label>
                         <div className="flex gap-2 mb-2 flex-wrap">
@@ -1179,26 +847,23 @@ const BlogManager: React.FC = () => {
                     </div>
                 </section>
 
-                {/* ── Cover Image ─── */}
+                {/* ── Cover Image ── */}
                 <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-4" style={{ border: '1px solid #e8edf2' }}>
                     <h2 className="font-black text-base" style={{ color: COLORS.NAVY }}>Cover Image <span className="text-xs font-normal text-gray-400 normal-case">(shown on blog listing + article hero)</span></h2>
-
                     {form.cover_image_url && (
                         <div className="relative">
                             <img src={form.cover_image_url} alt="Cover preview" className="w-full h-48 object-cover rounded-xl" />
                             <button onClick={() => setForm(prev => ({ ...prev, cover_image_url: null }))} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600"><X size={14} /></button>
                         </div>
                     )}
-
                     <button onClick={() => fileRef.current?.click()} disabled={uploadingImage} className="flex items-center gap-2 text-sm px-4 py-3 border-2 border-dashed rounded-xl w-full justify-center font-semibold transition-colors hover:bg-gray-50 dark:hover:bg-gray-700" style={{ borderColor: COLORS.TEAL, color: COLORS.NAVY }}>
-                        <Upload size={16} />
-                        {uploadingImage ? 'Uploading…' : form.cover_image_url ? 'Change Cover Image' : 'Upload Cover Image'}
+                        <Upload size={16} />{uploadingImage ? 'Uploading…' : form.cover_image_url ? 'Change Cover Image' : 'Upload Cover Image'}
                     </button>
                     <p className="text-xs text-gray-400">Or paste an image URL directly:</p>
                     <input className="w-full border rounded-xl px-4 py-2.5 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="https://images.unsplash.com/..." value={form.cover_image_url ?? ''} onChange={e => setForm(prev => ({ ...prev, cover_image_url: e.target.value }))} />
                 </section>
 
-                {/* ── Article Content ─── */}
+                {/* ── Article Content ── */}
                 <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-4" style={{ border: '1px solid #e8edf2' }}>
                     <div className="flex items-center justify-between flex-wrap gap-2">
                         <div>
@@ -1206,20 +871,12 @@ const BlogManager: React.FC = () => {
                             <p className="text-xs text-gray-400 mt-0.5">{editorBlocks.length} block{editorBlocks.length !== 1 ? 's' : ''}</p>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
-                            <button
-                                onClick={() => setShowPasteModal(true)}
-                                className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl text-white"
-                                style={{ background: COLORS.ORANGE }}
-                            >
+                            <button onClick={() => setShowPasteModal(true)} className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl text-white" style={{ background: COLORS.ORANGE }}>
                                 📋 Paste & Convert
                             </button>
                             <div className="flex rounded-xl overflow-hidden border" style={{ borderColor: '#e8edf2' }}>
-                                <button onClick={() => setEditorMode('visual')} className="text-xs px-3 py-2 font-bold transition-colors" style={{ background: editorMode === 'visual' ? COLORS.NAVY : '#f8f9fa', color: editorMode === 'visual' ? '#fff' : '#6b7280' }}>
-                                    Visual
-                                </button>
-                                <button onClick={() => { setEditorMode('json'); }} className="text-xs px-3 py-2 font-bold transition-colors" style={{ background: editorMode === 'json' ? COLORS.NAVY : '#f8f9fa', color: editorMode === 'json' ? '#fff' : '#6b7280' }}>
-                                    JSON
-                                </button>
+                                <button onClick={() => setEditorMode('visual')} className="text-xs px-3 py-2 font-bold transition-colors" style={{ background: editorMode === 'visual' ? COLORS.NAVY : '#f8f9fa', color: editorMode === 'visual' ? '#fff' : '#6b7280' }}>Visual</button>
+                                <button onClick={() => setEditorMode('json')} className="text-xs px-3 py-2 font-bold transition-colors" style={{ background: editorMode === 'json' ? COLORS.NAVY : '#f8f9fa', color: editorMode === 'json' ? '#fff' : '#6b7280' }}>JSON</button>
                             </div>
                             <button onClick={() => setShowGuide(!showGuide)} className="flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-xl border" style={{ borderColor: COLORS.TEAL, color: COLORS.TEAL }}>
                                 {showGuide ? <><ChevronUp size={12} /> Hide Guide</> : <><ChevronDown size={12} /> Guide</>}
@@ -1229,60 +886,57 @@ const BlogManager: React.FC = () => {
 
                     {showGuide && (
                         <div className="rounded-xl p-4 space-y-2 text-xs" style={{ background: `${COLORS.NAVY}08`, border: `1px solid ${COLORS.NAVY}20` }}>
-                            <p className="font-bold" style={{ color: COLORS.NAVY }}>📖 Rich Text Editor</p>
-                            <p className="text-gray-600">Use the toolbar above each paragraph to format text: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <del>strikethrough</del>, and <a href="#" style={{ color: '#2563eb', textDecoration: 'underline' }}>inline links</a>.</p>
-                            <p className="text-gray-600"><strong>Tips:</strong> Select text and click the link icon to create a link. Use the modal to set custom link text. Keyboard shortcuts: Ctrl+B (bold), Ctrl+I (italic), Ctrl+U (underline).</p>
+                            <p className="font-bold" style={{ color: COLORS.NAVY }}>📖 How to write your article</p>
+                            <p className="text-gray-600"><strong>Paste & Convert</strong> — paste from Word, Google Docs, or Notion. Blank lines between text become separate paragraph blocks. Headings, lists, and quotes are auto-detected.</p>
+                            <p className="text-gray-600"><strong>Rich text toolbar</strong> — bold, italic, underline, strikethrough, and inline links on any paragraph, quote, or callout block.</p>
+                            <p className="text-gray-500 mt-1 font-bold">Auto-detection:</p>
+                            <p className="text-gray-500">• Blank line = new paragraph block &nbsp;• ALL CAPS / # Heading = heading &nbsp;• - item / 1. item = list &nbsp;• "quoted" / &gt; text = blockquote &nbsp;• 💡 / Tip: = callout</p>
                         </div>
                     )}
 
+                    {/* Paste Modal */}
                     {showPasteModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
                             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl flex flex-col" style={{ border: '1px solid #e8edf2', maxHeight: '85vh' }}>
                                 <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: '#e8edf2' }}>
                                     <div>
                                         <h3 className="font-black text-base" style={{ color: COLORS.NAVY }}>Paste & Convert</h3>
-                                        <p className="text-xs text-gray-400 mt-0.5">Paste your full article from Word, Google Docs, Notion, or any editor</p>
+                                        <p className="text-xs text-gray-400 mt-0.5">Paste your article — blank lines become separate paragraph blocks</p>
                                     </div>
                                     <button onClick={() => setShowPasteModal(false)}><X size={18} className="text-gray-400 hover:text-gray-700" /></button>
                                 </div>
                                 <div className="px-6 py-3 flex-1 overflow-y-auto">
                                     <div className="rounded-xl p-3 mb-3 text-xs space-y-1" style={{ background: `${COLORS.GOLD}15`, border: `1px solid ${COLORS.GOLD}50` }}>
-                                        <p className="font-bold" style={{ color: COLORS.NAVY }}>Auto-detected formatting:</p>
-                                        <p className="text-gray-600">• <strong>ALL CAPS lines</strong> or <strong># Heading</strong> → Section heading</p>
+                                        <p className="font-bold" style={{ color: COLORS.NAVY }}>✨ Smart formatting:</p>
+                                        <p className="text-gray-600">• <strong>Blank line</strong> between text → separate blocks (preserves your structure)</p>
+                                        <p className="text-gray-600">• <strong>ALL CAPS</strong> or <strong># Heading</strong> → Section heading</p>
                                         <p className="text-gray-600">• <strong>- item</strong> or <strong>1. item</strong> → Numbered list</p>
-                                        <p className="text-gray-600">• <strong>"quoted text"</strong> or <strong>&gt; text</strong> → Blockquote</p>
-                                        <p className="text-gray-600">• <strong>💡 text</strong> or <strong>Tip: text</strong> → Callout box</p>
-                                        <p className="text-gray-600">• Everything else → Paragraph (with rich text support)</p>
-                                        <p className="text-gray-500 mt-1">Blank lines create new paragraph blocks.</p>
+                                        <p className="text-gray-600">• <strong>"quoted"</strong> or <strong>&gt; text</strong> → Blockquote</p>
+                                        <p className="text-gray-600">• <strong>💡</strong> or <strong>Tip:</strong> → Callout box</p>
+                                        <p className="text-gray-500 mt-1">After converting, insert images between blocks using the visual editor.</p>
                                     </div>
                                     <textarea
-                                        rows={16}
+                                        rows={18}
                                         className="w-full border rounded-xl px-4 py-3 text-sm resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                        placeholder="Paste your full article text here..."
+                                        placeholder={"Paste your article here...\n\nLeave blank lines between paragraphs — each becomes its own block.\n\nHEADINGS IN ALL CAPS are auto-detected.\n\n- List items like this\n- Are grouped automatically"}
                                         value={pasteText}
                                         onChange={e => setPasteText(e.target.value)}
                                         autoFocus
+                                        style={{ fontFamily: 'inherit', lineHeight: '1.6' }}
                                     />
-                                    <p className="text-xs text-gray-400 mt-2">{pasteText.split(/\n\s*\n/).filter(s => s.trim()).length} paragraph(s) detected</p>
+                                    <div className="flex items-center justify-between mt-2">
+                                        <p className="text-xs text-gray-400">{pasteText.split(/\n{2,}/).filter(c => c.trim()).length} blocks will be created</p>
+                                        <p className="text-xs text-gray-400">{pasteText.length} characters</p>
+                                    </div>
                                 </div>
                                 <div className="px-6 py-4 border-t flex justify-between items-center" style={{ borderColor: '#e8edf2' }}>
                                     <button onClick={() => { setPasteText(''); setShowPasteModal(false); }} className="text-sm text-gray-500 hover:text-gray-700">Cancel</button>
                                     <div className="flex gap-2">
-                                        <button
-                                            onClick={() => { const b = convertPasteToBlocks(pasteText); updateBlocks(b); setPasteText(''); setShowPasteModal(false); setEditorMode('visual'); }}
-                                            className="text-sm font-bold px-4 py-2 rounded-xl text-white"
-                                            style={{ background: COLORS.NAVY }}
-                                            disabled={!pasteText.trim()}
-                                        >
-                                            Replace content
-                                        </button>
-                                        <button
-                                            onClick={handlePasteConvert}
-                                            className="text-sm font-bold px-4 py-2 rounded-xl text-white"
-                                            style={{ background: COLORS.ORANGE }}
-                                            disabled={!pasteText.trim()}
-                                        >
+                                        <button onClick={() => handlePasteConvert('append')} disabled={!pasteText.trim()} className="text-sm font-bold px-4 py-2 rounded-xl border disabled:opacity-40" style={{ borderColor: COLORS.NAVY, color: COLORS.NAVY }}>
                                             Append to existing
+                                        </button>
+                                        <button onClick={() => handlePasteConvert('replace')} disabled={!pasteText.trim()} className="text-sm font-bold px-4 py-2 rounded-xl text-white disabled:opacity-40" style={{ background: COLORS.NAVY }}>
+                                            Replace all content
                                         </button>
                                     </div>
                                 </div>
@@ -1290,6 +944,7 @@ const BlogManager: React.FC = () => {
                         </div>
                     )}
 
+                    {/* Visual Block Editor */}
                     {editorMode === 'visual' && (
                         <div className="space-y-2">
                             {editorBlocks.length === 0 && (
@@ -1311,12 +966,7 @@ const BlogManager: React.FC = () => {
                                     </div>
 
                                     {block.type === 'paragraph' && (
-                                        <RichTextEditor
-                                            value={block.text || ''}
-                                            onChange={(html) => updateBlock(idx, { ...block, text: html })}
-                                            placeholder="Write your paragraph here..."
-                                            className="min-h-[60px]"
-                                        />
+                                        <RichTextEditor value={block.text || ''} onChange={html => updateBlock(idx, { ...block, text: html })} placeholder="Write your paragraph here..." className="min-h-[60px]" />
                                     )}
                                     {block.type === 'heading' && (
                                         <div className="flex gap-2">
@@ -1328,37 +978,20 @@ const BlogManager: React.FC = () => {
                                         </div>
                                     )}
                                     {block.type === 'quote' && (
-                                        <RichTextEditor
-                                            value={block.text || ''}
-                                            onChange={(html) => updateBlock(idx, { ...block, text: html })}
-                                            placeholder="Quote text..."
-                                            className="min-h-[40px] italic"
-                                        />
+                                        <RichTextEditor value={block.text || ''} onChange={html => updateBlock(idx, { ...block, text: html })} placeholder="Quote text..." className="min-h-[40px] italic" />
                                     )}
                                     {block.type === 'callout' && (
-                                        <RichTextEditor
-                                            value={block.text || ''}
-                                            onChange={(html) => updateBlock(idx, { ...block, text: html })}
-                                            placeholder="Callout text..."
-                                            className="min-h-[40px]"
-                                        />
+                                        <RichTextEditor value={block.text || ''} onChange={html => updateBlock(idx, { ...block, text: html })} placeholder="Callout text..." className="min-h-[40px]" />
                                     )}
                                     {block.type === 'list' && (
                                         <div className="space-y-1.5">
                                             {(block.items ?? []).map((item: string, ii: number) => (
                                                 <div key={ii} className="flex gap-2 items-start">
-                                                    <span className="text-xs font-bold w-5 text-center flex-shrink-0 mt-1" style={{ color: COLORS.ORANGE }}>{ii + 1}.</span>
-                                                    <RichTextEditor
-                                                        value={item || ''}
-                                                        onChange={(html) => {
-                                                            const items = [...(block.items ?? [])];
-                                                            items[ii] = html;
-                                                            updateBlock(idx, { ...block, items });
-                                                        }}
-                                                        placeholder="List item..."
-                                                        className="min-h-[30px] flex-1"
-                                                    />
-                                                    <button onClick={() => { const items = (block.items ?? []).filter((_: string, i: number) => i !== ii); updateBlock(idx, { ...block, items }); }} className="text-red-400 hover:text-red-600 mt-1"><X size={13} /></button>
+                                                    <span className="text-xs font-bold w-5 text-center flex-shrink-0 mt-2" style={{ color: COLORS.ORANGE }}>{ii + 1}.</span>
+                                                    <div className="flex-1">
+                                                        <RichTextEditor value={item || ''} onChange={html => { const items = [...(block.items ?? [])]; items[ii] = html; updateBlock(idx, { ...block, items }); }} placeholder="List item..." className="min-h-[30px]" />
+                                                    </div>
+                                                    <button onClick={() => { const items = (block.items ?? []).filter((_: string, i: number) => i !== ii); updateBlock(idx, { ...block, items }); }} className="text-red-400 hover:text-red-600 mt-2"><X size={13} /></button>
                                                 </div>
                                             ))}
                                             <button onClick={() => updateBlock(idx, { ...block, items: [...(block.items ?? []), ''] })} className="text-xs font-bold px-3 py-1 rounded-lg" style={{ color: COLORS.ORANGE, background: `${COLORS.ORANGE}15` }}>+ Add item</button>
@@ -1366,13 +999,28 @@ const BlogManager: React.FC = () => {
                                     )}
                                     {block.type === 'image' && (
                                         <div className="space-y-2">
-                                            {block.src && !block.src.includes('YOUR-IMAGE') && (
-                                                <img src={block.src} alt={block.alt} className="w-full max-h-48 object-cover rounded-lg" />
+                                            {block.src && (
+                                                <img src={block.src} alt={block.alt} className="w-full max-h-48 object-cover rounded-lg" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                             )}
                                             <div className="flex gap-2">
                                                 <input className="flex-1 text-xs bg-white dark:bg-gray-700 border rounded-lg px-3 py-1.5 dark:text-white" placeholder="Image URL" value={block.src ?? ''} onChange={e => updateBlock(idx, { ...block, src: e.target.value })} />
                                                 <button
-                                                    onClick={() => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.onchange = async (e: any) => { const f = e.target.files?.[0]; if (!f) return; setUploadingContentImage(true); try { const ext = f.name.split('.').pop(); const path = `blog-content/${Date.now()}.${ext}`; await supabase.storage.from('blog-images').upload(path, f, { cacheControl: '3600', upsert: false }); const { data } = supabase.storage.from('blog-images').getPublicUrl(path); updateBlock(idx, { ...block, src: data.publicUrl, alt: f.name.replace(/\.[^/.]+$/, '') }); } catch (err: any) { setErrorMsg('Upload failed: ' + err.message); } finally { setUploadingContentImage(false); } }; inp.click(); }}
+                                                    onClick={() => {
+                                                        const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+                                                        inp.onchange = async (e: any) => {
+                                                            const f = e.target.files?.[0]; if (!f) return;
+                                                            setUploadingContentImage(true);
+                                                            try {
+                                                                const ext = f.name.split('.').pop();
+                                                                const path = `blog-content/${Date.now()}.${ext}`;
+                                                                await supabase.storage.from('blog-images').upload(path, f, { cacheControl: '3600', upsert: false });
+                                                                const { data } = supabase.storage.from('blog-images').getPublicUrl(path);
+                                                                updateBlock(idx, { ...block, src: data.publicUrl, alt: f.name.replace(/\.[^/.]+$/, '') });
+                                                            } catch (err: any) { setErrorMsg('Upload failed: ' + err.message); }
+                                                            finally { setUploadingContentImage(false); }
+                                                        };
+                                                        inp.click();
+                                                    }}
                                                     className="text-xs font-bold px-3 py-1.5 rounded-lg text-white flex-shrink-0"
                                                     style={{ background: COLORS.TEAL }}
                                                 >
@@ -1380,7 +1028,7 @@ const BlogManager: React.FC = () => {
                                                 </button>
                                             </div>
                                             <div className="flex gap-2">
-                                                <input className="flex-1 text-xs bg-white dark:bg-gray-700 border rounded-lg px-3 py-1.5 dark:text-white" placeholder="Alt text (description)" value={block.alt ?? ''} onChange={e => updateBlock(idx, { ...block, alt: e.target.value })} />
+                                                <input className="flex-1 text-xs bg-white dark:bg-gray-700 border rounded-lg px-3 py-1.5 dark:text-white" placeholder="Alt text" value={block.alt ?? ''} onChange={e => updateBlock(idx, { ...block, alt: e.target.value })} />
                                                 <select className="text-xs bg-white dark:bg-gray-700 border rounded-lg px-2 py-1.5 dark:text-white" value={block.position ?? 'full'} onChange={e => updateBlock(idx, { ...block, position: e.target.value })}>
                                                     <option value="full">Full width</option>
                                                     <option value="center">Centered</option>
@@ -1398,12 +1046,15 @@ const BlogManager: React.FC = () => {
                                         </div>
                                     )}
 
+                                    {/* Insert below buttons */}
                                     <div className="mt-2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <div className="flex gap-1 flex-wrap justify-center">
                                             {[
                                                 { label: '+ Para', type: 'paragraph', text: '' },
                                                 { label: '+ H2', type: 'heading', level: 2, text: '' },
+                                                { label: '+ H3', type: 'heading', level: 3, text: '' },
                                                 { label: '+ Image', type: 'image', src: '', alt: '', caption: '' },
+                                                { label: '+ Quote', type: 'quote', text: '' },
                                                 { label: '+ List', type: 'list', items: [''] },
                                                 { label: '+ Callout', type: 'callout', text: '' },
                                             ].map(b => (
@@ -1431,7 +1082,7 @@ const BlogManager: React.FC = () => {
                                 <ImageIcon size={16} style={{ color: COLORS.TEAL }} />
                                 <div className="flex-1">
                                     <p className="text-xs font-bold" style={{ color: COLORS.TEAL }}>Upload image & append to end</p>
-                                    <p className="text-xs text-gray-400">Or use the ↑ Upload button on any existing image block to swap its photo.</p>
+                                    <p className="text-xs text-gray-400">Or use the ↑ Upload button on any image block to swap that photo.</p>
                                 </div>
                                 <button onClick={() => contentImageRef.current?.click()} disabled={uploadingContentImage} className="text-xs font-bold px-3 py-2 rounded-lg text-white flex-shrink-0" style={{ background: COLORS.TEAL }}>
                                     {uploadingContentImage ? 'Uploading…' : 'Upload & Insert'}
@@ -1462,26 +1113,32 @@ const BlogManager: React.FC = () => {
                     )}
                 </section>
 
-                {/* ── Publishing ─── */}
+                {/* ── Publishing ── */}
                 <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-5" style={{ border: '1px solid #e8edf2' }}>
                     <h2 className="font-black text-base" style={{ color: COLORS.NAVY }}>Publishing</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600 flex items-center gap-1.5"><Calendar size={13} /> Publish Date</label>
+                            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600 flex items-center gap-1.5">
+                                <Calendar size={13} /> Publish Date
+                            </label>
+                            {/* Store the raw datetime-local value — no new Date() conversion */}
                             <input
                                 type="datetime-local"
                                 className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                value={form.published_at ? form.published_at.slice(0, 16) : ''}
+                                value={toInputValue(form.published_at ?? null)}
                                 onChange={e => setForm(prev => ({ ...prev, published_at: e.target.value || null }))}
                             />
                             <p className="text-xs text-gray-400 mt-1">Set manually or leave blank for auto on publish.</p>
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600 flex items-center gap-1.5"><Clock size={13} /> Schedule for Future</label>
+                            <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600 flex items-center gap-1.5">
+                                <Clock size={13} /> Schedule for Future
+                            </label>
+                            {/* Store the raw datetime-local value — no new Date() conversion */}
                             <input
                                 type="datetime-local"
                                 className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                value={form.scheduled_at ? form.scheduled_at.slice(0, 16) : ''}
+                                value={toInputValue(form.scheduled_at ?? null)}
                                 onChange={e => setForm(prev => ({ ...prev, scheduled_at: e.target.value || null }))}
                             />
                             <p className="text-xs text-gray-400 mt-1">Requires a Supabase cron job to auto-publish.</p>
@@ -1498,45 +1155,34 @@ const BlogManager: React.FC = () => {
                     </div>
                 </section>
 
-                {/* ── SEO ─── */}
+                {/* ── SEO ── */}
                 <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-4" style={{ border: '1px solid #e8edf2' }}>
                     <div>
                         <h2 className="font-black text-base" style={{ color: COLORS.NAVY }}>SEO</h2>
-                        <p className="text-xs text-gray-400 mt-1">These fields control how the article appears in Google search results and when shared on social media.</p>
+                        <p className="text-xs text-gray-400 mt-1">Controls how the article appears in Google and when shared on social media.</p>
                     </div>
-
                     <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">
-                            SEO Title <span className="normal-case font-normal text-gray-400">({(form.seo_title ?? '').length}/60 chars)</span>
-                        </label>
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">SEO Title <span className="normal-case font-normal text-gray-400">({(form.seo_title ?? '').length}/60 chars)</span></label>
                         <input className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder={`${form.title ?? 'Article title'} | EITO Group`} value={form.seo_title ?? ''} onChange={e => setForm(prev => ({ ...prev, seo_title: e.target.value }))} />
                         <p className="text-xs text-gray-400 mt-1">Keep under 60 characters. Leave blank to default to article title + "| EITO Group".</p>
                     </div>
-
                     <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">
-                            Meta Description <span className="normal-case font-normal text-gray-400">({(form.seo_description ?? '').length}/160 chars)</span>
-                        </label>
-                        <textarea rows={2} className="w-full border rounded-xl px-4 py-3 text-sm resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="150–160 character summary — this is what appears under your title in Google results." value={form.seo_description ?? ''} onChange={e => setForm(prev => ({ ...prev, seo_description: e.target.value }))} />
+                        <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Meta Description <span className="normal-case font-normal text-gray-400">({(form.seo_description ?? '').length}/160 chars)</span></label>
+                        <textarea rows={2} className="w-full border rounded-xl px-4 py-3 text-sm resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="150–160 character summary for Google results." value={form.seo_description ?? ''} onChange={e => setForm(prev => ({ ...prev, seo_description: e.target.value }))} />
                         <div className="flex justify-between mt-1">
-                            <p className="text-xs text-gray-400">Aim for 150–160 characters for best Google display.</p>
-                            <span className={`text-xs font-bold ${(form.seo_description ?? '').length > 160 ? 'text-red-500' : (form.seo_description ?? '').length >= 150 ? 'text-green-600' : 'text-gray-400'}`}>
-                                {(form.seo_description ?? '').length} / 160
-                            </span>
+                            <p className="text-xs text-gray-400">Aim for 150–160 characters.</p>
+                            <span className={`text-xs font-bold ${(form.seo_description ?? '').length > 160 ? 'text-red-500' : (form.seo_description ?? '').length >= 150 ? 'text-green-600' : 'text-gray-400'}`}>{(form.seo_description ?? '').length} / 160</span>
                         </div>
                     </div>
-
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-gray-600">Keywords (comma-separated)</label>
                         <input className="w-full border rounded-xl px-4 py-3 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="team building Malaysia, corporate events KL, EITO Group" value={form.seo_keywords ?? ''} onChange={e => setForm(prev => ({ ...prev, seo_keywords: e.target.value }))} />
-                        <p className="text-xs text-gray-400 mt-1">Optional. 5–10 relevant keywords separated by commas.</p>
                     </div>
-
                     <div className="p-4 rounded-xl" style={{ background: '#f8f9fa', border: '1px solid #e8edf2' }}>
                         <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Google Search Preview</p>
                         <p className="text-blue-700 text-base font-medium leading-snug truncate">{form.seo_title || `${form.title || 'Article Title'} | EITO Group`}</p>
                         <p className="text-green-700 text-xs mt-0.5">https://eitogroup.com.my/blog/{form.slug || 'your-slug'}</p>
-                        <p className="text-gray-600 text-sm mt-1 line-clamp-2">{form.seo_description || form.excerpt || 'Your meta description will appear here. Fill in the field above.'}</p>
+                        <p className="text-gray-600 text-sm mt-1 line-clamp-2">{form.seo_description || form.excerpt || 'Your meta description will appear here.'}</p>
                     </div>
                 </section>
 
