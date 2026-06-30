@@ -8,6 +8,6 @@ export { default as ClientLogosManager } from './pages/ClientLogosManager';
 export { default as ProjectsManager } from './pages/ProjectsManager';
 export { default as InquiriesManager } from './pages/InquiriesManager';
 export { default as BookingsManager } from './pages/BookingsManager';
-
+export { default as BlogManager } from './pages/BlogManager';
 // Admin Components
 export { default as ProtectedRoute } from './components/ProtectedRoute';

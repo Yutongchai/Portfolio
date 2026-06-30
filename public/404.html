@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script>
+    // When GitHub Pages 404s on a deep path like /Portfolio/admin,
+    // redirect to /Portfolio/?p=/admin so index.html can restore it.
+    var l = window.location;
+    var pathParts = l.pathname.slice(1).split('/');
+    var basePath = '/' + pathParts[0]; // e.g. /Portfolio
+    var restPath = '/' + pathParts.slice(1).join('/'); // e.g. /admin
+    l.replace(
+      l.protocol + '//' + l.host + basePath +
+      '/?p=' + encodeURIComponent(restPath) +
+      (l.hash ? '&hash=' + encodeURIComponent(l.hash) : '')
+    );
+  </script>
+</head>
+<body></body>
+</html>
