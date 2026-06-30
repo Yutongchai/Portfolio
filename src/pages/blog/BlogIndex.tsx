@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Calendar, Clock, ArrowRight, Tag } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Tag, ChevronDown } from 'lucide-react';
 import Footer from '../../components/ui/Footer';
 import { supabase } from '../../config/supabaseClient';
 
@@ -14,6 +14,8 @@ const COLORS = {
     ORANGE: '#f68921',
     TEAL: '#79989f',
     TEAL_DARK: '#18616e',
+    CREAM: '#fdf8f0',
+    LIGHT_GRAY: '#f5f5f5',
 };
 
 const CATEGORIES = ['All', 'Team Building', 'Corporate Events', 'Training', 'CSR'];
@@ -60,12 +62,12 @@ const BlogCard: React.FC<{ post: BlogPostRow; featured?: boolean }> = ({ post, f
     return (
         <Link
             to={`/blog/${post.slug}`}
-            className={`group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ${featured ? 'md:col-span-2' : ''
+            className={`group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ${featured ? 'md:col-span-2' : ''
                 }`}
             style={{ border: '1px solid #e8edf2' }}
         >
             {/* Cover image */}
-            <div className={`relative overflow-hidden ${featured ? 'h-72 md:h-96' : 'h-52'}`}>
+            <div className={`relative overflow-hidden ${featured ? 'h-64 md:h-80' : 'h-48'}`}>
                 {post.cover_image_url ? (
                     <img
                         src={post.cover_image_url}
@@ -82,7 +84,7 @@ const BlogCard: React.FC<{ post: BlogPostRow; featured?: boolean }> = ({ post, f
                     </div>
                 )}
                 <span
-                    className="absolute top-4 left-4 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white"
+                    className="absolute top-3 left-3 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white"
                     style={{ background: COLORS.NAVY }}
                 >
                     {post.category}
@@ -90,32 +92,32 @@ const BlogCard: React.FC<{ post: BlogPostRow; featured?: boolean }> = ({ post, f
             </div>
 
             {/* Content */}
-            <div className="p-6">
-                <div className="flex items-center gap-4 text-xs mb-3" style={{ color: COLORS.TEAL }}>
+            <div className="p-5">
+                <div className="flex items-center gap-3 text-xs mb-2" style={{ color: COLORS.TEAL }}>
                     <span className="flex items-center gap-1.5">
-                        <Calendar size={13} />
+                        <Calendar size={12} />
                         {date}
                     </span>
                     <span className="flex items-center gap-1.5">
-                        <Clock size={13} />
+                        <Clock size={12} />
                         {post.read_time_minutes} min read
                     </span>
                 </div>
 
-                <h2
-                    className={`font-black leading-tight mb-3 group-hover:opacity-80 transition-opacity ${featured ? 'text-xl md:text-2xl' : 'text-lg'
+                <h3
+                    className={`font-bold leading-tight mb-2 group-hover:opacity-80 transition-opacity ${featured ? 'text-xl' : 'text-lg'
                         }`}
                     style={{ color: COLORS.NAVY }}
                 >
                     {post.title}
-                </h2>
+                </h3>
 
-                <p className="text-sm leading-relaxed mb-5 line-clamp-3" style={{ color: '#5a6a7a' }}>
+                <p className="text-sm leading-relaxed mb-3 line-clamp-2" style={{ color: '#5a6a7a' }}>
                     {post.excerpt}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-5">
-                    {tags.slice(0, 3).map(tag => (
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                    {tags.slice(0, 2).map(tag => (
                         <span
                             key={tag}
                             className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
@@ -128,10 +130,10 @@ const BlogCard: React.FC<{ post: BlogPostRow; featured?: boolean }> = ({ post, f
                 </div>
 
                 <div
-                    className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest group-hover:gap-3 transition-all"
+                    className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest group-hover:gap-3 transition-all"
                     style={{ color: COLORS.ORANGE }}
                 >
-                    Read Article <ArrowRight size={15} />
+                    Read <ArrowRight size={14} />
                 </div>
             </div>
         </Link>
@@ -263,20 +265,53 @@ const BlogIndex: React.FC = () => {
                             <p className="text-red-500 text-sm">{error}</p>
                         </div>
                     ) : filtered.length === 0 ? (
-                        <div className="text-center py-24">
-                            <p className="text-lg font-semibold" style={{ color: COLORS.NAVY }}>
-                                No articles in this category yet.
-                            </p>
-                            <button
-                                className="mt-4 text-sm underline"
-                                style={{ color: COLORS.ORANGE }}
-                                onClick={() => setActiveCategory('All')}
-                            >
-                                View all articles
-                            </button>
+                        <div className="text-center py-16">
+                            {/* Coming Soon Card */}
+                            <div className="max-w-md mx-auto">
+                                <div
+                                    className="rounded-2xl p-12 text-center"
+                                    style={{
+                                        background: 'white',
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                                        border: '1px solid #e8edf2'
+                                    }}
+                                >
+                                    <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: COLORS.CREAM }}>
+                                        <svg
+                                            className="w-10 h-10"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke={COLORS.NAVY}
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                        </svg>
+                                    </div>
+
+                                    <h3 className="text-2xl font-light mb-3" style={{ color: COLORS.NAVY }}>
+                                        <span className="font-bold">Coming Soon!</span>
+                                    </h3>
+
+                                    <p className="text-sm mb-6" style={{ color: '#6b7a8a' }}>
+                                        We're crafting something amazing for you.
+                                        <br />
+                                        Stay tuned for our latest articles.
+                                    </p>
+
+                                    <button
+                                        className="text-sm font-medium transition-colors hover:opacity-80"
+                                        style={{ color: COLORS.ORANGE }}
+                                        onClick={() => setActiveCategory('All')}
+                                    >
+                                        View all articles →
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {featured && <BlogCard post={featured} featured />}
                             {rest.map(post => (
                                 <BlogCard key={post.id} post={post} />
@@ -285,7 +320,7 @@ const BlogIndex: React.FC = () => {
                     )}
                 </div>
             </main>
-
+            
             <Footer />
         </>
     );

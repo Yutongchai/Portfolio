@@ -230,3 +230,21 @@ const port = process.env.PORT || 8787;
 app.listen(port, () =>
   console.log(`API server listening on http://localhost:${port}`),
 );
+
+// Called by a cron service (e.g. UptimeRobot, cron-job.org) every minute
+app.post("/api/cron/publish-scheduled", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .update({ is_published: true, published_at: new Date().toISOString() })
+      .eq("is_published", false)
+      .not("scheduled_at", "is", null)
+      .lte("scheduled_at", new Date().toISOString())
+      .select("slug");
+
+    if (error) throw error;
+    return res.json({ ok: true, published: data?.map(p => p.slug) ?? [] });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});

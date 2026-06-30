@@ -184,29 +184,31 @@ const AdminDashboard: React.FC = () => {
             </Button>
           </div>
 
-          {/* ── Blog Manager (new) ── */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Blog</h2>
-              <span className="text-2xl">✍️</span>
+          {/* ── Blog Manager — dev only ── */}
+          {user?.email === 'yutongchai2@gmail.com' ? (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Blog</h2>
+                <span className="text-2xl">✍️</span>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
+                Write, schedule, and publish blog articles. Each article gets its own SEO-friendly URL.
+              </p>
+              <Button
+                onClick={() => navigate('/admin/blog')}
+                className="w-full text-white mt-auto"
+                style={{ background: '#153462' }}
+              >
+                Manage Blog
+              </Button>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-1">
-              Write, schedule, and publish blog articles. Each article gets its own SEO-friendly URL.
-            </p>
-            <Button
-              onClick={() => navigate('/admin/blog')}
-              className="w-full text-white mt-auto"
-              style={{ background: '#153462' }}
-            >
-              Manage Blog
-            </Button>
-          </div>
+          ) : null}
         </div>
 
         {/* Quick Stats */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Stats</h2>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.heroImages}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Hero Images</div>
@@ -227,10 +229,12 @@ const AdminDashboard: React.FC = () => {
               <div className="text-3xl font-bold text-teal-600 dark:text-teal-400">{stats.bookings}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Bookings</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" style={{ color: '#153462' }}>{stats.blogPosts}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Blog Posts</div>
-            </div>
+            {user?.email === 'yutongchai2@gmail.com' && (
+              <div className="text-center">
+                <div className="text-3xl font-bold" style={{ color: '#153462' }}>{stats.blogPosts}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Blog Posts</div>
+              </div>
+            )}
           </div>
         </div>
 
